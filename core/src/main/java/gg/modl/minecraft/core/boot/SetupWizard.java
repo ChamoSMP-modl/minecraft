@@ -35,7 +35,7 @@ public class SetupWizard {
             try {
                 printBanner();
                 BootConfig config;
-                if (platformType == PlatformType.SPIGOT || platformType == PlatformType.FABRIC) {
+                if (platformType == PlatformType.PAPER) {
                     config = runSpigotWizard();
                 } else {
                     config = runProxyWizard();
@@ -269,9 +269,7 @@ public class SetupWizard {
         config.setMode(BootConfig.Mode.BRIDGE_ONLY);
         config.setTestingApi(testingApi);
 
-        String proxyType = askChoice("Proxy type (velocity / bungeecord) [velocity]: ",
-                new String[]{"velocity", "bungeecord"}, "velocity");
-        config.setProxyType(proxyType);
+        config.setProxyType("velocity");
 
         logger.info("API key is found in proxy plugin's boot.yml, make sure to setup modl on proxy first then come back here!");
         String apiKey = askApiKey("Enter your API key (from proxy setup or modl.gg panel): ");

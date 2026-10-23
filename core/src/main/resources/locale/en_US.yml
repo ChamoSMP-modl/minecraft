@@ -905,7 +905,6 @@ replay:
   not_available: "&cReplay recording is not available on this server."
   status_recording: "&a{player} is currently being recorded"
   status_not_recording: "&c{player} is not being recorded"
-  fabric_disabled: "&cReplay recording is disabled on Fabric servers."
   no_bridge_connected: "&cNo bridge backend is connected for replay capture."
   no_active_recording: "&cNo active recording for {player}"
   capturing: "&aCapturing and uploading replay for {player}..."

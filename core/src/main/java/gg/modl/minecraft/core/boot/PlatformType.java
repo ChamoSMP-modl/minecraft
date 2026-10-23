@@ -1,8 +1,6 @@
 package gg.modl.minecraft.core.boot;
 
 public enum PlatformType {
-    SPIGOT,
-    BUNGEECORD,
+    PAPER,
     VELOCITY,
-    FABRIC
 }

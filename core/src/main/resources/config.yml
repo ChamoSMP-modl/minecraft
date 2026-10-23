@@ -48,7 +48,7 @@ sync:
 realtime:
   enabled: true
 
-# Proxy Configuration (Velocity / BungeeCord only, ignored on game servers)
+# Proxy Configuration (Velocity only, ignored on game servers)
 proxy:
   # Controls modl's packet interception on the proxy, which powers proxy-side menus and
   # secure-chat enforcement. Moderation (punishments, chat, reports) never depends on it.

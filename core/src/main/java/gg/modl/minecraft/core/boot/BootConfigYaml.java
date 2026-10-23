@@ -78,7 +78,7 @@ final class BootConfigYaml {
                 + "# Use the testing API (api.modl.top) instead of production\n"
                 + "testing-api: false\n"
                 + "\n"
-                + "# Proxy type (bridge-only mode): velocity | bungeecord\n"
+                + "# Proxy type (bridge-only mode): velocity"
                 + "# proxy-type: velocity\n"
                 + "\n"
                 + "# Proxy connection target (bridge-only mode)\n"

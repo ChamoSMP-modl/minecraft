@@ -32,8 +32,6 @@ class BridgeResourceConsistencyTest {
         String bridgeCoreContent = readString(rootDir.resolve("bridge-core/src/main/resources").resolve(resourcePath));
 
         assertEquals(bridgeCoreContent,
-                readString(rootDir.resolve("platforms/fabric/src/main/resources").resolve(resourcePath)));
-        assertEquals(bridgeCoreContent,
                 readString(rootDir.resolve("platforms/spigot/src/main/resources").resolve(resourcePath)));
     }
 
@@ -43,6 +41,6 @@ class BridgeResourceConsistencyTest {
     }
 
     private static String readString(Path path) throws IOException {
-        return new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
+        return Files.readString(path);
     }
 }

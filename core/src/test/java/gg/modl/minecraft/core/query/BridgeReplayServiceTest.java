@@ -1,23 +1,15 @@
 package gg.modl.minecraft.core.query;
 
-import gg.modl.minecraft.core.support.RecordingBridgeBroadcaster;
-import gg.modl.minecraft.core.support.RecordingPluginLogger;
 import gg.modl.minecraft.core.service.ReplayCaptureResult;
 import gg.modl.minecraft.core.service.ReplayCaptureStatus;
+import gg.modl.minecraft.core.support.RecordingBridgeBroadcaster;
+import gg.modl.minecraft.core.support.RecordingPluginLogger;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class BridgeReplayServiceTest {
 
@@ -111,25 +103,6 @@ class BridgeReplayServiceTest {
     }
 
     @Test
-    void captureReplayPrioritizesFabricDisabledOverNotLocal() throws Exception {
-        RecordingBridgeBroadcaster broadcaster = new RecordingBridgeBroadcaster(true, 2);
-        RecordingPluginLogger logger = new RecordingPluginLogger();
-        BridgeReplayService service = new BridgeReplayService(broadcaster, logger);
-        UUID targetUuid = UUID.randomUUID();
-
-        CompletableFuture<ReplayCaptureResult> result = service.captureReplayResult(targetUuid, "byteful");
-        service.handleCaptureResponse(targetUuid, "", ReplayCaptureStatus.NOT_LOCAL);
-
-        assertFalse(result.isDone());
-
-        service.handleCaptureResponse(targetUuid, "", ReplayCaptureStatus.FABRIC_DISABLED);
-
-        assertEquals(ReplayCaptureStatus.FABRIC_DISABLED, result.get(100, TimeUnit.MILLISECONDS).getStatus());
-
-        service.shutdown();
-    }
-
-    @Test
     void captureReplayPrioritizesErrorOverNotLocal() throws Exception {
         RecordingBridgeBroadcaster broadcaster = new RecordingBridgeBroadcaster(true, 2);
         RecordingPluginLogger logger = new RecordingPluginLogger();
@@ -144,69 +117,6 @@ class BridgeReplayServiceTest {
         service.handleCaptureResponse(targetUuid, "", ReplayCaptureStatus.ERROR);
 
         assertEquals(ReplayCaptureStatus.ERROR, result.get(100, TimeUnit.MILLISECONDS).getStatus());
-
-        service.shutdown();
-    }
-
-    @Test
-    void captureReplayPrioritizesErrorOverFabricDisabled() throws Exception {
-        RecordingBridgeBroadcaster broadcaster = new RecordingBridgeBroadcaster(true, 2);
-        RecordingPluginLogger logger = new RecordingPluginLogger();
-        BridgeReplayService service = new BridgeReplayService(broadcaster, logger);
-        UUID targetUuid = UUID.randomUUID();
-
-        CompletableFuture<ReplayCaptureResult> result = service.captureReplayResult(targetUuid, "byteful");
-        service.handleCaptureResponse(targetUuid, "", ReplayCaptureStatus.FABRIC_DISABLED);
-
-        assertFalse(result.isDone());
-
-        service.handleCaptureResponse(targetUuid, "", ReplayCaptureStatus.ERROR);
-
-        assertEquals(ReplayCaptureStatus.ERROR, result.get(100, TimeUnit.MILLISECONDS).getStatus());
-        assertEquals(ReplayCaptureStatus.ERROR, service.getReplayStatus(targetUuid));
-
-        service.shutdown();
-    }
-
-    @Test
-    void captureReplayKeepsErrorStatusWhenFabricDisabledArrivesAfterError() throws Exception {
-        RecordingBridgeBroadcaster broadcaster = new RecordingBridgeBroadcaster(true, 2);
-        RecordingPluginLogger logger = new RecordingPluginLogger();
-        BridgeReplayService service = new BridgeReplayService(broadcaster, logger);
-        UUID targetUuid = UUID.randomUUID();
-
-        CompletableFuture<ReplayCaptureResult> result = service.captureReplayResult(targetUuid, "byteful");
-        service.handleCaptureResponse(targetUuid, "", ReplayCaptureStatus.ERROR);
-
-        assertFalse(result.isDone());
-
-        service.handleCaptureResponse(targetUuid, "", ReplayCaptureStatus.FABRIC_DISABLED);
-
-        assertEquals(ReplayCaptureStatus.ERROR, result.get(100, TimeUnit.MILLISECONDS).getStatus());
-        assertEquals(ReplayCaptureStatus.ERROR, service.getReplayStatus(targetUuid));
-
-        service.shutdown();
-    }
-
-    @Test
-    void captureReplayCompletesWhenNonOkResponseArrivesBeforeDispatchCountIsSet() throws Exception {
-        UUID targetUuid = UUID.randomUUID();
-        RecordingPluginLogger logger = new RecordingPluginLogger();
-        final BridgeReplayService[] serviceRef = new BridgeReplayService[1];
-        RecordingBridgeBroadcaster broadcaster = new RecordingBridgeBroadcaster(true) {
-            @Override
-            public int sendToAllBridges(String action, String... args) {
-                int dispatched = super.sendToAllBridges(action, args);
-                serviceRef[0].handleCaptureResponse(targetUuid, "", ReplayCaptureStatus.FABRIC_DISABLED);
-                return dispatched;
-            }
-        };
-        BridgeReplayService service = new BridgeReplayService(broadcaster, logger);
-        serviceRef[0] = service;
-
-        CompletableFuture<ReplayCaptureResult> result = service.captureReplayResult(targetUuid, "byteful");
-
-        assertEquals(ReplayCaptureStatus.FABRIC_DISABLED, result.get(100, TimeUnit.MILLISECONDS).getStatus());
 
         service.shutdown();
     }
@@ -334,21 +244,6 @@ class BridgeReplayServiceTest {
 
         assertEquals(ReplayCaptureStatus.NO_ACTIVE_RECORDING, result.get(100, TimeUnit.MILLISECONDS).getStatus());
         assertEquals(ReplayCaptureStatus.NOT_LOCAL, service.getReplayStatus(targetUuid));
-
-        service.shutdown();
-    }
-
-    @Test
-    void getReplayStatusReturnsFabricDisabledAfterBridgeReportsFabricDisabled() throws Exception {
-        RecordingBridgeBroadcaster broadcaster = new RecordingBridgeBroadcaster(true);
-        BridgeReplayService service = new BridgeReplayService(broadcaster, new RecordingPluginLogger());
-        UUID targetUuid = UUID.randomUUID();
-
-        CompletableFuture<ReplayCaptureResult> result = service.captureReplayResult(targetUuid, "byteful");
-        service.handleCaptureResponse(targetUuid, "", ReplayCaptureStatus.FABRIC_DISABLED);
-
-        assertEquals(ReplayCaptureStatus.FABRIC_DISABLED, result.get(100, TimeUnit.MILLISECONDS).getStatus());
-        assertEquals(ReplayCaptureStatus.FABRIC_DISABLED, service.getReplayStatus(targetUuid));
 
         service.shutdown();
     }

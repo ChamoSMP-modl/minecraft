@@ -66,7 +66,7 @@ public class BootConfigMigrator {
     }
 
     private static boolean isBackendPlatform(PlatformType platformType) {
-        return platformType == PlatformType.SPIGOT || platformType == PlatformType.FABRIC;
+        return platformType == PlatformType.PAPER;
     }
 
     @SuppressWarnings("unchecked")

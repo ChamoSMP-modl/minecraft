@@ -102,7 +102,6 @@ public class ReplayCommand {
     }
 
     private String statusMessageKey(ReplayCaptureStatus status) {
-        if (status == ReplayCaptureStatus.FABRIC_DISABLED) return "replay.fabric_disabled";
         if (status == ReplayCaptureStatus.NO_BRIDGE_CONNECTED) return "replay.no_bridge_connected";
         if (status == ReplayCaptureStatus.NO_ACTIVE_RECORDING || status == ReplayCaptureStatus.NOT_LOCAL) {
             return "replay.no_active_recording";

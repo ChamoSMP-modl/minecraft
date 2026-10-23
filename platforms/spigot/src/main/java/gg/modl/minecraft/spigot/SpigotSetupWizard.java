@@ -72,7 +72,7 @@ public class SpigotSetupWizard implements Listener {
     private void runWizard() {
         try {
             ConsoleInput input = new ServerCommandInput();
-            SetupWizard wizard = new SetupWizard(logger, input, PlatformType.SPIGOT);
+            SetupWizard wizard = new SetupWizard(logger, input, PlatformType.PAPER);
             BootConfig config = wizard.run();
 
             if (config != null) {

@@ -1,18 +1,13 @@
 package gg.modl.minecraft.core.query;
 
 import gg.modl.minecraft.core.bridge.protocol.BridgeAction;
-import gg.modl.minecraft.core.service.ReplayService;
 import gg.modl.minecraft.core.service.ReplayCaptureResult;
 import gg.modl.minecraft.core.service.ReplayCaptureStatus;
+import gg.modl.minecraft.core.service.ReplayService;
 import gg.modl.minecraft.core.util.PluginLogger;
 
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -33,7 +28,8 @@ public class BridgeReplayService implements ReplayService {
     });
 
     public BridgeReplayService(BridgeBroadcaster broadcaster, PluginLogger logger) {
-        this(broadcaster, logger, () -> {});
+        this(broadcaster, logger, () -> {
+        });
     }
 
     BridgeReplayService(BridgeBroadcaster broadcaster, PluginLogger logger, Runnable beforeDispatchHook) {
@@ -200,7 +196,6 @@ public class BridgeReplayService implements ReplayService {
         private final CompletableFuture<ReplayCaptureResult> future = new CompletableFuture<>();
         private int expectedResponses;
         private int receivedResponses;
-        private boolean fabricDisabled;
         private boolean noActiveRecording;
         private boolean notLocal;
         private boolean error;
@@ -212,9 +207,7 @@ public class BridgeReplayService implements ReplayService {
 
         private synchronized ReplayCaptureResult recordResponse(ReplayCaptureStatus status) {
             receivedResponses++;
-            if (status == ReplayCaptureStatus.FABRIC_DISABLED) {
-                fabricDisabled = true;
-            } else if (status == ReplayCaptureStatus.NO_ACTIVE_RECORDING) {
+            if (status == ReplayCaptureStatus.NO_ACTIVE_RECORDING) {
                 noActiveRecording = true;
             } else if (status == ReplayCaptureStatus.NOT_LOCAL) {
                 notLocal = true;
@@ -227,7 +220,6 @@ public class BridgeReplayService implements ReplayService {
 
         private synchronized ReplayCaptureStatus getCurrentStatus() {
             if (error) return ReplayCaptureStatus.ERROR;
-            if (fabricDisabled) return ReplayCaptureStatus.FABRIC_DISABLED;
             if (noActiveRecording) return ReplayCaptureStatus.NO_ACTIVE_RECORDING;
             if (notLocal) return ReplayCaptureStatus.NOT_LOCAL;
             return null;
@@ -237,7 +229,6 @@ public class BridgeReplayService implements ReplayService {
             if (expectedResponses <= 0 || receivedResponses < expectedResponses) return null;
 
             if (error) return ReplayCaptureResult.error();
-            if (fabricDisabled) return ReplayCaptureResult.fabricDisabled();
             return ReplayCaptureResult.noActiveRecording();
         }
     }

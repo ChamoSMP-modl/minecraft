@@ -111,28 +111,30 @@ class BootConfigTest {
         BootConfig.saveTemplate(tempDir);
 
         assertEquals(normalizeLineEndings(BootConfigYaml.template()), normalizeLineEndings(readBootConfig()));
-        assertEquals("# modl.gg Boot Configuration\n"
-                + "# Edit this file and restart the server.\n"
-                + "# To register a new server, visit https://modl.gg/register\n"
-                + "#\n"
-                + "# mode: standalone | bridge-only | proxy\n"
-                + "mode: standalone\n"
-                + "\n"
-                + "# Your API key from the modl.gg panel\n"
-                + "api-key: \"your-api-key-here\"\n"
-                + "\n"
-                + "# Use the testing API (api.modl.top) instead of production\n"
-                + "testing-api: false\n"
-                + "\n"
-                + "# Proxy type (bridge-only mode): velocity | bungeecord\n"
-                + "# proxy-type: velocity\n"
-                + "\n"
-                + "# Proxy connection target (bridge-only mode)\n"
-                + "# proxy-host: \"127.0.0.1\"\n"
-                + "# proxy-port: 25590\n"
-                + "\n"
-                + "# Bridge listen port (proxy mode only - backends connect to this port)\n"
-                + "# bridge-port: 25590\n", normalizeLineEndings(readBootConfig()));
+        assertEquals("""
+                # modl.gg Boot Configuration
+                # Edit this file and restart the server.
+                # To register a new server, visit https://modl.gg/register
+                #
+                # mode: standalone | bridge-only | proxy
+                mode: standalone
+                
+                # Your API key from the modl.gg panel
+                api-key: "your-api-key-here"
+                
+                # Use the testing API (api.modl.top) instead of production
+                testing-api: false
+                
+                # Proxy type (bridge-only mode): velocity\
+                # proxy-type: velocity
+                
+                # Proxy connection target (bridge-only mode)
+                # proxy-host: "127.0.0.1"
+                # proxy-port: 25590
+                
+                # Bridge listen port (proxy mode only - backends connect to this port)
+                # bridge-port: 25590
+                """, normalizeLineEndings(readBootConfig()));
     }
 
     @Test

@@ -11,7 +11,7 @@ api-key: "your-api-key-here"
 # Use the testing API (api.modl.top) instead of production
 testing-api: false
 
-# Proxy type (bridge-only mode): velocity | bungeecord
+# Proxy type (bridge-only mode): velocity
 # proxy-type: velocity
 
 # Proxy connection target (bridge-only mode)

@@ -1,10 +1,6 @@
-import org.gradle.api.artifacts.VersionCatalogsExtension
-
 plugins {
     java
 }
-
-val sharedConfigExclusions = setOf("fabric", "platforms")
 
 val defaultJvmRelease = 8
 val defaultToolchainVersion = 21
@@ -20,8 +16,6 @@ allprojects {
 }
 
 subprojects {
-    if (name in sharedConfigExclusions) return@subprojects
-
     apply(plugin = "java-library")
     apply(plugin = "maven-publish")
 

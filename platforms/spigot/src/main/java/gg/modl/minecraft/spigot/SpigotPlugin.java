@@ -89,7 +89,7 @@ public class SpigotPlugin extends JavaPlugin {
             if (mode == BootConfig.Mode.STANDALONE || mode == BootConfig.Mode.PROXY) {
                 panelUrl = StartupClient.callStartupWithRetry(
                         bootConfig.getApiKey(), bootConfig.isTestingApi(),
-                        new StartupRequest(PluginInfo.VERSION, "SPIGOT",
+                        new StartupRequest(PluginInfo.VERSION, "PAPER",
                                 getServer().getVersion(), getServer().getMaxPlayers()),
                         pluginLogger);
                 if (panelUrl == null) {
@@ -113,7 +113,7 @@ public class SpigotPlugin extends JavaPlugin {
         if (mode == BootConfig.Mode.STANDALONE || mode == BootConfig.Mode.PROXY) {
             panelUrl = StartupClient.callStartupWithRetry(
                     bootConfig.getApiKey(), bootConfig.isTestingApi(),
-                    new StartupRequest(PluginInfo.VERSION, "SPIGOT",
+                    new StartupRequest(PluginInfo.VERSION, "PAPER",
                             getServer().getVersion(), getServer().getMaxPlayers()),
                     pluginLogger);
             if (panelUrl == null) {
@@ -249,7 +249,7 @@ public class SpigotPlugin extends JavaPlugin {
             }
 
             Optional<BootConfig> migrated = BootConfigMigrator.migrateFromConfigYml(
-                    getDataFolder().toPath(), PlatformType.SPIGOT, pluginLogger);
+                    getDataFolder().toPath(), PlatformType.PAPER, pluginLogger);
             if (migrated.isPresent()) {
                 return migrated.get();
             }

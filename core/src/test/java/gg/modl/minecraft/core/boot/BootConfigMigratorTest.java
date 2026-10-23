@@ -21,31 +21,6 @@ class BootConfigMigratorTest {
     private final PluginLogger logger = new RecordingPluginLogger();
 
     @Test
-    void migratesFabricWithBridgeHostAsBridgeOnlyBackend() throws IOException {
-        writeLegacyConfig(
-                "api:",
-                "  key: \"1234567890123456789012345678901234567890\"",
-                "  url: \"https://example.modl.gg\"",
-                "bridge:",
-                "  host: \"10.0.0.25\"",
-                "  port: 25591"
-        );
-
-        Optional<BootConfig> migrated = BootConfigMigrator.migrateFromConfigYml(
-                tempDir, PlatformType.FABRIC, logger);
-
-        assertTrue(migrated.isPresent());
-        assertEquals(BootConfig.Mode.BRIDGE_ONLY, migrated.get().getMode());
-        assertEquals("10.0.0.25", migrated.get().getWizardProxyHost());
-        assertEquals(25591, migrated.get().getWizardProxyPort());
-
-        BootConfig reloaded = BootConfig.load(tempDir);
-        assertEquals(BootConfig.Mode.BRIDGE_ONLY, reloaded.getMode());
-        assertEquals("10.0.0.25", reloaded.getWizardProxyHost());
-        assertEquals(25591, reloaded.getWizardProxyPort());
-    }
-
-    @Test
     void migratesVelocityAsProxy() throws IOException {
         writeLegacyConfig(
                 "api:",

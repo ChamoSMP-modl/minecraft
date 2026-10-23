@@ -6,6 +6,7 @@ repositories {
     maven("https://libraries.minecraft.net/")
     maven("https://repo.grim.ac/snapshots")
     maven("https://repo.polar.top/repository/polar/")
+    maven("https://repo.janmm14.de/repository/intave/")
 }
 
 val vulcanApiJar = layout.projectDirectory.file("libs/VulcanAPI.jar")
@@ -24,35 +25,13 @@ fun sha256Hex(file: File): String {
     return digest.digest().joinToString("") { "%02x".format(it) }
 }
 
-val verifyVulcanApiJar by tasks.registering {
-    group = "verification"
-    description = "Verifies the vendored Vulcan API jar checksum."
-
-    inputs.file(vulcanApiJar)
-
-    doLast {
-        val jarFile = vulcanApiJar.asFile
-        if (!jarFile.isFile) {
-            throw GradleException("Missing vendored Vulcan API jar: ${jarFile.relativeTo(projectDir)}")
-        }
-
-        val actualSha256 = sha256Hex(jarFile)
-        if (actualSha256 != vulcanApiSha256) {
-            throw GradleException(
-                "Vulcan API jar checksum mismatch for ${jarFile.relativeTo(projectDir)}. " +
-                        "Expected $vulcanApiSha256 but found $actualSha256."
-            )
-        }
-    }
-}
-
 dependencies {
     compileOnly(libs.spigot.api)
 
     // Anticheat APIs
     compileOnly(libs.grim.api)
     compileOnly(libs.polar.api)
-    compileOnly(files("libs/VulcanAPI.jar"))
+    compileOnly("de.jpx3.intave.access:intave-access:14.4.2")
 
     // Netty (provided by Minecraft server)
     compileOnly(libs.netty.all)
@@ -128,8 +107,4 @@ tasks.jar {
 
 tasks.test {
     useJUnitPlatform()
-}
-
-tasks.named("compileJava") {
-    dependsOn(verifyVulcanApiJar)
 }

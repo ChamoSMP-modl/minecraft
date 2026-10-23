@@ -22,16 +22,9 @@ class ReplayServiceTest {
         UUID targetUuid = UUID.randomUUID();
 
         assertFalse(new StatusReplayService(ReplayCaptureStatus.NO_BRIDGE_CONNECTED).shouldAttemptCapture(targetUuid));
-        assertFalse(new StatusReplayService(ReplayCaptureStatus.FABRIC_DISABLED).shouldAttemptCapture(targetUuid));
     }
 
-    private static final class StatusReplayService implements ReplayService {
-        private final ReplayCaptureStatus status;
-
-        private StatusReplayService(ReplayCaptureStatus status) {
-            this.status = status;
-        }
-
+    private record StatusReplayService(ReplayCaptureStatus status) implements ReplayService {
         @Override
         public CompletableFuture<ReplayCaptureResult> captureReplayResult(UUID targetUuid, String targetName) {
             return CompletableFuture.completedFuture(ReplayCaptureResult.noActiveRecording());

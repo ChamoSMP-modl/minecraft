@@ -21,27 +21,19 @@ class LibrariesTest {
         assertFalse(Libraries.PACKETEVENTS_API.hasRelocations());
         assertFalse(Libraries.PACKETEVENTS_NETTY.hasRelocations());
         assertFalse(Libraries.PACKETEVENTS_SPIGOT.hasRelocations());
-        assertFalse(Libraries.PACKETEVENTS_BUNGEE.hasRelocations());
         assertFalse(Libraries.PACKETEVENTS_VELOCITY.hasRelocations());
-        assertFalse(Libraries.PACKETEVENTS_FABRIC_COMMON.hasRelocations());
-        assertFalse(Libraries.PACKETEVENTS_FABRIC_INTERMEDIARY.hasRelocations());
-        assertFalse(Libraries.PACKETEVENTS_FABRIC_OFFICIAL.hasRelocations());
     }
 
     @Test
     void legacyCirrusPlatformArtifactsAreReverseRelocatedToCanonicalPacketEvents() {
         assertReverseRelocations(Libraries.CIRRUS_SPIGOT.getRelocations());
-        assertReverseRelocations(Libraries.CIRRUS_BUNGEECORD.getRelocations());
         assertReverseRelocations(Libraries.CIRRUS_VELOCITY.getRelocations());
-        assertFalse(Libraries.CIRRUS_FABRIC.hasRelocations());
     }
 
     @Test
     void cirrusChecksumsMatchCurrentRuntimeExpectations() {
         assertEquals("UBSO7Eenxuj/Xs2tvxEgOOOZnhA2BGM9cQqaFXJXxdI=", Libraries.CIRRUS_SPIGOT.getChecksum());
-        assertEquals("mi6v+Xa7F29OI4BOTVcuJSpz4Z+cI/m6BwmBKFmvg34=", Libraries.CIRRUS_BUNGEECORD.getChecksum());
         assertEquals("9wAG0uzxFitqPdb/UESODtJG8rezsF8QdTybrPxMoV8=", Libraries.CIRRUS_VELOCITY.getChecksum());
-        assertEquals("LELadOgUGGv2iyKXM0u55N986FNLjmL6FwHqF/zegFs=", Libraries.CIRRUS_FABRIC.getChecksum());
     }
 
     @Test

@@ -93,11 +93,9 @@ class BridgeConfigTest {
                 : projectDir;
 
         Path bridgeCoreConfig = rootDir.resolve("bridge-core/src/main/resources/bridge-config.yml");
-        Path fabricConfig = rootDir.resolve("platforms/fabric/src/main/resources/bridge-config.yml");
         Path spigotConfig = rootDir.resolve("platforms/spigot/src/main/resources/bridge-config.yml");
 
         String bridgeCoreContent = readString(bridgeCoreConfig);
-        assertEquals(bridgeCoreContent, readString(fabricConfig));
         assertEquals(bridgeCoreContent, readString(spigotConfig));
 
         assertSafeReplayDefaults(loadYaml(bridgeCoreConfig));

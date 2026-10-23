@@ -1,8 +1,9 @@
 package gg.modl.minecraft.core.service;
 
+import lombok.Getter;
+
+@Getter
 public final class ReplayCaptureResult {
-    private static final ReplayCaptureResult FABRIC_DISABLED =
-            new ReplayCaptureResult(ReplayCaptureStatus.FABRIC_DISABLED, null);
     private static final ReplayCaptureResult NO_BRIDGE_CONNECTED =
             new ReplayCaptureResult(ReplayCaptureStatus.NO_BRIDGE_CONNECTED, null);
     private static final ReplayCaptureResult NO_ACTIVE_RECORDING =
@@ -27,10 +28,6 @@ public final class ReplayCaptureResult {
         return new ReplayCaptureResult(ReplayCaptureStatus.OK, replayId);
     }
 
-    public static ReplayCaptureResult fabricDisabled() {
-        return FABRIC_DISABLED;
-    }
-
     public static ReplayCaptureResult noBridgeConnected() {
         return NO_BRIDGE_CONNECTED;
     }
@@ -51,18 +48,10 @@ public final class ReplayCaptureResult {
         if (status == ReplayCaptureStatus.OK) {
             return ok(replayId);
         }
-        if (status == ReplayCaptureStatus.FABRIC_DISABLED) return fabricDisabled();
         if (status == ReplayCaptureStatus.NO_BRIDGE_CONNECTED) return noBridgeConnected();
         if (status == ReplayCaptureStatus.NOT_LOCAL) return notLocal();
         if (status == ReplayCaptureStatus.ERROR) return error();
         return noActiveRecording();
     }
 
-    public ReplayCaptureStatus getStatus() {
-        return status;
-    }
-
-    public String getReplayId() {
-        return replayId;
-    }
 }

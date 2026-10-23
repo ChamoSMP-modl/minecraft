@@ -54,10 +54,6 @@ public class SpigotPlatform implements Platform {
     private volatile Method propertyNameMethod;
     private volatile Method propertyValueMethod;
 
-    public SpigotPlatform(JavaPlugin plugin, Logger logger, File dataFolder, String configServerName) {
-        this(plugin, logger, dataFolder, configServerName, false);
-    }
-
     public SpigotPlatform(JavaPlugin plugin, Logger logger, File dataFolder, String configServerName, boolean lateBootstrap) {
         this.plugin = plugin;
         this.logger = logger;

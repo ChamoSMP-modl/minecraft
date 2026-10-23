@@ -83,40 +83,12 @@ public final class Libraries {
             "packetevents-spigot",
             LibraryVersions.PACKETEVENTS_SPIGOT_CHECKSUM
     ),
-    PACKETEVENTS_BUNGEE = LibraryRecord.of(
-            "gg{}modl{}minecraft{}packetevents",
-            "packetevents-bungeecord",
-            LibraryVersions.PACKETEVENTS_BUNGEE,
-            "packetevents-bungeecord",
-            LibraryVersions.PACKETEVENTS_BUNGEE_CHECKSUM
-    ),
     PACKETEVENTS_VELOCITY = LibraryRecord.of(
             "gg{}modl{}minecraft{}packetevents",
             "packetevents-velocity",
             LibraryVersions.PACKETEVENTS_VELOCITY,
             "packetevents-velocity",
             LibraryVersions.PACKETEVENTS_VELOCITY_CHECKSUM
-    ),
-    PACKETEVENTS_FABRIC_COMMON = LibraryRecord.of(
-            "gg{}modl{}minecraft{}packetevents",
-            "packetevents-fabric-common",
-            LibraryVersions.PACKETEVENTS_FABRIC_COMMON,
-            "packetevents-fabric-common",
-            LibraryVersions.PACKETEVENTS_FABRIC_COMMON_CHECKSUM
-    ),
-    PACKETEVENTS_FABRIC_INTERMEDIARY = LibraryRecord.of(
-            "gg{}modl{}minecraft{}packetevents",
-            "packetevents-fabric-intermediary",
-            LibraryVersions.PACKETEVENTS_FABRIC_INTERMEDIARY,
-            "packetevents-fabric-intermediary",
-            LibraryVersions.PACKETEVENTS_FABRIC_INTERMEDIARY_CHECKSUM
-    ),
-    PACKETEVENTS_FABRIC_OFFICIAL = LibraryRecord.of(
-            "gg{}modl{}minecraft{}packetevents",
-            "packetevents-fabric-official",
-            LibraryVersions.PACKETEVENTS_FABRIC_OFFICIAL,
-            "packetevents-fabric-official",
-            LibraryVersions.PACKETEVENTS_FABRIC_OFFICIAL_CHECKSUM
     ),
     ADVENTURE_NBT = LibraryRecord.of(
             "net{}kyori",
@@ -153,20 +125,6 @@ public final class Libraries {
             "lamp-velocity",
             LibraryVersions.LAMP_VELOCITY_CHECKSUM
     ),
-    LAMP_BUNGEE = LibraryRecord.of(
-            "io{}github{}revxrsal",
-            "lamp.bungee",
-            LibraryVersions.LAMP_BUNGEE,
-            "lamp-bungee",
-            LibraryVersions.LAMP_BUNGEE_CHECKSUM
-    ),
-    LAMP_FABRIC = LibraryRecord.of(
-            "io{}github{}revxrsal",
-            "lamp.fabric",
-            LibraryVersions.LAMP_FABRIC,
-            "lamp-fabric",
-            LibraryVersions.LAMP_FABRIC_CHECKSUM
-    ),
     SLF4J_API = LibraryRecord.of(
             "org{}slf4j",
             "slf4j-api",
@@ -196,21 +154,6 @@ public final class Libraries {
             "cirrus-velocity",
             LibraryVersions.CIRRUS_VELOCITY_CHECKSUM,
             CIRRUS_PACKETEVENTS_REVERSE_RELOCATIONS
-    ),
-    CIRRUS_BUNGEECORD = LibraryRecord.of(
-            "gg{}modl{}minecraft{}cirrus",
-            "cirrus-bungeecord",
-            LibraryVersions.CIRRUS_BUNGEECORD,
-            "cirrus-bungeecord",
-            LibraryVersions.CIRRUS_BUNGEECORD_CHECKSUM,
-            CIRRUS_PACKETEVENTS_REVERSE_RELOCATIONS
-    ),
-    CIRRUS_FABRIC = LibraryRecord.of(
-            "gg{}modl{}minecraft{}cirrus",
-            "cirrus-fabric",
-            LibraryVersions.CIRRUS_FABRIC,
-            "cirrus-fabric",
-            LibraryVersions.CIRRUS_FABRIC_CHECKSUM
     ),
     ADVENTURE_KEY = LibraryRecord.of(
             "net{}kyori",

@@ -107,24 +107,16 @@ val runtimeLibraries = listOf(
     RuntimeLibrary("PACKETEVENTS_API", "gg.modl.minecraft.packetevents", "packetevents-api", "packetevents"),
     RuntimeLibrary("PACKETEVENTS_NETTY", "gg.modl.minecraft.packetevents", "packetevents-netty-common", "packetevents"),
     RuntimeLibrary("PACKETEVENTS_SPIGOT", "gg.modl.minecraft.packetevents", "packetevents-spigot", "packetevents"),
-    RuntimeLibrary("PACKETEVENTS_BUNGEE", "gg.modl.minecraft.packetevents", "packetevents-bungeecord", "packetevents"),
     RuntimeLibrary("PACKETEVENTS_VELOCITY", "gg.modl.minecraft.packetevents", "packetevents-velocity", "packetevents"),
-    RuntimeLibrary("PACKETEVENTS_FABRIC_COMMON", "gg.modl.minecraft.packetevents", "packetevents-fabric-common", "packetevents"),
-    RuntimeLibrary("PACKETEVENTS_FABRIC_INTERMEDIARY", "gg.modl.minecraft.packetevents", "packetevents-fabric-intermediary", "packetevents"),
-    RuntimeLibrary("PACKETEVENTS_FABRIC_OFFICIAL", "gg.modl.minecraft.packetevents", "packetevents-fabric-official", "packetevents"),
     RuntimeLibrary("ADVENTURE_NBT", "net.kyori", "adventure-nbt", "adventure"),
     RuntimeLibrary("LAMP_COMMON", "io.github.revxrsal", "lamp.common", "lamp"),
     RuntimeLibrary("LAMP_BRIGADIER", "io.github.revxrsal", "lamp.brigadier", "lamp"),
     RuntimeLibrary("LAMP_BUKKIT", "io.github.revxrsal", "lamp.bukkit", "lamp"),
     RuntimeLibrary("LAMP_VELOCITY", "io.github.revxrsal", "lamp.velocity", "lamp"),
-    RuntimeLibrary("LAMP_BUNGEE", "io.github.revxrsal", "lamp.bungee", "lamp"),
-    RuntimeLibrary("LAMP_FABRIC", "io.github.revxrsal", "lamp.fabric", "lamp"),
     RuntimeLibrary("SLF4J_API", "org.slf4j", "slf4j-api", "slf4j"),
     RuntimeLibrary("SLF4J_SIMPLE", "org.slf4j", "slf4j-simple", "slf4j"),
     RuntimeLibrary("CIRRUS_SPIGOT", "gg.modl.minecraft.cirrus", "cirrus-spigot", "cirrus"),
     RuntimeLibrary("CIRRUS_VELOCITY", "gg.modl.minecraft.cirrus", "cirrus-velocity", "cirrus"),
-    RuntimeLibrary("CIRRUS_BUNGEECORD", "gg.modl.minecraft.cirrus", "cirrus-bungeecord", "cirrus"),
-    RuntimeLibrary("CIRRUS_FABRIC", "gg.modl.minecraft.cirrus", "cirrus-fabric", "cirrus"),
     RuntimeLibrary("ADVENTURE_KEY", "net.kyori", "adventure-key", "adventure"),
     RuntimeLibrary("EXAMINATION_API", "net.kyori", "examination-api", "examination"),
     RuntimeLibrary("EXAMINATION_STRING", "net.kyori", "examination-string", "examination"),
@@ -151,8 +143,6 @@ val runtimeLibraries = listOf(
 val publishedRuntimeChecksums = mapOf(
     "gg.modl.minecraft.cirrus:cirrus-spigot:4.2.4" to "UBSO7Eenxuj/Xs2tvxEgOOOZnhA2BGM9cQqaFXJXxdI=",
     "gg.modl.minecraft.cirrus:cirrus-velocity:4.2.4" to "9wAG0uzxFitqPdb/UESODtJG8rezsF8QdTybrPxMoV8=",
-    "gg.modl.minecraft.cirrus:cirrus-bungeecord:4.2.4" to "mi6v+Xa7F29OI4BOTVcuJSpz4Z+cI/m6BwmBKFmvg34=",
-    "gg.modl.minecraft.cirrus:cirrus-fabric:4.2.4" to "LELadOgUGGv2iyKXM0u55N986FNLjmL6FwHqF/zegFs=",
 )
 
 val generateLibraryVersions = tasks.register("generateLibraryVersions") {
