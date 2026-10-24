@@ -5,26 +5,24 @@ import gg.modl.minecraft.api.Punishment;
 import gg.modl.minecraft.core.HttpClientHolder;
 import gg.modl.minecraft.core.Platform;
 import gg.modl.minecraft.core.cache.Cache;
-import gg.modl.minecraft.core.command.StaffOnly;
+import gg.modl.minecraft.core.command.StaffOrPermission;
 import gg.modl.minecraft.core.impl.menus.inspect.HistoryMenu;
 import gg.modl.minecraft.core.impl.menus.util.MenuAsync;
 import gg.modl.minecraft.core.impl.menus.util.MenuItems;
 import gg.modl.minecraft.core.locale.LocaleManager;
+import gg.modl.minecraft.core.punishment.PunishmentTypeCacheManager;
 import gg.modl.minecraft.core.util.CommandUtil;
 import gg.modl.minecraft.core.util.Pagination;
-import gg.modl.minecraft.core.punishment.PunishmentTypeCacheManager;
+import gg.modl.minecraft.core.util.Permissions;
 import lombok.RequiredArgsConstructor;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
-import revxrsal.commands.annotation.Optional;
 import revxrsal.commands.annotation.Named;
+import revxrsal.commands.annotation.Optional;
 import revxrsal.commands.command.CommandActor;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+
 import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 
 @RequiredArgsConstructor
@@ -37,7 +35,7 @@ public class HistoryCommand {
 
     @Command("history")
     @Description("Open the punishment history menu for a player, or use -p to print to chat")
-    @StaffOnly
+    @StaffOrPermission(value = Permissions.HISTORY, needsPermissionOnStaff = false)
     public void history(CommandActor actor, @Named("player") String playerQuery, @Optional String flags) {
         if (flags == null) flags = "";
         int page = Pagination.parsePrintFlags(flags);
@@ -52,8 +50,8 @@ public class HistoryCommand {
         ProfileMenuOpener.openProfileMenu(actor, httpClientHolder.client(), platform, cache, localeManager, playerQuery,
                 (profileResponse, senderName, viewer) -> {
                     HistoryMenu menu = new HistoryMenu(
-                        platform, httpClientHolder.client(), senderUuid, senderName,
-                        profileResponse.getProfile(), null);
+                            platform, httpClientHolder.client(), senderUuid, senderName,
+                            profileResponse.getProfile(), null);
                     MenuAsync.displayWhenLoaded(platform, menu.getDataFuture(), viewer, menu::display);
                 });
     }
@@ -121,7 +119,8 @@ public class HistoryCommand {
         } else if (punishment.getStarted() == null)
             actor.reply(localeManager.getMessage("print.history.entry_unstarted", vars));
         else if (punishment.isActive()) {
-            if (effectiveDuration == null || effectiveDuration <= 0) actor.reply(localeManager.getMessage("print.history.entry_permanent", vars));
+            if (effectiveDuration == null || effectiveDuration <= 0)
+                actor.reply(localeManager.getMessage("print.history.entry_permanent", vars));
             else {
                 Date effectiveExpiry = punishment.getEffectiveExpiry();
                 long remaining = effectiveExpiry != null

@@ -36,7 +36,7 @@ public final class ConfiguredCommandAliases {
 
     public String primaryAlias(String key) {
         List<String> aliases = aliasesFor(key);
-        return aliases.isEmpty() ? null : aliases.get(0);
+        return aliases.isEmpty() ? null : aliases.getFirst();
     }
 
     public String[] resolveCommandValues(String... declaredValues) {

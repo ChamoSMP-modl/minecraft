@@ -5,21 +5,23 @@ import gg.modl.minecraft.api.Note;
 import gg.modl.minecraft.core.HttpClientHolder;
 import gg.modl.minecraft.core.Platform;
 import gg.modl.minecraft.core.cache.Cache;
-import gg.modl.minecraft.core.command.StaffOnly;
+import gg.modl.minecraft.core.command.StaffOrPermission;
 import gg.modl.minecraft.core.impl.menus.inspect.NotesMenu;
 import gg.modl.minecraft.core.locale.LocaleManager;
 import gg.modl.minecraft.core.util.CommandUtil;
 import gg.modl.minecraft.core.util.DateFormatter;
 import gg.modl.minecraft.core.util.Pagination;
+import gg.modl.minecraft.core.util.Permissions;
 import lombok.RequiredArgsConstructor;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
-import revxrsal.commands.annotation.Optional;
 import revxrsal.commands.annotation.Named;
+import revxrsal.commands.annotation.Optional;
 import revxrsal.commands.command.CommandActor;
 
 import java.util.List;
 import java.util.UUID;
+
 import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 
 @RequiredArgsConstructor
@@ -32,7 +34,7 @@ public class NotesCommand {
 
     @Command("notes")
     @Description("Open the notes menu for a player, or use -p to print to chat")
-    @StaffOnly
+    @StaffOrPermission(value = Permissions.STAFF_NOTES, needsPermissionOnStaff = false)
     public void notes(CommandActor actor, @Named("player") String playerQuery, @Optional String flags) {
         if (flags == null) flags = "";
         int page = Pagination.parsePrintFlags(flags);
@@ -46,8 +48,8 @@ public class NotesCommand {
         UUID senderUuid = actor.uniqueId();
         ProfileMenuOpener.openProfileMenu(actor, httpClientHolder.client(), platform, cache, localeManager, playerQuery,
                 (profileResponse, senderName, viewer) -> new NotesMenu(
-                    platform, httpClientHolder.client(), senderUuid, senderName,
-                    profileResponse.getProfile(), null
+                        platform, httpClientHolder.client(), senderUuid, senderName,
+                        profileResponse.getProfile(), null
                 ).display(viewer));
     }
 

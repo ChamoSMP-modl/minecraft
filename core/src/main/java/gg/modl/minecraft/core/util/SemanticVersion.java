@@ -47,7 +47,7 @@ public final class SemanticVersion implements Comparable<SemanticVersion> {
         for (long segment : releaseSegments) {
             if (segment != 0) hash = 31 * hash + segment;
         }
-        return (int) (hash ^ (hash >>> 32));
+        return Long.hashCode(hash);
     }
 
     private static String stripPrefix(String version) {

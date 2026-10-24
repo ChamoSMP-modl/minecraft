@@ -27,6 +27,7 @@ import revxrsal.commands.command.CommandActor;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -215,6 +216,11 @@ public class SpigotPlatform implements Platform {
             logger.warning("Error checking for LiteBans: " + e.getMessage());
         }
         return null;
+    }
+
+    @Override
+    public boolean hasPermission(CommandActor actor, String permission) {
+        return Objects.requireNonNull(Bukkit.getPlayer(actor.uniqueId())).hasPermission(permission);
     }
 
     @Override

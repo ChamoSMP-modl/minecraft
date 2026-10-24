@@ -2,7 +2,7 @@ package gg.modl.minecraft.core.impl.commands.staff;
 
 import gg.modl.minecraft.core.command.PlayerOnly;
 import gg.modl.minecraft.core.command.RequiresPermission;
-import gg.modl.minecraft.core.command.StaffOnly;
+import gg.modl.minecraft.core.command.StaffOrPermission;
 import gg.modl.minecraft.core.locale.LocaleManager;
 import gg.modl.minecraft.core.service.NetworkChatInterceptService;
 import gg.modl.minecraft.core.util.Permissions;
@@ -13,7 +13,10 @@ import revxrsal.commands.command.CommandActor;
 
 import java.util.UUID;
 
-@RequiredArgsConstructor @Command("interceptnetworkchat") @StaffOnly @PlayerOnly
+@RequiredArgsConstructor
+@Command("interceptnetworkchat")
+@StaffOrPermission(Permissions.INTERCEPT)
+@PlayerOnly
 public class InterceptNetworkChatCommand {
     private final NetworkChatInterceptService interceptService;
     private final LocaleManager localeManager;

@@ -6,25 +6,22 @@ import gg.modl.minecraft.api.http.response.ReportsResponse;
 import gg.modl.minecraft.core.HttpClientHolder;
 import gg.modl.minecraft.core.Platform;
 import gg.modl.minecraft.core.cache.Cache;
-import gg.modl.minecraft.core.command.StaffOnly;
+import gg.modl.minecraft.core.command.StaffOrPermission;
 import gg.modl.minecraft.core.impl.menus.inspect.ReportsMenu;
-import gg.modl.minecraft.core.impl.menus.util.MenuAsync;
 import gg.modl.minecraft.core.impl.menus.staff.StaffReportsMenu;
+import gg.modl.minecraft.core.impl.menus.util.MenuAsync;
 import gg.modl.minecraft.core.locale.LocaleManager;
-import gg.modl.minecraft.core.util.CommandUtil;
-import gg.modl.minecraft.core.util.Constants;
-import gg.modl.minecraft.core.util.DateFormatter;
-import gg.modl.minecraft.core.util.Pagination;
-import gg.modl.minecraft.core.util.Permissions;
+import gg.modl.minecraft.core.util.*;
 import lombok.RequiredArgsConstructor;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
-import revxrsal.commands.annotation.Optional;
 import revxrsal.commands.annotation.Named;
+import revxrsal.commands.annotation.Optional;
 import revxrsal.commands.command.CommandActor;
 
 import java.util.List;
 import java.util.UUID;
+
 import static gg.modl.minecraft.core.util.Java8Collections.listOf;
 import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 
@@ -42,7 +39,7 @@ public class ReportsCommand {
 
     @Command("reports")
     @Description("Open the reports menu (for a player or all reports), or use -p with a player to print to chat")
-    @StaffOnly
+    @StaffOrPermission(value = Permissions.REPORTS, needsPermissionOnStaff = false)
     public void reports(CommandActor actor, @Optional @Named("player") String playerQuery, @Optional String flags) {
         if (flags == null) flags = "";
         boolean printMode;
@@ -79,8 +76,8 @@ public class ReportsCommand {
         ProfileMenuOpener.openProfileMenu(actor, httpClientHolder.client(), platform, cache, localeManager, actualPlayerQuery,
                 (profileResponse, senderName, viewer) -> {
                     ReportsMenu menu = new ReportsMenu(
-                        platform, httpClientHolder.client(), senderUuid, senderName,
-                        profileResponse.getProfile(), null);
+                            platform, httpClientHolder.client(), senderUuid, senderName,
+                            profileResponse.getProfile(), null);
                     MenuAsync.displayWhenLoaded(platform, menu.getDataFuture(), viewer, menu::display);
                 });
     }
@@ -169,8 +166,8 @@ public class ReportsCommand {
         String senderName = CommandUtil.resolveSenderName(senderUuid, cache, platform);
 
         StaffReportsMenu menu = new StaffReportsMenu(
-            platform, httpClientHolder.client(), senderUuid, senderName,
-            isAdmin, panelUrl, null
+                platform, httpClientHolder.client(), senderUuid, senderName,
+                isAdmin, panelUrl, null
         );
         MenuAsync.displayWhenLoaded(platform, menu.getDataFuture(),
                 platform.getPlayerWrapper(senderUuid),

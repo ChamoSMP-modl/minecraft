@@ -1,17 +1,14 @@
 package gg.modl.minecraft.core;
 
 import gg.modl.minecraft.core.cache.Cache;
-import gg.modl.minecraft.core.command.AdminOnly;
-import gg.modl.minecraft.core.command.PlayerOnly;
-import gg.modl.minecraft.core.command.RequiresPermission;
-import gg.modl.minecraft.core.command.StaffNo2fa;
-import gg.modl.minecraft.core.command.StaffOnly;
+import gg.modl.minecraft.core.command.*;
 import gg.modl.minecraft.core.locale.LocaleManager;
 import gg.modl.minecraft.core.service.Staff2faService;
 import gg.modl.minecraft.core.staff.PermissionUtil;
 import gg.modl.minecraft.core.util.CommandUtil;
 import gg.modl.minecraft.core.util.Permissions;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import revxrsal.commands.annotation.list.AnnotationList;
 import revxrsal.commands.command.CommandActor;
 import revxrsal.commands.exception.SendableException;
@@ -22,7 +19,7 @@ public final class CommandAccessPolicy {
     private final LocaleManager localeManager;
     private final Staff2faService staff2faService;
 
-    public void enforce(AnnotationList annotations, CommandActor actor) {
+    public void enforce(AnnotationList annotations, CommandActor actor, Platform platform) {
         if (annotations.contains(PlayerOnly.class) && CommandUtil.isConsole(actor)) {
             throw deny(localeManager.getMessage("general.players_only"));
         }
@@ -35,6 +32,13 @@ public final class CommandAccessPolicy {
         boolean adminOnly = annotations.contains(AdminOnly.class);
         RequiresPermission requiresPermission = annotations.get(RequiresPermission.class);
         boolean staffNo2fa = annotations.contains(StaffNo2fa.class);
+
+        StaffOrPermission staffOrPermission = annotations.get(StaffOrPermission.class);
+
+        if (staffOrPermission != null && !PermissionUtil.staffOrPermission(actor, cache, staffOrPermission.value(), platform, staffOrPermission.needsPermissionOnStaff())
+        ) {
+            throw deny(localeManager.getMessage("general.no-permission"));
+        }
 
         if (staffOnly && !PermissionUtil.isStaff(actor, cache)) {
             throw deny(localeManager.getMessage("general.no_permission"));
@@ -66,7 +70,7 @@ public final class CommandAccessPolicy {
     static SendableException deny(String message) {
         return new SendableException(message) {
             @Override
-            public void sendTo(CommandActor actor) {
+            public void sendTo(@NotNull CommandActor actor) {
                 actor.reply(message);
             }
         };

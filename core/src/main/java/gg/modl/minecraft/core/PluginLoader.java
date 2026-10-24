@@ -1,13 +1,5 @@
 package gg.modl.minecraft.core;
 
-import revxrsal.commands.annotation.Command;
-import revxrsal.commands.Lamp;
-import revxrsal.commands.annotation.dynamic.Annotations;
-import revxrsal.commands.annotation.list.AnnotationList;
-import revxrsal.commands.command.CommandActor;
-import revxrsal.commands.annotation.Named;
-import revxrsal.commands.parameter.ParameterType;
-import revxrsal.commands.parameter.StringParameterType;
 import gg.modl.minecraft.api.AbstractPlayer;
 import gg.modl.minecraft.api.Account;
 import gg.modl.minecraft.api.PunishmentTypeClassifiers;
@@ -15,92 +7,54 @@ import gg.modl.minecraft.api.RegistryPunishmentTypeClassifier;
 import gg.modl.minecraft.api.http.ModlHttpClient;
 import gg.modl.minecraft.api.http.response.StartupResponse;
 import gg.modl.minecraft.core.boot.StartupClient;
-import gg.modl.minecraft.core.config.ConfigManager;
-import gg.modl.minecraft.core.config.RuntimeConfigSource;
 import gg.modl.minecraft.core.cache.Cache;
-import gg.modl.minecraft.core.cache.LoginCache;
 import gg.modl.minecraft.core.cache.CachedProfileRegistry;
-import gg.modl.minecraft.core.impl.commands.staff.AltsCommand;
-import gg.modl.minecraft.core.impl.commands.staff.ChatCommand;
-import gg.modl.minecraft.core.impl.commands.staff.ChatLogsCommand;
-import gg.modl.minecraft.core.impl.commands.staff.CommandLogsCommand;
-import gg.modl.minecraft.core.impl.commands.staff.FreezeCommand;
-import gg.modl.minecraft.core.impl.commands.staff.HistoryCommand;
-import gg.modl.minecraft.core.impl.commands.staff.InspectCommand;
-import gg.modl.minecraft.core.impl.commands.staff.InterceptNetworkChatCommand;
-import gg.modl.minecraft.core.impl.commands.staff.LocalChatCommand;
-import gg.modl.minecraft.core.impl.commands.ModlHelpCommand;
-import gg.modl.minecraft.core.impl.commands.staff.ModlReloadCommand;
-import gg.modl.minecraft.core.impl.commands.staff.NotesCommand;
-import gg.modl.minecraft.core.impl.commands.staff.PunishmentActionCommand;
-import gg.modl.minecraft.core.impl.commands.staff.ReportsCommand;
-import gg.modl.minecraft.core.impl.commands.staff.StaffChatCommand;
-import gg.modl.minecraft.core.impl.commands.staff.StaffCommand;
-import gg.modl.minecraft.core.impl.commands.staff.StaffListCommand;
-import gg.modl.minecraft.core.impl.commands.staff.StaffModeCommand;
-import gg.modl.minecraft.core.impl.commands.staff.ReplayCommand;
-import gg.modl.minecraft.core.impl.commands.staff.TargetCommand;
+import gg.modl.minecraft.core.cache.LoginCache;
+import gg.modl.minecraft.core.chat.ChatService;
 import gg.modl.minecraft.core.command.ConfiguredCommandAliases;
 import gg.modl.minecraft.core.command.ConsumeRemaining;
 import gg.modl.minecraft.core.command.PlayerQuerySuggestions;
-import gg.modl.minecraft.core.impl.commands.player.ApplyCommand;
-import gg.modl.minecraft.core.impl.commands.player.BugReportCommand;
-import gg.modl.minecraft.core.impl.commands.player.ChatReportCommand;
-import gg.modl.minecraft.core.impl.commands.player.ClaimTicketCommand;
-import gg.modl.minecraft.core.impl.commands.player.HackReportCommand;
-import gg.modl.minecraft.core.impl.commands.player.ReportCommand;
-import gg.modl.minecraft.core.impl.commands.player.SupportCommand;
-import gg.modl.minecraft.core.service.TicketService;
-import gg.modl.minecraft.core.impl.commands.staff.VanishCommand;
-import gg.modl.minecraft.core.impl.commands.staff.VerifyCommand;
-import gg.modl.minecraft.core.impl.commands.player.IAmMutedCommand;
-import gg.modl.minecraft.core.impl.commands.player.StandingCommand;
-import gg.modl.minecraft.core.impl.commands.staff.punishments.BanCommand;
-import gg.modl.minecraft.core.impl.commands.staff.punishments.BlacklistCommand;
-import gg.modl.minecraft.core.impl.commands.staff.punishments.KickCommand;
-import gg.modl.minecraft.core.impl.commands.staff.punishments.MuteCommand;
-import gg.modl.minecraft.core.impl.commands.staff.punishments.PardonCommand;
-import gg.modl.minecraft.core.impl.commands.staff.punishments.PunishCommand;
-import gg.modl.minecraft.core.impl.commands.staff.punishments.WarnCommand;
+import gg.modl.minecraft.core.config.ConfigManager;
+import gg.modl.minecraft.core.config.RuntimeConfigSource;
+import gg.modl.minecraft.core.impl.commands.player.*;
+import gg.modl.minecraft.core.impl.commands.staff.*;
+import gg.modl.minecraft.core.impl.commands.staff.punishments.*;
 import gg.modl.minecraft.core.impl.menus.util.ChatInputManager;
-import gg.modl.minecraft.core.locale.LocaleManager;
-import gg.modl.minecraft.core.locale.MessageRenderer;
-import gg.modl.minecraft.core.plugin.PluginInfo;
-import gg.modl.minecraft.core.realtime.MinecraftRealtimeClient;
-import gg.modl.minecraft.core.service.BridgeService;
-import gg.modl.minecraft.core.service.ChatCommandLogService;
-import gg.modl.minecraft.core.service.ChatManagementService;
-import gg.modl.minecraft.core.service.ChatMessageCache;
-import gg.modl.minecraft.core.service.FreezeService;
-import gg.modl.minecraft.core.service.MaintenanceService;
-import gg.modl.minecraft.core.service.NetworkChatInterceptService;
-import gg.modl.minecraft.core.service.Staff2faService;
-import gg.modl.minecraft.core.service.StaffChatService;
-import gg.modl.minecraft.core.service.StaffModeService;
-import gg.modl.minecraft.core.service.UpdateCheckerService;
-import gg.modl.minecraft.core.service.VanishService;
+import gg.modl.minecraft.core.impl.menus.util.MenuItems;
 import gg.modl.minecraft.core.impl.menus.util.PlayerHeadItemBuilder;
-import gg.modl.minecraft.core.util.Java8Collections;
-import gg.modl.minecraft.core.service.database.DatabaseConfig;
-import gg.modl.minecraft.core.service.sync.SyncService;
-import gg.modl.minecraft.core.service.sync.SyncServiceContext;
-import gg.modl.minecraft.core.util.DateFormatter;
-import gg.modl.minecraft.core.staff.StaffPermissionService;
-import gg.modl.minecraft.core.chat.ChatService;
 import gg.modl.minecraft.core.integration.iplookup.IpEnrichmentService;
 import gg.modl.minecraft.core.integration.iplookup.PendingIpLookupService;
 import gg.modl.minecraft.core.integration.mojang.MojangProfiles;
+import gg.modl.minecraft.core.locale.LocaleManager;
+import gg.modl.minecraft.core.locale.MessageRenderer;
 import gg.modl.minecraft.core.login.BanEnforcementAcknowledger;
 import gg.modl.minecraft.core.login.LoginService;
 import gg.modl.minecraft.core.login.PlayerNotificationMapper;
 import gg.modl.minecraft.core.player.PlayerLookupService;
+import gg.modl.minecraft.core.plugin.PluginInfo;
 import gg.modl.minecraft.core.punishment.PunishmentActionMessageService;
 import gg.modl.minecraft.core.punishment.PunishmentMessageService;
 import gg.modl.minecraft.core.punishment.PunishmentTypeCacheManager;
+import gg.modl.minecraft.core.realtime.MinecraftRealtimeClient;
+import gg.modl.minecraft.core.service.*;
+import gg.modl.minecraft.core.service.database.DatabaseConfig;
+import gg.modl.minecraft.core.service.sync.SyncService;
+import gg.modl.minecraft.core.service.sync.SyncServiceContext;
 import gg.modl.minecraft.core.session.PlayerSessionService;
 import gg.modl.minecraft.core.session.ServerSwitchService;
-import gg.modl.minecraft.core.impl.menus.util.MenuItems;
+import gg.modl.minecraft.core.staff.StaffPermissionService;
+import gg.modl.minecraft.core.util.DateFormatter;
+import gg.modl.minecraft.core.util.Java8Collections;
+import gg.modl.minecraft.core.util.PluginLogger;
 import lombok.Getter;
+import revxrsal.commands.Lamp;
+import revxrsal.commands.annotation.Command;
+import revxrsal.commands.annotation.Named;
+import revxrsal.commands.annotation.dynamic.Annotations;
+import revxrsal.commands.annotation.list.AnnotationList;
+import revxrsal.commands.command.CommandActor;
+import revxrsal.commands.parameter.ParameterType;
+import revxrsal.commands.parameter.StringParameterType;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -110,7 +64,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-import gg.modl.minecraft.core.util.PluginLogger;
 
 @Getter
 public class PluginLoader {
@@ -223,7 +176,7 @@ public class PluginLoader {
             logger.info("modl.gg Configuration:");
             logger.info("  API URL: " + httpManager.getApiUrl());
             logger.info("  API Key: " + (httpManager.getApiKey().length() > 8 ?
-                httpManager.getApiKey().substring(0, 8) + "..." : "***"));
+                    httpManager.getApiKey().substring(0, 8) + "..." : "***"));
             logger.info("  Debug Mode: " + httpManager.isDebugHttp());
         }
 
@@ -261,9 +214,9 @@ public class PluginLoader {
 
         this.lamp = platform.buildLamp(builder -> {
             builder.annotationReplacer(Command.class, (element, annotation) ->
-                remapCommandAnnotation(annotation, configuredCommandAliases));
+                    remapCommandAnnotation(annotation, configuredCommandAliases));
             builder.commandCondition(context ->
-                accessPolicy.enforce(context.command().annotations(), context.actor()));
+                    accessPolicy.enforce(context.command().annotations(), context.actor(), platform));
             builder.suggestionProviders(suggestionProviders -> suggestionProviders.addProviderFactoryLast((type, annotations, lamp) -> {
                 if (type instanceof Class<?> clazz) {
                     if (clazz == AbstractPlayer.class || clazz == Account.class) {
@@ -296,13 +249,15 @@ public class PluginLoader {
                 types.addParameterType(AbstractPlayer.class, (input, context) -> {
                     String name = input.readString();
                     AbstractPlayer player = playerLookup.fetchPlayer(name);
-                    if (player == null) throw CommandAccessPolicy.deny(localeManager.getMessage("general.player_not_found"));
+                    if (player == null)
+                        throw CommandAccessPolicy.deny(localeManager.getMessage("general.player_not_found"));
                     return player;
                 });
                 types.addParameterType(Account.class, (input, context) -> {
                     String name = input.readString();
                     Account account = playerLookup.fetchAccount(name);
-                    if (account == null) throw CommandAccessPolicy.deny(localeManager.getMessage("general.player_not_found"));
+                    if (account == null)
+                        throw CommandAccessPolicy.deny(localeManager.getMessage("general.player_not_found"));
                     return account;
                 });
             });
@@ -319,7 +274,6 @@ public class PluginLoader {
 
         this.staffPermissionService.initialLoad();
 
-        registerIfEnabled(configuredCommandAliases, new ModlHelpCommand(cache, this.localeManager), "modl");
         registerIfEnabled(configuredCommandAliases, new ModlReloadCommand(this.localeManager, this::reloadRuntimeConfiguration), "modl");
         registerIfEnabled(configuredCommandAliases, new BanCommand(httpClientHolder, platform, cache, this.localeManager), "ban");
         registerIfEnabled(configuredCommandAliases, new MuteCommand(httpClientHolder, platform, cache, this.localeManager), "mute");
@@ -349,7 +303,7 @@ public class PluginLoader {
         InspectCommand inspectCommand = new InspectCommand(httpClientHolder, platform, cache, this.localeManager, httpManager.getPanelUrl(), this.punishmentTypeCacheManager);
         registerIfEnabled(configuredCommandAliases, inspectCommand, "inspect");
         registerIfEnabled(configuredCommandAliases, new StaffCommand(asyncCommandExecutor, httpClientHolder, platform, cache,
-            httpManager.getPanelUrl()), "staffmenu");
+                httpManager.getPanelUrl()), "staffmenu");
         HistoryCommand historyCommand = new HistoryCommand(httpClientHolder, platform, cache, this.localeManager, this.punishmentTypeCacheManager);
         registerIfEnabled(configuredCommandAliases, historyCommand, "history");
         registerIfEnabled(configuredCommandAliases, new AltsCommand(httpClientHolder, platform, cache, this.localeManager), "alts");
@@ -373,7 +327,6 @@ public class PluginLoader {
         registerIfEnabled(configuredCommandAliases, new LocalChatCommand(platform, cache, this.localeManager, staffChatService), "localchat");
         registerIfEnabled(configuredCommandAliases, new ChatCommand(platform, cache, this.localeManager, staffChatService, chatManagementService,
                 configManager.getStaffChatConfig(), configManager.getChatManagementConfig()), "chat");
-        registerIfEnabled(configuredCommandAliases, new StaffListCommand(platform, cache, this.localeManager, vanishService, httpClientHolder, httpManager.getPanelUrl()), "stafflist");
         registerIfEnabled(configuredCommandAliases, new VerifyCommand(platform, this.localeManager, staff2faService, httpClientHolder), "verify");
         registerIfEnabled(configuredCommandAliases, new InterceptNetworkChatCommand(networkChatInterceptService, this.localeManager), "interceptnetworkchat");
         registerIfEnabled(configuredCommandAliases, new ChatLogsCommand(httpClientHolder, chatCommandLogService, this.localeManager, this.dateFormatter), "chatlogs");
@@ -385,12 +338,12 @@ public class PluginLoader {
         registerIfEnabled(configuredCommandAliases, new ReplayCommand(platform, this.localeManager, httpManager.getPanelUrl()), "replay");
 
         registerAsyncAliases(configuredCommandAliases,
-            "punish", "ban", "mute", "kick", "blacklist", "pardon", "unban", "unmute", "warn",
-            "inspect", "staffmenu", "history", "alts", "notes", "reports", "iammuted",
-            "report", "chatreport", "hackreport", "apply", "bugreport", "support", "tclaim", "standing",
-            "punishment_action", "staffchat", "localchat", "chat", "stafflist", "freeze",
-            "staffmode", "vanish", "target", "verify", "interceptnetworkchat", "chatlogs",
-            "commandlogs", "replay");
+                "punish", "ban", "mute", "kick", "blacklist", "pardon", "unban", "unmute", "warn",
+                "inspect", "staffmenu", "history", "alts", "notes", "reports", "iammuted",
+                "report", "chatreport", "hackreport", "apply", "bugreport", "support", "tclaim", "standing",
+                "punishment_action", "staffchat", "localchat", "chat", "stafflist", "freeze",
+                "staffmode", "vanish", "target", "verify", "interceptnetworkchat", "chatlogs",
+                "commandlogs", "replay");
         platform.finalizeLampRegistration(lamp);
     }
 
@@ -456,17 +409,18 @@ public class PluginLoader {
                 startupResponse = null;
             }
             if (!MinecraftRealtimeClient.canStart(localEnabled, startupResponse)) {
-                if (debugMode) logger.info("[Realtime] Startup response did not enable realtime; staying on HTTP polling only");
+                if (debugMode)
+                    logger.info("[Realtime] Startup response did not enable realtime; staying on HTTP polling only");
                 return null;
             }
 
             MinecraftRealtimeClient client = new MinecraftRealtimeClient(
-                httpManager.getApiKey(),
-                startupResponse,
-                platform,
-                syncService,
-                logger,
-                debugMode
+                    httpManager.getApiKey(),
+                    startupResponse,
+                    platform,
+                    syncService,
+                    logger,
+                    debugMode
             );
             client.start();
             if (debugMode) logger.info("[Realtime] Client started beside authoritative HTTP polling");

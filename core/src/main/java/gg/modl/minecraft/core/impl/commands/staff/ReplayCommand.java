@@ -1,28 +1,25 @@
 package gg.modl.minecraft.core.impl.commands.staff;
 
-import gg.modl.minecraft.core.PluginServices;
 import gg.modl.minecraft.api.AbstractPlayer;
 import gg.modl.minecraft.core.Platform;
+import gg.modl.minecraft.core.PluginServices;
 import gg.modl.minecraft.core.command.RequiresPermission;
-import gg.modl.minecraft.core.command.StaffOnly;
+import gg.modl.minecraft.core.command.StaffOrPermission;
 import gg.modl.minecraft.core.locale.LocaleManager;
 import gg.modl.minecraft.core.service.ReplayCaptureStatus;
 import gg.modl.minecraft.core.service.ReplayService;
 import gg.modl.minecraft.core.util.CommandUtil;
 import gg.modl.minecraft.core.util.Permissions;
 import lombok.RequiredArgsConstructor;
-import revxrsal.commands.annotation.Command;
-import revxrsal.commands.annotation.Description;
-import revxrsal.commands.annotation.Optional;
-import revxrsal.commands.annotation.Named;
-import revxrsal.commands.annotation.Subcommand;
+import revxrsal.commands.annotation.*;
 import revxrsal.commands.command.CommandActor;
 
 import java.util.UUID;
+
 import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 
 @Command("replay")
-@StaffOnly
+@StaffOrPermission(Permissions.MOD_ACTIONS)
 @RequiredArgsConstructor
 public class ReplayCommand {
     private final Platform platform;
@@ -83,10 +80,10 @@ public class ReplayCommand {
                     String hoverText = localeManager.getMessage("replay.click_to_view_hover");
                     String json = String.format(
                             "{\"text\":\"\",\"extra\":["
-                            + "{\"text\":\"\",\"color\":\"gold\"},"
-                            + "{\"text\":\"%s\",\"color\":\"aqua\",\"underlined\":true,"
-                            + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"%s\"},"
-                            + "\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"%s\"}}]}",
+                                    + "{\"text\":\"\",\"color\":\"gold\"},"
+                                    + "{\"text\":\"%s\",\"color\":\"aqua\",\"underlined\":true,"
+                                    + "\"clickEvent\":{\"action\":\"open_url\",\"value\":\"%s\"},"
+                                    + "\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"%s\"}}]}",
                             clickText.replace("\"", "\\\""), replayLink, hoverText.replace("\"", "\\\""));
                     platform.runOnMainThread(() -> platform.sendJsonMessage(actor.uniqueId(), json));
                 } else {

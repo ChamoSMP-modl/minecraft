@@ -21,7 +21,7 @@ public class Cache {
     private final Map<UUID, StaffPermissions> staffPermissionsCache = new ConcurrentHashMap<>();
     private final Object skinTextureLock = new Object();
     private final Map<UUID, CachedTexture> skinTextureCache =
-            new LinkedHashMap<UUID, CachedTexture>(16, 0.75f, true) {
+            new LinkedHashMap<>(16, 0.75f, true) {
                 @Override
                 protected boolean removeEldestEntry(Map.Entry<UUID, CachedTexture> eldest) {
                     return size() > TEXTURE_CACHE_MAX_SIZE;
@@ -33,15 +33,12 @@ public class Cache {
     private volatile PunishGuiConfig cachedPunishGuiConfig;
     @Getter
     private volatile ReportGuiConfig cachedReportGuiConfig;
+    @Getter
     private volatile Map<Integer, String> punishmentTypeItems = Collections.emptyMap();
 
     @Getter
     @Setter
     private boolean queryMojang;
-
-    public Map<Integer, String> getPunishmentTypeItems() {
-        return punishmentTypeItems;
-    }
 
     public void setPunishmentTypeItems(Map<Integer, String> items) {
         this.punishmentTypeItems = items == null
@@ -144,7 +141,7 @@ public class Cache {
     }
 
     public void cacheStaffPermissions(UUID playerUuid, String staffUsername, String staffId, String staffRole, List<String> permissions) {
-        List<String> cachedPermissions = Collections.unmodifiableList(new ArrayList<>(permissions));
+        List<String> cachedPermissions = List.copyOf(permissions);
         staffPermissionsCache.put(playerUuid, new StaffPermissions(staffUsername, staffId, staffRole, cachedPermissions));
     }
 

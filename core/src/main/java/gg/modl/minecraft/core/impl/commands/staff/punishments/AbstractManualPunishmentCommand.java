@@ -1,23 +1,24 @@
 package gg.modl.minecraft.core.impl.commands.staff.punishments;
 
-import revxrsal.commands.command.CommandActor;
 import gg.modl.minecraft.api.Account;
 import gg.modl.minecraft.api.http.ModlHttpClient;
 import gg.modl.minecraft.api.http.request.PunishmentCreateRequest;
 import gg.modl.minecraft.core.HttpClientHolder;
 import gg.modl.minecraft.core.Platform;
 import gg.modl.minecraft.core.cache.Cache;
+import gg.modl.minecraft.core.locale.LocaleManager;
 import gg.modl.minecraft.core.punishment.PunishmentFlagParser;
 import gg.modl.minecraft.core.punishment.PunishmentIssuer;
-import gg.modl.minecraft.core.locale.LocaleManager;
 import gg.modl.minecraft.core.util.CommandUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import revxrsal.commands.command.CommandActor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
 import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
@@ -28,8 +29,11 @@ public abstract class AbstractManualPunishmentCommand {
     protected final LocaleManager localeManager;
 
     protected abstract int getOrdinal();
+
     protected abstract String getTypeName();
+
     protected abstract Set<Flag> getSupportedFlags();
+
     protected abstract long getDefaultDuration();
 
     protected ModlHttpClient getHttpClient() {
@@ -44,12 +48,12 @@ public abstract class AbstractManualPunishmentCommand {
 
         Set<Flag> supportedFlags = getSupportedFlags();
         PunishmentFlagParser.Flags parsed = PunishmentFlagParser.builder()
-            .silent(true)
-            .altBlocking(supportedFlags.contains(Flag.ALT_BLOCKING))
-            .statWipe(supportedFlags.contains(Flag.STAT_WIPE))
-            .duration(supportedFlags.contains(Flag.DURATION))
-            .build()
-            .parse(args);
+                .silent(true)
+                .altBlocking(supportedFlags.contains(Flag.ALT_BLOCKING))
+                .statWipe(supportedFlags.contains(Flag.STAT_WIPE))
+                .duration(supportedFlags.contains(Flag.DURATION))
+                .build()
+                .parse(args);
 
         String issuerName = CommandUtil.resolveActorName(actor, cache, platform);
         String issuerId = CommandUtil.resolveActorId(actor, cache);
@@ -62,26 +66,25 @@ public abstract class AbstractManualPunishmentCommand {
         if (supportedFlags.contains(Flag.STAT_WIPE)) dataMap.put("wipeAfterExpiry", parsed.isStatWipe());
         long duration = parsed.getDuration() > 0 ? parsed.getDuration() : getDefaultDuration();
         if (duration > 0) dataMap.put("duration", duration);
-        dataMap.put("issuedServer", actor.uniqueId() != null
-            ? platform.getPlayerServer(actor.uniqueId())
-            : platform.getServerName());
+        actor.uniqueId();
+        dataMap.put("issuedServer", platform.getPlayerServer(actor.uniqueId()));
 
         PunishmentCreateRequest request = new PunishmentCreateRequest(
-            target.getMinecraftUuid().toString(),
-            issuerName,
-            issuerId,
-            reason,
-            null, null,
-            getOrdinal(),
-            duration,
-            dataMap,
-            new ArrayList<>(),
-            new ArrayList<>()
+                target.getMinecraftUuid().toString(),
+                issuerName,
+                issuerId,
+                reason,
+                null, null,
+                getOrdinal(),
+                duration,
+                dataMap,
+                new ArrayList<>(),
+                new ArrayList<>()
         );
 
-        String targetName = target.getUsernames().get(0).getUsername();
+        String targetName = target.getUsernames().getFirst().getUsername();
         new PunishmentIssuer(platform, localeManager)
-            .issue(actor, getHttpClient().createPunishmentWithResponse(request), getTypeName(), targetName, duration);
+                .issue(actor, getHttpClient().createPunishmentWithResponse(request), getTypeName(), targetName, duration);
     }
 
     public enum Flag {

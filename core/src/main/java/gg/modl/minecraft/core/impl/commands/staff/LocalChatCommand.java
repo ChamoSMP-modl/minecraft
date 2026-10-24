@@ -5,10 +5,11 @@ import gg.modl.minecraft.core.Platform;
 import gg.modl.minecraft.core.cache.Cache;
 import gg.modl.minecraft.core.command.ConsumeRemaining;
 import gg.modl.minecraft.core.command.PlayerOnly;
-import gg.modl.minecraft.core.command.StaffOnly;
+import gg.modl.minecraft.core.command.StaffOrPermission;
 import gg.modl.minecraft.core.locale.LocaleManager;
 import gg.modl.minecraft.core.service.StaffChatService;
 import gg.modl.minecraft.core.service.StaffChatService.ChatMode;
+import gg.modl.minecraft.core.util.Permissions;
 import lombok.RequiredArgsConstructor;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
@@ -17,9 +18,12 @@ import revxrsal.commands.command.CommandActor;
 
 import java.util.UUID;
 
-@RequiredArgsConstructor @Command("localchat") @PlayerOnly @StaffOnly
+@RequiredArgsConstructor
+@Command("localchat")
+@PlayerOnly
+@StaffOrPermission(value = Permissions.STAFF_MODE, needsPermissionOnStaff = false)
 public class LocalChatCommand {
-    private static final String LOCAL_CHAT_FORMAT = "\u00a7f<%s\u00a7f> %s";
+    private static final String LOCAL_CHAT_FORMAT = "§f<%s§f> %s";
 
     private final Platform platform;
     private final Cache cache;

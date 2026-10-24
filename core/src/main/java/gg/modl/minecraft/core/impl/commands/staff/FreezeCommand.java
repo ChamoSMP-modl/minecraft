@@ -5,6 +5,7 @@ import gg.modl.minecraft.core.Platform;
 import gg.modl.minecraft.core.cache.Cache;
 import gg.modl.minecraft.core.command.RequiresPermission;
 import gg.modl.minecraft.core.command.StaffOnly;
+import gg.modl.minecraft.core.command.StaffOrPermission;
 import gg.modl.minecraft.core.locale.LocaleManager;
 import gg.modl.minecraft.core.service.BridgeService;
 import gg.modl.minecraft.core.service.FreezeService;
@@ -20,7 +21,8 @@ import revxrsal.commands.command.CommandActor;
 import java.util.UUID;
 import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 
-@Command("freeze") @StaffOnly @RequiredArgsConstructor
+@Command("freeze") @StaffOrPermission(Permissions.MOD_ACTIONS)
+@RequiredArgsConstructor
 public class FreezeCommand {
     private final Platform platform;
     private final Cache cache;

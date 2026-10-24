@@ -3,16 +3,17 @@ package gg.modl.minecraft.core.impl.commands.staff;
 import gg.modl.minecraft.core.Platform;
 import gg.modl.minecraft.core.cache.Cache;
 import gg.modl.minecraft.core.command.RequiresPermission;
-import gg.modl.minecraft.core.command.StaffOnly;
+import gg.modl.minecraft.core.command.StaffOrPermission;
 import gg.modl.minecraft.core.config.ConfigManager.ChatManagementConfig;
 import gg.modl.minecraft.core.config.ConfigManager.StaffChatConfig;
 import gg.modl.minecraft.core.locale.LocaleManager;
 import gg.modl.minecraft.core.service.ChatManagementService;
 import gg.modl.minecraft.core.service.StaffChatService;
 import gg.modl.minecraft.core.service.StaffChatService.ChatMode;
-import gg.modl.minecraft.core.util.CommandUtil;
 import gg.modl.minecraft.core.staff.StaffCommandUtil;
 import gg.modl.minecraft.core.staff.StaffCommandUtil.StaffDisplay;
+import gg.modl.minecraft.core.util.CommandUtil;
+import gg.modl.minecraft.core.util.Permissions;
 import lombok.RequiredArgsConstructor;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
@@ -22,9 +23,12 @@ import revxrsal.commands.command.CommandActor;
 
 import java.util.Collections;
 import java.util.UUID;
+
 import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 
-@RequiredArgsConstructor @Command("chat") @StaffOnly
+@RequiredArgsConstructor
+@Command("chat")
+@StaffOrPermission(value = Permissions.STAFF_CHAT, needsPermissionOnStaff = false)
 public class ChatCommand {
     private final Platform platform;
     private final Cache cache;
@@ -65,7 +69,7 @@ public class ChatCommand {
 
     @Subcommand("toggle")
     @Description("Toggle public chat on or off")
-    @RequiresPermission("staff.chat.toggle")
+    @RequiresPermission(Permissions.STAFF_CHAT_TOGGLE)
     public void toggle(CommandActor actor) {
         boolean newState = chatManagementService.toggleChat();
 
@@ -73,14 +77,14 @@ public class ChatCommand {
 
         String messageKey = newState ? "chat_management.chat_toggled_on" : "chat_management.chat_toggled_off";
         platform.broadcast(localeManager.getMessage(messageKey, mapOf(
-                    "staff", display.getPanelName(),
-                    "in-game-name", display.getInGameName()
-            )));
+                "staff", display.getPanelName(),
+                "in-game-name", display.getInGameName()
+        )));
     }
 
     @Subcommand("clear")
     @Description("Clear the chat")
-    @RequiresPermission("staff.chat.clear")
+    @RequiresPermission(Permissions.STAFF_CHAT_CLEAR)
     public void clear(CommandActor actor, @Optional String countArg) {
         if (countArg == null) countArg = "";
         int lines = parseClearLineCount(countArg);
@@ -96,7 +100,7 @@ public class ChatCommand {
 
     @Subcommand("slow")
     @Description("Set or disable slow mode")
-    @RequiresPermission("staff.chat.slow")
+    @RequiresPermission(Permissions.STAFF_CHAT_SLOW)
     public void slow(CommandActor actor, @Optional String secondsArg) {
         if (secondsArg == null) secondsArg = "";
         StaffDisplay display = StaffCommandUtil.resolveActorDisplay(actor, platform, cache, "Console", "Staff", true);

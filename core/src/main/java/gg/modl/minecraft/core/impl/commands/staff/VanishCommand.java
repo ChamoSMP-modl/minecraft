@@ -4,14 +4,14 @@ import gg.modl.minecraft.core.Platform;
 import gg.modl.minecraft.core.cache.Cache;
 import gg.modl.minecraft.core.command.PlayerOnly;
 import gg.modl.minecraft.core.command.RequiresPermission;
-import gg.modl.minecraft.core.command.StaffOnly;
+import gg.modl.minecraft.core.command.StaffOrPermission;
 import gg.modl.minecraft.core.locale.LocaleManager;
 import gg.modl.minecraft.core.service.BridgeService;
 import gg.modl.minecraft.core.service.VanishService;
-import gg.modl.minecraft.core.util.Constants;
-import gg.modl.minecraft.core.util.Permissions;
 import gg.modl.minecraft.core.staff.StaffCommandUtil;
 import gg.modl.minecraft.core.staff.StaffCommandUtil.StaffDisplay;
+import gg.modl.minecraft.core.util.Constants;
+import gg.modl.minecraft.core.util.Permissions;
 import lombok.RequiredArgsConstructor;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
@@ -19,7 +19,10 @@ import revxrsal.commands.command.CommandActor;
 
 import java.util.UUID;
 
-@Command("vanish") @PlayerOnly @StaffOnly @RequiredArgsConstructor
+@Command("vanish")
+@PlayerOnly
+@StaffOrPermission(Permissions.MOD_ACTIONS)
+@RequiredArgsConstructor
 public class VanishCommand {
     private final Platform platform;
     private final Cache cache;

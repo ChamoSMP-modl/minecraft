@@ -2,34 +2,34 @@ package gg.modl.minecraft.velocity;
 
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.util.GameProfile;
 import dev.simplix.cirrus.player.CirrusPlayerWrapper;
 import dev.simplix.cirrus.velocity.wrapper.VelocityPlayerWrapper;
 import gg.modl.minecraft.api.AbstractPlayer;
 import gg.modl.minecraft.api.DatabaseProvider;
 import gg.modl.minecraft.core.Platform;
+import gg.modl.minecraft.core.StaffAudience;
+import gg.modl.minecraft.core.integration.mojang.MojangProfiles;
+import gg.modl.minecraft.core.integration.mojang.WebPlayer;
+import gg.modl.minecraft.core.service.database.LiteBansDatabaseProvider;
+import gg.modl.minecraft.core.util.PluginLogger;
+import gg.modl.minecraft.core.util.StringUtil;
+import lombok.Setter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import org.slf4j.Logger;
 import revxrsal.commands.Lamp;
 import revxrsal.commands.command.CommandActor;
 import revxrsal.commands.velocity.VelocityLamp;
 import revxrsal.commands.velocity.VelocityVisitors;
 import revxrsal.commands.velocity.actor.VelocityCommandActor;
-import gg.modl.minecraft.core.StaffAudience;
-import gg.modl.minecraft.core.service.database.LiteBansDatabaseProvider;
-import gg.modl.minecraft.core.util.StringUtil;
-import gg.modl.minecraft.core.integration.mojang.MojangProfiles;
-import gg.modl.minecraft.core.integration.mojang.WebPlayer;
-import lombok.Setter;
-import net.kyori.adventure.text.Component;
-import org.slf4j.Logger;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.io.File;
 import java.util.Collection;
 import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import com.velocitypowered.api.util.GameProfile;
-import gg.modl.minecraft.core.util.PluginLogger;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 
 public class VelocityPlatform implements Platform {
     private final ProxyServer server;
@@ -73,22 +73,27 @@ public class VelocityPlatform implements Platform {
     @Override
     public void staffBroadcast(String string) {
         server.getAllPlayers().stream()
-            .filter(this::isAuthenticatedStaff)
-            .forEach(player -> player.sendMessage(colorize(string)));
+                .filter(this::isAuthenticatedStaff)
+                .forEach(player -> player.sendMessage(colorize(string)));
     }
 
     @Override
     public void connectToServer(UUID playerUuid, String serverName) {
         server.getPlayer(playerUuid).ifPresent(player ->
-            server.getServer(serverName).ifPresent(srv ->
-                player.createConnectionRequest(srv).fireAndForget()));
+                server.getServer(serverName).ifPresent(srv ->
+                        player.createConnectionRequest(srv).fireAndForget()));
+    }
+
+    @Override
+    public boolean hasPermission(CommandActor actor, String permission) {
+        return server.getPlayer(actor.uniqueId()).orElseThrow().hasPermission(permission);
     }
 
     @Override
     public void staffJsonBroadcast(String jsonMessage) {
         server.getAllPlayers().stream()
-            .filter(this::isAuthenticatedStaff)
-            .forEach(player -> sendJsonToPlayer(player, jsonMessage));
+                .filter(this::isAuthenticatedStaff)
+                .forEach(player -> sendJsonToPlayer(player, jsonMessage));
     }
 
     @Override
@@ -242,9 +247,9 @@ public class VelocityPlatform implements Platform {
     @Override
     public String getPlayerServer(UUID uuid) {
         return server.getPlayer(uuid)
-            .flatMap(Player::getCurrentServer)
-            .map(conn -> conn.getServerInfo().getName())
-            .orElse(getServerName());
+                .flatMap(Player::getCurrentServer)
+                .map(conn -> conn.getServerInfo().getName())
+                .orElse(getServerName());
     }
 
     @Override

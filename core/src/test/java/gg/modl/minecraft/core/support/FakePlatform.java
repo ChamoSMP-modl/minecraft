@@ -228,6 +228,11 @@ public class FakePlatform implements Platform {
         return null;
     }
 
+    @Override
+    public boolean hasPermission(CommandActor actor, String permission) {
+        return true;
+    }
+
     public record JsonMessage(UUID uuid, String json) {
     }
 

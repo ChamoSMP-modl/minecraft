@@ -28,3 +28,118 @@ permissions:
   modl.bridge.reload:
     description: Reload the modl bridge configuration
     default: op
+
+  modl.admin:
+    default: false
+    children:
+      modl.admin.settings.view: false
+      modl.admin.settings.view.billing: false
+      modl.admin.settings.modify: false
+      modl.admin.settings.modify.punishments: false
+      modl.admin.settings.modify.content: false
+      modl.admin.settings.modify.domain: false
+      modl.admin.settings.modify.billing: false
+      modl.admin.settings.modify.migration: false
+      modl.admin.settings.modify.storage: false
+      modl.admin.staff.manage: false
+      modl.admin.staff.manage.members: false
+      modl.admin.staff.manage.roles: false
+      modl.admin.audit.view: false
+      modl.admin.audit.view.dashboard: false
+      modl.admin.audit.view.analytics: false
+      modl.admin.audit.view.logs: false
+
+  modl.staff.modactions:
+    default: false
+
+  modl.staff.chatlogs:
+    default: false
+
+  modl.staff.commandlogs:
+    default: false
+
+  modl.staff.intercept:
+    default: false
+
+  modl.staff.chat.toggle:
+    default: false
+
+  modl.staff.chat.clear:
+    default: false
+
+  modl.staff.chat.slow:
+    default: false
+
+  modl.staff.menu:
+    default: false
+
+  modl.staff.chat:
+    default: false
+
+  modl.staff.alts:
+    default: false
+
+  modl.staff.notes:
+    default: false
+
+  modl.staff.reports:
+    default: false
+
+  modl.staff.punish:
+    default: false
+
+  modl.staff.warn:
+    default: false
+
+  modl.staff.staffmode:
+    default: false
+
+  modl.staff.history:
+    default: false
+
+  modl.punishment.modify:
+    default: false
+    children:
+      modl.punishment.modify.pardon: false
+      modl.punishment.modify.duration: false
+      modl.punishment.modify.note: false
+      modl.punishment.modify.evidence: false
+      modl.punishment.modify.options: false
+      modl.punishment.modify.tickets: false
+
+  modl.punishment.apply.manual-ban:
+    default: false
+
+  modl.punishment.apply.blacklist:
+    default: false
+
+  modl.punishment.apply.kick:
+    default: false
+
+  modl.punishment.apply.manual-mute:
+    default: false
+
+  modl.ticket.view.all:
+    default: false
+    children:
+      modl.ticket.view.all.notes: false
+
+  modl.ticket.reply.all:
+    default: false
+    children:
+      modl.ticket.reply.all.notes: false
+
+  modl.ticket.close.all:
+    default: false
+    children:
+      modl.ticket.close.all.lock: false
+
+  modl.ticket.manage:
+    default: false
+    children:
+      modl.ticket.manage.tags: false
+      modl.ticket.manage.hide: false
+      modl.ticket.manage.subscribe: false
+
+  modl.ticket.delete.all:
+    default: false

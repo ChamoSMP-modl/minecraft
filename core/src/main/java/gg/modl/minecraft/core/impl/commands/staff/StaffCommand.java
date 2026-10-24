@@ -7,7 +7,7 @@ import gg.modl.minecraft.core.Platform;
 import gg.modl.minecraft.core.PluginServices;
 import gg.modl.minecraft.core.cache.Cache;
 import gg.modl.minecraft.core.command.PlayerOnly;
-import gg.modl.minecraft.core.command.StaffOnly;
+import gg.modl.minecraft.core.command.StaffOrPermission;
 import gg.modl.minecraft.core.impl.menus.staff.StaffMenu;
 import gg.modl.minecraft.core.util.CommandUtil;
 import gg.modl.minecraft.core.util.Permissions;
@@ -28,7 +28,8 @@ public class StaffCommand {
 
     @Command("staffmenu")
     @Description("Open the staff menu")
-    @PlayerOnly @StaffOnly
+    @PlayerOnly
+    @StaffOrPermission(value = Permissions.STAFF_MENU, needsPermissionOnStaff = false)
     public void staff(CommandActor actor) {
         if (!platform.areMenusAvailable()) {
             actor.reply(PluginServices.locale().getMessage("general.gui_unavailable"));
@@ -41,8 +42,8 @@ public class StaffCommand {
 
         commandExecutor.execute(() -> {
             StaffMenu menu = new StaffMenu(
-                platform, httpClientHolder.client(), senderUuid, senderName,
-                isAdmin, panelUrl, null
+                    platform, httpClientHolder.client(), senderUuid, senderName,
+                    isAdmin, panelUrl, null
             );
             CirrusPlayerWrapper player = platform.getPlayerWrapper(senderUuid);
             menu.display(player);

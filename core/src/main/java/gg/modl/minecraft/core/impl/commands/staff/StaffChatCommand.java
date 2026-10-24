@@ -3,14 +3,15 @@ package gg.modl.minecraft.core.impl.commands.staff;
 import gg.modl.minecraft.core.Platform;
 import gg.modl.minecraft.core.cache.Cache;
 import gg.modl.minecraft.core.command.ConsumeRemaining;
-import gg.modl.minecraft.core.command.StaffOnly;
+import gg.modl.minecraft.core.command.StaffOrPermission;
 import gg.modl.minecraft.core.config.ConfigManager.StaffChatConfig;
 import gg.modl.minecraft.core.locale.LocaleManager;
 import gg.modl.minecraft.core.service.StaffChatService;
 import gg.modl.minecraft.core.service.StaffChatService.ChatMode;
-import gg.modl.minecraft.core.util.CommandUtil;
 import gg.modl.minecraft.core.staff.StaffCommandUtil;
 import gg.modl.minecraft.core.staff.StaffCommandUtil.StaffDisplay;
+import gg.modl.minecraft.core.util.CommandUtil;
+import gg.modl.minecraft.core.util.Permissions;
 import lombok.RequiredArgsConstructor;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
@@ -19,7 +20,9 @@ import revxrsal.commands.command.CommandActor;
 
 import java.util.UUID;
 
-@RequiredArgsConstructor @Command("staffchat") @StaffOnly
+@RequiredArgsConstructor
+@Command("staffchat")
+@StaffOrPermission(value = Permissions.STAFF_CHAT, needsPermissionOnStaff = false)
 public class StaffChatCommand {
     private final Platform platform;
     private final Cache cache;

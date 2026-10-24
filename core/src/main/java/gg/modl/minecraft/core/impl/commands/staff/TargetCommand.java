@@ -6,6 +6,7 @@ import gg.modl.minecraft.core.cache.Cache;
 import gg.modl.minecraft.core.command.PlayerOnly;
 import gg.modl.minecraft.core.command.RequiresPermission;
 import gg.modl.minecraft.core.command.StaffOnly;
+import gg.modl.minecraft.core.command.StaffOrPermission;
 import gg.modl.minecraft.core.locale.LocaleManager;
 import gg.modl.minecraft.core.service.BridgeService;
 import gg.modl.minecraft.core.service.StaffModeService;
@@ -21,7 +22,8 @@ import revxrsal.commands.command.CommandActor;
 import java.util.UUID;
 import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 
-@Command("target") @PlayerOnly @StaffOnly @RequiredArgsConstructor
+@Command("target") @PlayerOnly @StaffOrPermission(Permissions.MOD_ACTIONS)
+@RequiredArgsConstructor
 public class TargetCommand {
     private final Platform platform;
     private final Cache cache;

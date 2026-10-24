@@ -5,24 +5,26 @@ import gg.modl.minecraft.api.http.PanelUnavailableException;
 import gg.modl.minecraft.api.http.request.PlayerLookupRequest;
 import gg.modl.minecraft.core.HttpClientHolder;
 import gg.modl.minecraft.core.Platform;
-import gg.modl.minecraft.core.cache.CachedProfile;
 import gg.modl.minecraft.core.cache.Cache;
-import gg.modl.minecraft.core.command.StaffOnly;
+import gg.modl.minecraft.core.cache.CachedProfile;
+import gg.modl.minecraft.core.command.StaffOrPermission;
 import gg.modl.minecraft.core.impl.menus.inspect.AltsMenu;
 import gg.modl.minecraft.core.impl.menus.util.MenuAsync;
 import gg.modl.minecraft.core.locale.LocaleManager;
 import gg.modl.minecraft.core.util.CommandUtil;
 import gg.modl.minecraft.core.util.Constants;
 import gg.modl.minecraft.core.util.Pagination;
+import gg.modl.minecraft.core.util.Permissions;
 import lombok.RequiredArgsConstructor;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
-import revxrsal.commands.annotation.Optional;
 import revxrsal.commands.annotation.Named;
+import revxrsal.commands.annotation.Optional;
 import revxrsal.commands.command.CommandActor;
 
 import java.util.List;
 import java.util.UUID;
+
 import static gg.modl.minecraft.core.util.Java8Collections.listOf;
 import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 
@@ -38,7 +40,7 @@ public class AltsCommand {
 
     @Command("alts")
     @Description("Open the alts menu for a player, or use -p to print to chat")
-    @StaffOnly
+    @StaffOrPermission(value = Permissions.STAFF_ALTS, needsPermissionOnStaff = false)
     public void alts(CommandActor actor, @Named("player") String playerQuery, @Optional String flags) {
         if (flags == null) flags = "";
         int page = Pagination.parsePrintFlags(flags);
@@ -53,8 +55,8 @@ public class AltsCommand {
         ProfileMenuOpener.openProfileMenu(actor, httpClientHolder.client(), platform, cache, localeManager, playerQuery,
                 (profileResponse, senderName, viewer) -> {
                     AltsMenu menu = new AltsMenu(
-                        platform, httpClientHolder.client(), senderUuid, senderName,
-                        profileResponse.getProfile(), null);
+                            platform, httpClientHolder.client(), senderUuid, senderName,
+                            profileResponse.getProfile(), null);
                     MenuAsync.displayWhenLoaded(platform, menu.getDataFuture(), viewer, menu::display);
                 });
     }
@@ -70,7 +72,8 @@ public class AltsCommand {
                 UUID targetUuid = UUID.fromString(response.getData().getMinecraftUuid());
 
                 httpClientHolder.client().getLinkedAccounts(targetUuid).thenAccept(linkedResponse -> displayAlts(actor, playerName, linkedResponse.getLinkedAccounts(), page)).exceptionally(throwable -> {
-                    if (throwable.getCause() instanceof PanelUnavailableException) actor.reply(localeManager.getMessage("api_errors.panel_restarting"));
+                    if (throwable.getCause() instanceof PanelUnavailableException)
+                        actor.reply(localeManager.getMessage("api_errors.panel_restarting"));
                     else displayAlts(actor, playerName, listOf(), page);
                     return null;
                 });
@@ -84,7 +87,8 @@ public class AltsCommand {
     private void displayAlts(CommandActor actor, String playerName, List<Account> linkedAccounts, int page) {
         actor.reply(localeManager.getMessage("print.alts.header", mapOf("player", playerName)));
 
-        if (linkedAccounts == null || linkedAccounts.isEmpty()) actor.reply(localeManager.getMessage("print.alts.empty"));
+        if (linkedAccounts == null || linkedAccounts.isEmpty())
+            actor.reply(localeManager.getMessage("print.alts.empty"));
         else PaginatedChatPrinter.printPageWithTotal(actor, localeManager, linkedAccounts, ENTRIES_PER_PAGE, page,
                 "print.alts.total", (index, ordinal) -> replyAltEntry(actor, linkedAccounts.get(index), ordinal));
 

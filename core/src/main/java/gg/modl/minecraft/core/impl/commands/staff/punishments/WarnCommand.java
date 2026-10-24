@@ -1,9 +1,5 @@
 package gg.modl.minecraft.core.impl.commands.staff.punishments;
 
-import revxrsal.commands.annotation.Command;
-import revxrsal.commands.annotation.Named;
-import revxrsal.commands.annotation.Optional;
-import revxrsal.commands.command.CommandActor;
 import gg.modl.minecraft.api.AbstractPlayer;
 import gg.modl.minecraft.api.Account;
 import gg.modl.minecraft.api.http.PanelUnavailableException;
@@ -12,11 +8,16 @@ import gg.modl.minecraft.core.HttpClientHolder;
 import gg.modl.minecraft.core.Platform;
 import gg.modl.minecraft.core.cache.Cache;
 import gg.modl.minecraft.core.command.ConsumeRemaining;
-import gg.modl.minecraft.core.command.StaffOnly;
+import gg.modl.minecraft.core.command.StaffOrPermission;
 import gg.modl.minecraft.core.locale.LocaleManager;
 import gg.modl.minecraft.core.punishment.PunishmentFlagParser;
 import gg.modl.minecraft.core.util.CommandUtil;
+import gg.modl.minecraft.core.util.Permissions;
 import lombok.RequiredArgsConstructor;
+import revxrsal.commands.annotation.Command;
+import revxrsal.commands.annotation.Named;
+import revxrsal.commands.annotation.Optional;
+import revxrsal.commands.command.CommandActor;
 
 import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 
@@ -30,7 +31,7 @@ public class WarnCommand {
     private final Cache cache;
     private final LocaleManager localeManager;
 
-    @StaffOnly
+    @StaffOrPermission(value = Permissions.WARN, needsPermissionOnStaff = false)
     public void warn(CommandActor actor, @Named("target") Account target, @Optional @ConsumeRemaining String args) {
         if (target == null) {
             actor.reply(localeManager.getPunishmentMessage("general.player_not_found", mapOf()));
@@ -47,7 +48,7 @@ public class WarnCommand {
         final String issuerId = CommandUtil.resolveActorId(actor, cache);
 
         CreatePlayerNoteRequest noteRequest = new CreatePlayerNoteRequest(
-            target.getMinecraftUuid().toString(), issuerName, issuerId, WARNING_NOTE_PREFIX + warnArgs.getReason()
+                target.getMinecraftUuid().toString(), issuerName, issuerId, WARNING_NOTE_PREFIX + warnArgs.getReason()
         );
 
         httpClientHolder.client().createPlayerNote(noteRequest).thenAccept(response -> {
@@ -58,21 +59,22 @@ public class WarnCommand {
                 notifyTargetIfOnline(target, issuerName, warnArgs.getReason());
 
                 actor.reply(localeManager.getMessage("warn.success", mapOf(
-                    "target", targetName, "reason", warnArgs.getReason()
+                        "target", targetName, "reason", warnArgs.getReason()
                 )));
 
                 if (!warnArgs.isSilent()) {
                     platform.staffBroadcast(localeManager.getMessage("warn.staff_notification", mapOf(
-                        "issuer", issuerName, "target", targetName, "reason", warnArgs.getReason()
+                            "issuer", issuerName, "target", targetName, "reason", warnArgs.getReason()
                     )));
                 }
             });
         }).exceptionally(throwable -> {
             platform.runOnMainThread(() -> {
-                if (throwable.getCause() instanceof PanelUnavailableException) actor.reply(localeManager.getMessage("api_errors.panel_restarting"));
+                if (throwable.getCause() instanceof PanelUnavailableException)
+                    actor.reply(localeManager.getMessage("api_errors.panel_restarting"));
                 else actor.reply(localeManager.getMessage("warn.error", mapOf(
                         "error", localeManager.sanitizeErrorMessage(throwable.getMessage())
-                    )));
+                )));
             });
             return null;
         });
@@ -82,7 +84,7 @@ public class WarnCommand {
         AbstractPlayer targetPlayer = platform.getAbstractPlayer(target.getMinecraftUuid(), false);
         if (targetPlayer != null && targetPlayer.online()) {
             platform.sendMessage(target.getMinecraftUuid(), localeManager.getMessage("warn.player_message", mapOf(
-                "issuer", issuerName, "reason", reason
+                    "issuer", issuerName, "reason", reason
             )));
         }
     }

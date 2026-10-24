@@ -2,24 +2,25 @@ package gg.modl.minecraft.core.impl.commands.staff;
 
 import gg.modl.minecraft.api.http.ChatLogEntry;
 import gg.modl.minecraft.core.HttpClientHolder;
-import gg.modl.minecraft.core.command.RequiresPermission;
-import gg.modl.minecraft.core.command.StaffOnly;
+import gg.modl.minecraft.core.command.StaffOrPermission;
 import gg.modl.minecraft.core.locale.LocaleManager;
 import gg.modl.minecraft.core.service.ChatCommandLogService;
 import gg.modl.minecraft.core.util.DateFormatter;
 import gg.modl.minecraft.core.util.Permissions;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
-import revxrsal.commands.annotation.Optional;
 import revxrsal.commands.annotation.Named;
+import revxrsal.commands.annotation.Optional;
 import revxrsal.commands.command.CommandActor;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+
 import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 
-@Command("chatlogs") @StaffOnly
+@Command("chatlogs")
+@StaffOrPermission(value = Permissions.CHAT_LOGS, needsPermissionOnStaff = false)
 public class ChatLogsCommand extends AbstractLogCommand<ChatLogEntry> {
     private final ChatCommandLogService logService;
 
@@ -29,21 +30,30 @@ public class ChatLogsCommand extends AbstractLogCommand<ChatLogEntry> {
     }
 
     @Description("View recent chat messages for a player")
-    @RequiresPermission(Permissions.CHAT_LOGS)
     public void chatLogs(CommandActor actor, @Named("player") String playerQuery, @Optional String pageArg) {
         if (pageArg == null) pageArg = "1";
         execute(actor, playerQuery, pageArg);
     }
 
-    @Override protected String localePrefix() { return "chat_logs"; }
+    @Override
+    protected String localePrefix() {
+        return "chat_logs";
+    }
 
     @Override
     protected CompletableFuture<List<ChatLogEntry>> fetchEntries(String uuid) {
         return logService.getChatLogs(httpClientHolder, uuid, 200);
     }
 
-    @Override protected long getTimestamp(ChatLogEntry entry) { return entry.getTimestamp(); }
-    @Override protected String getServer(ChatLogEntry entry) { return entry.getServer(); }
+    @Override
+    protected long getTimestamp(ChatLogEntry entry) {
+        return entry.getTimestamp();
+    }
+
+    @Override
+    protected String getServer(ChatLogEntry entry) {
+        return entry.getServer();
+    }
 
     @Override
     protected Map<String, String> entryPlaceholders(ChatLogEntry entry, String playerName, String timestamp, String server) {
