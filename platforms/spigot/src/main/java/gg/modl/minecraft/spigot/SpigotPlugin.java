@@ -15,6 +15,7 @@ import gg.modl.minecraft.core.login.LoginPipeline;
 import gg.modl.minecraft.core.plugin.PluginInfo;
 import gg.modl.minecraft.core.service.ChatMessageCache;
 import gg.modl.minecraft.core.util.PluginLogger;
+import gg.modl.minecraft.spigot.api.ApiRegistrar;
 import gg.modl.minecraft.spigot.boot.SignedVelocityBootstrap;
 import gg.modl.minecraft.spigot.boot.TicketCreatorFactory;
 import gg.modl.minecraft.spigot.bridge.BridgeComponent;
@@ -124,11 +125,19 @@ public class SpigotPlugin extends JavaPlugin {
 
         signedVelocityBootstrap.init(bootConfig);
 
+        HttpManager httpManager = new HttpManager(
+                bootConfig.getApiKey(),
+                panelUrl,
+                getConfig().getBoolean("debug", false),
+                bootConfig.isTestingApi(),
+                getConfig().getBoolean("server.query_mojang", false)
+        );
+
         if (mode == BootConfig.Mode.STANDALONE) {
             saveDefaultConfig();
             createLocaleFiles();
             mergeDefaultConfigs();
-            enableStandaloneMode(bootConfig, panelUrl, lateBootstrap);
+            enableStandaloneMode(lateBootstrap, httpManager);
         } else if (mode == BootConfig.Mode.BRIDGE_ONLY) {
             mergeBootConfig();
             enableBridgeOnlyMode(bootConfig);
@@ -144,16 +153,11 @@ public class SpigotPlugin extends JavaPlugin {
         }
 
         getLogger().info("Successfully booted modl.gg platform plugin!");
+
+        new ApiRegistrar(this, httpManager).register();
     }
 
-    private void enableStandaloneMode(BootConfig bootConfig, String panelUrl, boolean lateBootstrap) {
-        HttpManager httpManager = new HttpManager(
-                bootConfig.getApiKey(),
-                panelUrl,
-                getConfig().getBoolean("debug", false),
-                bootConfig.isTestingApi(),
-                getConfig().getBoolean("server.query_mojang", false)
-        );
+    private void enableStandaloneMode(boolean lateBootstrap, HttpManager httpManager) {
 
         new CirrusSpigot(this).init();
 

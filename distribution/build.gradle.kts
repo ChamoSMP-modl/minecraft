@@ -7,6 +7,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":api"))
     implementation(project(":core"))
     implementation(project(":bridge-core"))
     implementation(project(":platforms:spigot"))
