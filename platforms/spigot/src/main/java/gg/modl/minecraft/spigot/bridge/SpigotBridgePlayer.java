@@ -11,10 +11,6 @@ import java.util.UUID;
 public class SpigotBridgePlayer implements BridgePlayer {
     private final Player player;
 
-    public Player getBukkitPlayer() {
-        return player;
-    }
-
     @Override
     public UUID getUniqueId() {
         return player.getUniqueId();

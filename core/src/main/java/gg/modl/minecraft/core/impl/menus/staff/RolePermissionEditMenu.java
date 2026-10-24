@@ -90,24 +90,24 @@ public class RolePermissionEditMenu extends BaseStaffListMenu<RolePermissionEdit
 
     public RolePermissionEditMenu(Platform platform, ModlHttpClient httpClient, UUID viewerUuid, String viewerName,
                                    boolean isAdmin, String panelUrl, RoleListMenu.Role role, Consumer<CirrusPlayerWrapper> backAction) {
-        super("Edit: " + role.getName(), platform, httpClient, viewerUuid, viewerName, isAdmin, panelUrl, backAction);
+        super("Edit: " + role.name(), platform, httpClient, viewerUuid, viewerName, isAdmin, panelUrl, backAction);
         this.role = role;
         activeTab = StaffTab.SETTINGS;
 
         Cache cache = PluginServices.cache();
-        boolean isSuperAdmin = role.getId() != null && role.getId().contains("super-admin");
+        boolean isSuperAdmin = role.id() != null && role.id().contains("super-admin");
         this.hasPermission = !isSuperAdmin && cache != null && cache.hasPermission(viewerUuid, Permissions.SETTINGS_MODIFY);
 
-        enabledPermissions = new HashSet<>(role.getPermissions());
-        originalPermissions = new HashSet<>(role.getPermissions());
+        enabledPermissions = new HashSet<>(role.permissions());
+        originalPermissions = new HashSet<>(role.permissions());
 
         Set<String> allNodes = new LinkedHashSet<>(AVAILABLE_PERMISSIONS);
-        for (String perm : role.getPermissions())
+        for (String perm : role.permissions())
             if (perm.startsWith("punishment.apply.")) allNodes.add(perm);
 
         if (cache != null && cache.getCachedPunishmentTypes() != null && cache.getCachedPunishmentTypes().getData() != null)
             for (PunishmentTypesResponse.PunishmentTypeData type : cache.getCachedPunishmentTypes().getData()) {
-                String permNode = "punishment.apply." + type.getName().toLowerCase().replace(" ", "-");
+                String permNode = "punishment.apply." + type.name().toLowerCase().replace(" ", "-");
                 allNodes.add(permNode);
             }
 
@@ -209,7 +209,7 @@ public class RolePermissionEditMenu extends BaseStaffListMenu<RolePermissionEdit
         storeOnlyExplicitlyToggledNode(permission.getNode(), newState);
 
         RoleListMenu.Role localRole = new RoleListMenu.Role(
-                role.getId(), role.getName(), role.getDescription(), new ArrayList<>(enabledPermissions));
+                role.id(), role.name(), role.description(), new ArrayList<>(enabledPermissions));
         RolePermissionEditMenu newMenu = new RolePermissionEditMenu(
                 platform, httpClient, viewerUuid, viewerName, isAdmin, panelUrl, localRole, backAction);
         newMenu.originalPermissions.clear();
@@ -243,10 +243,10 @@ public class RolePermissionEditMenu extends BaseStaffListMenu<RolePermissionEdit
             return;
         }
 
-        sendMessage(MenuItems.COLOR_YELLOW + "Saving permissions for " + role.getName() + "...");
+        sendMessage(MenuItems.COLOR_YELLOW + "Saving permissions for " + role.name() + "...");
 
         String actingStaffId = PluginServices.cache() != null ? PluginServices.cache().getStaffId(viewerUuid) : null;
-        httpClient.updateRolePermissions(role.getId(), new ArrayList<>(enabledPermissions), actingStaffId).thenAccept(v -> {
+        httpClient.updateRolePermissions(role.id(), new ArrayList<>(enabledPermissions), actingStaffId).thenAccept(v -> {
             sendMessage(MenuItems.COLOR_GREEN + "Permissions saved successfully!");
             if (backAction != null) backAction.accept(click.player());
         }).exceptionally(e -> {

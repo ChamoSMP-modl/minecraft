@@ -3,7 +3,6 @@ package gg.modl.minecraft.core.service;
 import gg.modl.minecraft.api.DatabaseProvider;
 import gg.modl.minecraft.core.util.Constants;
 import lombok.Builder;
-import lombok.Value;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -213,37 +212,21 @@ final class LiteBansMigrationRepository {
         }
     }
 
-    @Value
     @Builder
-    static class PlayerRecord {
-        String minecraftUuid;
-        List<UsernameRecord> usernames;
-        List<IpRecord> ipList;
-        List<PunishmentRecord> punishments;
+    record PlayerRecord(String minecraftUuid, List<UsernameRecord> usernames, List<IpRecord> ipList,
+                        List<PunishmentRecord> punishments) {
     }
 
-    @Value
-    static class UsernameRecord {
-        String username, date;
+    record UsernameRecord(String username, String date) {
     }
 
-    @Value
-    static class IpRecord {
-        String ipAddress, country, region, asn;
-        boolean proxy, hosting;
-        String firstLogin;
-        Set<String> logins;
+    record IpRecord(String ipAddress, String country, String region, String asn, boolean proxy, boolean hosting,
+                    String firstLogin, Set<String> logins) {
     }
 
-    @Value
     @Builder
-    static class PunishmentRecord {
-        String id, type, reason, issued, issuerName, started;
-        int typeOrdinal;
-        long duration;
-        Map<String, Object> data;
-        List<Map<String, Object>> notes;
-        List<Object> evidence;
-        List<String> attachedTicketIds;
+    record PunishmentRecord(String id, String type, String reason, String issued, String issuerName, String started,
+                            int typeOrdinal, long duration, Map<String, Object> data, List<Map<String, Object>> notes,
+                            List<Object> evidence, List<String> attachedTicketIds) {
     }
 }

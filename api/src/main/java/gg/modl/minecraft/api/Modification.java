@@ -8,11 +8,17 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
 
-@NoArgsConstructor @AllArgsConstructor @Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
 public final class Modification {
+
     private @SerializedName("type") Type type;
+
     private @SerializedName("issuerName") String issuer;
+
     private @SerializedName("date") Date issued;
+
     private @Nullable @SerializedName("effectiveDuration") Long effectiveDuration;
 
     public enum Type {

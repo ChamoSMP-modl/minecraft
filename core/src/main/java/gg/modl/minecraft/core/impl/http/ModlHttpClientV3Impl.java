@@ -147,13 +147,13 @@ public class ModlHttpClientV3Impl extends AbstractModlHttpTransport implements M
 
     @NotNull @Override
     public CompletableFuture<PlayerGetResponse> getPlayer(@NotNull PlayerGetRequest request) {
-        return get("/minecraft/players?minecraftUuid=" + request.getMinecraftUuid() + "&queryMojang=true",
+        return get("/minecraft/players?minecraftUuid=" + request.minecraftUuid() + "&queryMojang=true",
             gg.modl.proto.modl.v1.PlayerGetResponse.parser(), PlayerProtoMapper::toPlayerGetResponse);
     }
 
     @NotNull @Override
     public CompletableFuture<PlayerNameResponse> getPlayer(@NotNull PlayerNameRequest request) {
-        return get("/minecraft/players/by-name?username=" + request.getMinecraftUsername() + "&queryMojang=true",
+        return get("/minecraft/players/by-name?username=" + request.minecraftUsername() + "&queryMojang=true",
             gg.modl.proto.modl.v1.PlayerNameResponse.parser(), PlayerProtoMapper::toPlayerNameResponse);
     }
 
@@ -171,13 +171,13 @@ public class ModlHttpClientV3Impl extends AbstractModlHttpTransport implements M
 
     @NotNull @Override
     public CompletableFuture<Void> createPlayerNote(@NotNull CreatePlayerNoteRequest request) {
-        return postVoid("/minecraft/players/" + request.getTargetUuid() + "/notes",
+        return postVoid("/minecraft/players/" + request.targetUuid() + "/notes",
             PlayerProtoMapper.toProto(request).toByteArray());
     }
 
     @NotNull @Override
     public CompletableFuture<PlayerNoteCreateResponse> createPlayerNoteWithResponse(@NotNull CreatePlayerNoteRequest request) {
-        return post("/minecraft/players/" + request.getTargetUuid() + "/notes",
+        return post("/minecraft/players/" + request.targetUuid() + "/notes",
             PlayerProtoMapper.toProto(request).toByteArray(), null,
             gg.modl.proto.modl.v1.PlayerNoteCreateResponse.parser(), PlayerProtoMapper::toPlayerNoteCreateResponse, null);
     }
@@ -245,31 +245,31 @@ public class ModlHttpClientV3Impl extends AbstractModlHttpTransport implements M
 
     @NotNull @Override
     public CompletableFuture<Void> acknowledgeStatWipe(@NotNull StatWipeAcknowledgeRequest request) {
-        return postVoid("/minecraft/punishments/" + request.getPunishmentId() + "/stat-wipe-acknowledge",
+        return postVoid("/minecraft/punishments/" + request.punishmentId() + "/stat-wipe-acknowledge",
             PunishmentProtoMapper.toProto(request).toByteArray());
     }
 
     @NotNull @Override
     public CompletableFuture<Void> changePunishmentDuration(@NotNull ChangePunishmentDurationRequest request) {
-        return postVoid("/minecraft/punishments/" + request.getPunishmentId() + "/duration",
+        return postVoid("/minecraft/punishments/" + request.punishmentId() + "/duration",
             PunishmentProtoMapper.toProto(request).toByteArray());
     }
 
     @NotNull @Override
     public CompletableFuture<Void> togglePunishmentOption(@NotNull TogglePunishmentOptionRequest request) {
-        return postVoid("/minecraft/punishments/" + request.getPunishmentId() + "/toggle",
+        return postVoid("/minecraft/punishments/" + request.punishmentId() + "/toggle",
             PunishmentProtoMapper.toProto(request).toByteArray());
     }
 
     @NotNull @Override
     public CompletableFuture<Void> addPunishmentNote(@NotNull AddPunishmentNoteRequest request) {
-        return postVoid("/minecraft/punishments/" + request.getPunishmentId() + "/note",
+        return postVoid("/minecraft/punishments/" + request.punishmentId() + "/note",
             PunishmentProtoMapper.toProto(request).toByteArray());
     }
 
     @NotNull @Override
     public CompletableFuture<Void> addPunishmentEvidence(@NotNull AddPunishmentEvidenceRequest request) {
-        return postVoid("/minecraft/punishments/" + request.getPunishmentId() + "/evidence",
+        return postVoid("/minecraft/punishments/" + request.punishmentId() + "/evidence",
             PunishmentProtoMapper.toProto(request).toByteArray());
     }
 
@@ -283,14 +283,14 @@ public class ModlHttpClientV3Impl extends AbstractModlHttpTransport implements M
 
     @NotNull @Override
     public CompletableFuture<PardonResponse> pardonPunishment(@NotNull PardonPunishmentRequest request) {
-        return post("/minecraft/punishments/" + request.getPunishmentId() + "/pardon",
+        return post("/minecraft/punishments/" + request.punishmentId() + "/pardon",
             PunishmentProtoMapper.toProto(request).toByteArray(), null,
             gg.modl.proto.modl.v1.PardonResponse.parser(), PlayerProtoMapper::toPardonResponse, null);
     }
 
     @NotNull @Override
     public CompletableFuture<Void> modifyPunishmentTickets(@NotNull ModifyPunishmentTicketsRequest request) {
-        return postVoid("/minecraft/punishments/" + request.getPunishmentId() + "/tickets",
+        return postVoid("/minecraft/punishments/" + request.punishmentId() + "/tickets",
             PunishmentProtoMapper.toProto(request).toByteArray());
     }
 
@@ -352,7 +352,7 @@ public class ModlHttpClientV3Impl extends AbstractModlHttpTransport implements M
 
     @NotNull @Override
     public CompletableFuture<ClaimTicketResponse> claimTicket(@NotNull ClaimTicketRequest request) {
-        return post("/minecraft/tickets/" + request.getTicketId() + "/claim",
+        return post("/minecraft/tickets/" + request.ticketId() + "/claim",
             TicketProtoMapper.toProto(request).toByteArray(), null,
             gg.modl.proto.modl.v1.ClaimTicketResponse.parser(), TicketProtoMapper::toClaimTicketResponse, null);
     }
@@ -501,7 +501,7 @@ public class ModlHttpClientV3Impl extends AbstractModlHttpTransport implements M
     }
 
     private CompletableFuture<Void> sendVoid(HttpRequest request) {
-        return this.<Void>execute(request, null, backgroundLane, (requestId, body) -> null);
+        return this.execute(request, null, backgroundLane, (requestId, body) -> null);
     }
 
     private <P extends Message, R> R decodeProto(String requestId, byte[] body, Parser<P> parser, Function<P, R> mapper) {

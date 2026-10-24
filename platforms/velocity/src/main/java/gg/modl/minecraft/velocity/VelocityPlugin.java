@@ -1,44 +1,37 @@
 package gg.modl.minecraft.velocity;
 
+import com.alessiodp.libby.VelocityLibraryManager;
+import com.alessiodp.libby.logging.LogLevel;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
+import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import dev.simplix.cirrus.velocity.CirrusVelocity;
 import gg.modl.minecraft.api.LibraryRecord;
+import gg.modl.minecraft.api.http.request.StartupRequest;
 import gg.modl.minecraft.core.HttpManager;
 import gg.modl.minecraft.core.Libraries;
 import gg.modl.minecraft.core.PluginLoader;
+import gg.modl.minecraft.core.boot.*;
 import gg.modl.minecraft.core.chat.CommandInterceptService;
-import gg.modl.minecraft.api.http.request.StartupRequest;
-import gg.modl.minecraft.core.boot.BootConfig;
-import gg.modl.minecraft.core.boot.BootConfigMigrator;
-import gg.modl.minecraft.core.boot.ConsoleInput;
-import gg.modl.minecraft.core.boot.LibraryLoader;
-import gg.modl.minecraft.core.boot.PlatformType;
-import gg.modl.minecraft.core.boot.SetupWizard;
-import gg.modl.minecraft.core.boot.StartupClient;
-import gg.modl.minecraft.core.boot.SyncPollingRate;
+import gg.modl.minecraft.core.config.yaml.CoreConfigBootstrap;
 import gg.modl.minecraft.core.login.LoginPipeline;
+import gg.modl.minecraft.core.login.ProxyLoginFlow;
 import gg.modl.minecraft.core.packet.PacketInterceptionDecision;
 import gg.modl.minecraft.core.packet.PacketInterceptionMode;
 import gg.modl.minecraft.core.packet.PacketInterceptionPolicy;
-import gg.modl.minecraft.core.login.ProxyLoginFlow;
-import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 import gg.modl.minecraft.core.plugin.PluginInfo;
 import gg.modl.minecraft.core.query.ProxyBridgeRuntime;
 import gg.modl.minecraft.core.service.ChatMessageCache;
 import gg.modl.minecraft.core.util.PluginLogger;
-import gg.modl.minecraft.core.config.yaml.CoreConfigBootstrap;
 import io.github._4drian3d.signedvelocity.velocity.SignedVelocity;
-
 import io.github.retrooper.packetevents.velocity.factory.VelocityPacketEventsBuilder;
-import com.alessiodp.libby.VelocityLibraryManager;
 import org.slf4j.Logger;
 import org.yaml.snakeyaml.Yaml;
 
@@ -50,15 +43,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import com.alessiodp.libby.logging.LogLevel;
+
+import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 
 @Plugin(id = PluginInfo.ID,
         name = PluginInfo.NAME,
         version = PluginInfo.VERSION,
-        authors = { PluginInfo.AUTHOR },
+        authors = { "ChamoSMP Development Team", "Chamogelastos", "byteful", "tigerbong" },
         description = PluginInfo.DESCRIPTION,
         url = PluginInfo.URL,
-        dependencies = {})
+        dependencies = {
+                @Dependency(id = "packetevents")
+        }
+)
 public final class VelocityPlugin {
     private static final long LOGIN_TIMEOUT_SECONDS = 5;
 
@@ -150,7 +147,6 @@ public final class VelocityPlugin {
     public synchronized void onProxyShutdown(ProxyShutdownEvent event) {
         if (bridgeRuntime != null) bridgeRuntime.shutdown();
         if (pluginLoader != null) pluginLoader.shutdown();
-        terminatePacketEvents();
     }
 
     private void initSignedVelocity(boolean packetInterceptionEnabled) {
@@ -193,7 +189,7 @@ public final class VelocityPlugin {
             logConfigurationError();
             return null;
         } catch (IOException e) {
-            logger.error("Failed to load boot.yml: " + e.getMessage());
+            logger.error("Failed to load boot.yml: {}", e.getMessage());
             return null;
         }
     }
@@ -205,7 +201,7 @@ public final class VelocityPlugin {
 
     private void logConfigurationError() {
         logger.error("===============================================");
-        logger.error("modl.gg CONFIGURATION ERROR");
+        logger.error("modl CONFIGURATION ERROR");
         logger.error("===============================================");
         logger.error("Setup wizard failed or was cancelled.");
         logger.error("Delete boot.yml and restart to re-run the wizard,");
@@ -237,19 +233,7 @@ public final class VelocityPlugin {
         } catch (Throwable failure) {
             logger.warn("modl packet interception could not start on this proxy; proxy menus and secure-chat "
                     + "enforcement are off. Moderation is unaffected.", failure);
-            terminatePacketEvents();
             return false;
-        }
-    }
-
-    private void terminatePacketEvents() {
-        if (PacketEvents.getAPI() == null) return;
-        try {
-            PacketEvents.getAPI().terminate();
-        } catch (Throwable failure) {
-            logger.debug("PacketEvents termination failed: {}", failure.getMessage());
-        } finally {
-            PacketEvents.setAPI(null);
         }
     }
 
@@ -267,15 +251,7 @@ public final class VelocityPlugin {
         loadLibrary(libraryManager, Libraries.LAMP_COMMON);
         loadLibrary(libraryManager, Libraries.LAMP_BRIGADIER);
         loadLibrary(libraryManager, Libraries.LAMP_VELOCITY);
-        loadLibrary(libraryManager, Libraries.SLF4J_API);
         loadLibrary(libraryManager, Libraries.CIRRUS_VELOCITY);
-        loadLibrary(libraryManager, Libraries.PACKETEVENTS_API);
-        loadLibrary(libraryManager, Libraries.PACKETEVENTS_NETTY);
-        loadLibrary(libraryManager, Libraries.PACKETEVENTS_VELOCITY);
-
-        loadLibrary(libraryManager, Libraries.ADVENTURE_TEXT_SERIALIZER_JSON);
-        loadLibrary(libraryManager, Libraries.ADVENTURE_TEXT_SERIALIZER_GSON);
-        loadLibrary(libraryManager, Libraries.ADVENTURE_TEXT_MINIMESSAGE);
     }
 
     private void loadLibrary(VelocityLibraryManager<VelocityPlugin> libraryManager, LibraryRecord record) {

@@ -3,14 +3,15 @@ package gg.modl.minecraft.spigot.bridge.handler;
 import gg.modl.minecraft.bridge.BridgeScheduler;
 import gg.modl.minecraft.bridge.locale.BridgeLocaleManager;
 import gg.modl.minecraft.core.service.FrozenPlayerStore;
+import io.papermc.paper.event.player.AsyncChatEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,14 +27,15 @@ public class BridgeOnlyFreezeHandler implements Listener {
     private final BridgeScheduler scheduler;
     private final FrozenPlayerStore frozenPlayers;
 
-    @Setter private StaffModeHandler staffModeHandler;
+    @Setter
+    private StaffModeHandler staffModeHandler;
 
     public void register() {
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onChat(AsyncPlayerChatEvent event) {
+    public void onChat(AsyncChatEvent event) {
         Player player = event.getPlayer();
         if (!frozenPlayers.isFrozen(player.getUniqueId())) return;
 
@@ -41,7 +43,7 @@ public class BridgeOnlyFreezeHandler implements Listener {
 
         UUID playerUuid = player.getUniqueId();
         String message = localeManager.getMessage("freeze.chat",
-                mapOf("player", player.getName(), "message", event.getMessage()));
+                mapOf("player", player.getName(), "message", MiniMessage.miniMessage().serialize(event.message())));
 
         scheduler.runOnMainThread(() -> {
             if (staffModeHandler != null) {

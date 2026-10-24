@@ -72,7 +72,7 @@ class FreezeCoreTest {
 
         core.freeze(target.toString(), UUID.randomUUID().toString());
 
-        assertEquals(Arrays.asList("onFrozen:" + target), ops.hookEvents);
+        assertEquals(List.of("onFrozen:" + target), ops.hookEvents);
     }
 
     @Test
@@ -83,7 +83,7 @@ class FreezeCoreTest {
 
         core.unfreeze(target.toString());
 
-        assertEquals(Arrays.asList("onUnfrozen:" + target), ops.hookEvents);
+        assertEquals(List.of("onUnfrozen:" + target), ops.hookEvents);
     }
 
     @Test
@@ -95,7 +95,7 @@ class FreezeCoreTest {
 
         core.releaseOnDisconnect(target);
 
-        assertEquals(Arrays.asList("onUnfrozen:" + target), ops.hookEvents);
+        assertEquals(List.of("onUnfrozen:" + target), ops.hookEvents);
     }
 
     @Test
@@ -108,7 +108,7 @@ class FreezeCoreTest {
 
         assertTrue(core.isFrozen(target));
         assertEquals(1, ops.sent.size());
-        assertEquals(Arrays.asList("onFrozen:" + target), ops.hookEvents);
+        assertEquals(List.of("onFrozen:" + target), ops.hookEvents);
     }
 
     @Test
@@ -163,13 +163,6 @@ class FreezeCoreTest {
         }
     }
 
-    private static final class Sent {
-        final UUID uuid;
-        final String message;
-
-        Sent(UUID uuid, String message) {
-            this.uuid = uuid;
-            this.message = message;
-        }
+    private record Sent(UUID uuid, String message) {
     }
 }

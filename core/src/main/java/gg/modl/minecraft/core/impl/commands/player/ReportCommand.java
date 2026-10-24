@@ -55,7 +55,7 @@ public class ReportCommand {
 
         if (ticketUtil.denySelfReport(actor, reporter, targetPlayer)) return;
 
-        if (!targetPlayer.isOnline()) {
+        if (!targetPlayer.online()) {
             actor.reply(localeManager.getMessage("messages.player_not_online"));
             return;
         }

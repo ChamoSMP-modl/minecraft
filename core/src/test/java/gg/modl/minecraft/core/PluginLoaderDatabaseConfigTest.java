@@ -70,12 +70,12 @@ class PluginLoaderDatabaseConfigTest {
         DatabaseConfig config = PluginConfiguration.loadDatabaseConfig(buildConfig(database), tempDir, logger);
 
         assertNotNull(config);
-        assertEquals("db.example.com", config.getHost());
-        assertEquals("real-user", config.getUsername());
-        assertEquals("real-pass", config.getPassword());
-        assertEquals("real_db", config.getDatabase());
-        assertEquals(3307, config.getPort());
-        assertEquals("lb_", config.getTablePrefix());
+        assertEquals("db.example.com", config.host());
+        assertEquals("real-user", config.username());
+        assertEquals("real-pass", config.password());
+        assertEquals("real_db", config.database());
+        assertEquals(3307, config.port());
+        assertEquals("lb_", config.tablePrefix());
     }
 
     private static Map<String, Object> buildConfig(Map<String, Object> database) {

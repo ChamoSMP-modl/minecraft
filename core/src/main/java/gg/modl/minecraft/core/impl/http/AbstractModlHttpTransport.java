@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
@@ -17,17 +19,16 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 abstract class AbstractModlHttpTransport {
     protected static final String HEADER_API_KEY = "X-API-Key", HEADER_SERVER_DOMAIN = "X-Server-Domain",
-        HEADER_CONTENT_TYPE = "Content-Type", HEADER_ACTING_STAFF_ID = "X-Acting-Staff-Id", HEADER_USER_AGENT = "User-Agent";
+            HEADER_CONTENT_TYPE = "Content-Type", HEADER_ACTING_STAFF_ID = "X-Acting-Staff-Id", HEADER_USER_AGENT = "User-Agent";
     private static final int BACKGROUND_LANE_THREADS = 8, BACKGROUND_LANE_QUEUE = 64,
             LOGIN_LANE_THREADS = 4, LOGIN_LANE_QUEUE = 16;
     protected static final Duration CONNECT_TIMEOUT = Duration.ofSeconds(10), LOGIN_TIMEOUT = Duration.ofSeconds(15),
-        SYNC_TIMEOUT = Duration.ofSeconds(20);
+            SYNC_TIMEOUT = Duration.ofSeconds(20);
     protected static final int STATUS_UNREACHABLE = -1;
     private static final long EXECUTOR_SHUTDOWN_TIMEOUT_SECONDS = 5L;
     private static final byte[] EMPTY_BODY = new byte[0];
@@ -68,7 +69,7 @@ abstract class AbstractModlHttpTransport {
 
         if (!lane.breaker().allowRequest()) {
             return Java8Collections.failedFuture(new PanelUnavailableException(request.url,
-                HttpURLConnection.HTTP_UNAVAILABLE, versionTag + " API is temporarily unavailable (circuit breaker open)"));
+                    HttpURLConnection.HTTP_UNAVAILABLE, versionTag + " API is temporarily unavailable (circuit breaker open)"));
         }
 
         if (debugMode) logRequest(requestId, request);
@@ -79,12 +80,12 @@ abstract class AbstractModlHttpTransport {
         } catch (RejectedExecutionException rejected) {
             lane.breaker().releaseProbe();
             return Java8Collections.failedFuture(new PanelUnavailableException(request.url,
-                HttpURLConnection.HTTP_UNAVAILABLE, versionTag + " API request rejected (local executor saturated)"));
+                    HttpURLConnection.HTTP_UNAVAILABLE, versionTag + " API request rejected (local executor saturated)"));
         }
 
         return pending.exceptionally(throwable -> {
             Throwable cause = throwable instanceof CompletionException && throwable.getCause() != null
-                ? throwable.getCause() : throwable;
+                    ? throwable.getCause() : throwable;
             if (cause instanceof ApiClientException) lane.breaker().recordSuccess();
             else lane.breaker().recordFailure();
             if (cause instanceof RuntimeException) throw (RuntimeException) cause;
@@ -113,7 +114,7 @@ abstract class AbstractModlHttpTransport {
                 throw e;
             } catch (IOException e) {
                 throw new PanelUnavailableException(request.url, STATUS_UNREACHABLE,
-                    versionTag + " API unreachable: " + e.getClass().getSimpleName() + " - " + e.getMessage());
+                        versionTag + " API unreachable: " + e.getClass().getSimpleName() + " - " + e.getMessage());
             } catch (Exception e) {
                 throw new RuntimeException(versionTag + " HTTP request failed", e);
             } finally {
@@ -122,8 +123,8 @@ abstract class AbstractModlHttpTransport {
         }, lane.executor());
     }
 
-    private HttpURLConnection open(HttpRequest request) throws IOException {
-        URL url = new URL(request.url);
+    private HttpURLConnection open(HttpRequest request) throws IOException, URISyntaxException {
+        URL url = new URI(request.url).toURL();
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod(request.method);
         connection.setConnectTimeout((int) CONNECT_TIMEOUT.toMillis());

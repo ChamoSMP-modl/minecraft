@@ -83,8 +83,7 @@ public class BootConfigMigrator {
             bridgeConfigMap.put("query-port", YamlValues.asInt(bridgeYml.get("query-port"), 25590));
 
             Object cmds = bridgeYml.get("stat-wipe-commands");
-            if (cmds instanceof List<?>) {
-                List<?> list = (List<?>) cmds;
+            if (cmds instanceof List<?> list) {
                 List<String> strList = new ArrayList<>();
                 for (Object o : list) strList.add(String.valueOf(o));
                 bridgeConfigMap.put("stat-wipe-commands", strList);
@@ -98,14 +97,12 @@ public class BootConfigMigrator {
 
             Map<String, Integer> thresholds = new LinkedHashMap<>();
             Object threshObj = bridgeYml.get("report-violation-threshold");
-            if (threshObj instanceof Map<?, ?>) {
-                Map<?, ?> threshMap = (Map<?, ?>) threshObj;
+            if (threshObj instanceof Map<?, ?> threshMap) {
                 for (Map.Entry<?, ?> entry : threshMap.entrySet()) {
                     String key = String.valueOf(entry.getKey());
                     if (entry.getValue() instanceof Number) {
                         thresholds.put(key, ((Number) entry.getValue()).intValue());
-                    } else if (entry.getValue() instanceof Map<?, ?>) {
-                        Map<?, ?> checksMap = (Map<?, ?>) entry.getValue();
+                    } else if (entry.getValue() instanceof Map<?, ?> checksMap) {
                         for (Map.Entry<?, ?> check : checksMap.entrySet()) {
                             if (check.getValue() instanceof Number) {
                                 thresholds.put(String.valueOf(check.getKey()), ((Number) check.getValue()).intValue());

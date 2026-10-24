@@ -41,7 +41,7 @@ public abstract class AbstractLogCommand<T> {
 
         actor.reply(localeManager.getMessage("player_lookup.looking_up", mapOf("player", playerQuery)));
 
-        httpClientHolder.getClient().lookupPlayer(PlayerLookupRequest.builder().query(playerQuery).build()).thenAccept(response -> {
+        httpClientHolder.client().lookupPlayer(PlayerLookupRequest.builder().query(playerQuery).build()).thenAccept(response -> {
             if (response.isSuccess() && response.getData() != null) {
                 String playerName = response.getData().getCurrentUsername();
                 String targetUuid = response.getData().getMinecraftUuid();
@@ -75,8 +75,8 @@ public abstract class AbstractLogCommand<T> {
         });
 
         actor.reply(localeManager.getMessage(localePrefix() + ".footer", mapOf(
-                "page", String.valueOf(pg.getPage()),
-                "total_pages", String.valueOf(pg.getTotalPages()),
+                "page", String.valueOf(pg.page()),
+                "total_pages", String.valueOf(pg.totalPages()),
                 "total", String.valueOf(entries.size())
         )));
     }

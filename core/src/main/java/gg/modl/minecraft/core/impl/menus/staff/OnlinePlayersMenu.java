@@ -42,16 +42,7 @@ import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 import java.util.function.Consumer;
 
 public class OnlinePlayersMenu extends BaseStaffListMenu<OnlinePlayersMenu.OnlinePlayer> {
-    @Getter
-    public static class ReportSummary {
-        private final String details, reporter;
-        private final Date date;
-
-        public ReportSummary(String details, String reporter, Date date) {
-            this.details = details;
-            this.reporter = reporter;
-            this.date = date;
-        }
+    public record ReportSummary(String details, String reporter, Date date) {
     }
 
     @Getter
@@ -76,9 +67,9 @@ public class OnlinePlayersMenu extends BaseStaffListMenu<OnlinePlayersMenu.Onlin
     }
 
     private List<OnlinePlayer> onlinePlayers = new ArrayList<>();
-    private String currentSort;
+    private final String currentSort;
     private final List<String> sortOptions = Arrays.asList("Least Playtime", "Recent Gameplay Reports", "Longest Session");
-    @Getter private CompletableFuture<Void> dataFuture;
+    @Getter private final CompletableFuture<Void> dataFuture;
 
     public OnlinePlayersMenu(Platform platform, ModlHttpClient httpClient, UUID viewerUuid, String viewerName,
                              boolean isAdmin, String panelUrl, Consumer<CirrusPlayerWrapper> backAction) {
@@ -143,10 +134,10 @@ public class OnlinePlayersMenu extends BaseStaffListMenu<OnlinePlayersMenu.Onlin
                 if (reports == null) continue;
 
                 reports.sort((a, b) -> {
-                    if (a.getDate() == null && b.getDate() == null) return 0;
-                    if (a.getDate() == null) return 1;
-                    if (b.getDate() == null) return -1;
-                    return b.getDate().compareTo(a.getDate());
+                    if (a.date() == null && b.date() == null) return 0;
+                    if (a.date() == null) return 1;
+                    if (b.date() == null) return -1;
+                    return b.date().compareTo(a.date());
                 });
                 player.recentReports = reports;
             }
@@ -218,9 +209,9 @@ public class OnlinePlayersMenu extends BaseStaffListMenu<OnlinePlayersMenu.Onlin
                     for (int i = 0; i < shown; i++) {
                         ReportSummary report = reports.get(i);
                         Map<String, String> reportVars = new HashMap<>();
-                        reportVars.put("date", MenuItems.formatDate(report.getDate()));
-                        reportVars.put("details", report.getDetails());
-                        reportVars.put("reporter", report.getReporter());
+                        reportVars.put("date", MenuItems.formatDate(report.date()));
+                        reportVars.put("details", report.details());
+                        reportVars.put("reporter", report.reporter());
                         lore.add(localeManager.getMessage("menus.online_players.report_entry", reportVars));
                     }
                     if (reports.size() > 5) {

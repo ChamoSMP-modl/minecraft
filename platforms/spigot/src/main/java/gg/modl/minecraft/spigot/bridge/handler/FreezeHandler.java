@@ -75,7 +75,6 @@ public class FreezeHandler implements Listener {
         if (!isFrozen(uuid)) return;
 
         Location to = event.getTo();
-        if (to == null) return;
 
         FreezeAnchor anchor = ops.anchor(uuid);
         if (anchor == null) {
@@ -100,7 +99,7 @@ public class FreezeHandler implements Listener {
 
         FreezeAnchor anchor = ops.anchor(uuid);
         Location to = event.getTo();
-        if (anchor == null || to == null || !anchor.holds(to)) {
+        if (anchor == null || !anchor.holds(to)) {
             event.setCancelled(true);
         }
     }

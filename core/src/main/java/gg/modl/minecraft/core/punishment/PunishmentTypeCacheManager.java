@@ -29,8 +29,8 @@ public final class PunishmentTypeCacheManager {
         Map<Integer, String> newNamesByOrdinal = new HashMap<>();
         Map<String, Integer> newOrdinalsByName = new HashMap<>();
         allTypes.forEach(pt -> {
-            newNamesByOrdinal.put(pt.getOrdinal(), pt.getName());
-            if (pt.getName() != null) newOrdinalsByName.put(pt.getName().toLowerCase(), pt.getOrdinal());
+            newNamesByOrdinal.put(pt.ordinal(), pt.name());
+            if (pt.name() != null) newOrdinalsByName.put(pt.name().toLowerCase(), pt.ordinal());
         });
         namesByOrdinal = newNamesByOrdinal;
         ordinalsByName = newOrdinalsByName;

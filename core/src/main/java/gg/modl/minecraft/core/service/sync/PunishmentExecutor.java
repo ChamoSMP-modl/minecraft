@@ -101,7 +101,7 @@ class PunishmentExecutor {
     private boolean executeBan(UUID uuid, String username, SimplePunishment punishment) {
         try {
             AbstractPlayer player = platform.getPlayer(uuid);
-            if (player != null && player.isOnline()) {
+            if (player != null && player.online()) {
                 platform.kickPlayer(player, punishmentMessages.formatBanMessage(punishment, PunishmentMessageContext.SYNC));
             }
             platform.broadcast(punishmentMessages.formatPunishmentBroadcast(username, punishment));
@@ -116,7 +116,7 @@ class PunishmentExecutor {
     private boolean executeKick(UUID uuid, String username, SimplePunishment punishment) {
         try {
             AbstractPlayer player = platform.getPlayer(uuid);
-            if (player == null || !player.isOnline()) {
+            if (player == null || !player.online()) {
                 if (debugMode) logger.info("Player " + username + " is not online, kick ignored");
                 return true;
             }
@@ -206,7 +206,7 @@ class PunishmentExecutor {
         PunishmentAcknowledgeRequest request = new PunishmentAcknowledgeRequest(
                 punishmentId, playerUuid, Instant.now().toString(), null, success);
 
-        orTimeout(httpClientHolder.getClient().acknowledgePunishment(request)
+        orTimeout(httpClientHolder.client().acknowledgePunishment(request)
                 .thenAccept(response -> {
                     if (debugMode) logger.info("Acknowledged punishment " + punishmentId + ": " + (success ? "SUCCESS" : "FAILED"));
                 })

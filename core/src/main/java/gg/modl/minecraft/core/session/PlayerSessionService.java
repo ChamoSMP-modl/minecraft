@@ -76,7 +76,7 @@ public final class PlayerSessionService {
     }
 
     public void handlePlayerDisconnect(UUID uuid, String playerName) {
-        ModlHttpClient httpClient = httpClientHolder.getClient();
+        ModlHttpClient httpClient = httpClientHolder.client();
 
         CachedProfile profile = registry.getProfile(uuid);
         long sessionDuration = profile != null ? profile.getSessionDuration() : 0;

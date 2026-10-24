@@ -40,8 +40,8 @@ public class FakePlatform implements Platform {
     private String serverName = "test-server";
 
     public FakePlatform register(AbstractPlayer player) {
-        playersByUuid.put(player.getUuid(), player);
-        playersByName.put(player.getUsername(), player);
+        playersByUuid.put(player.uuid(), player);
+        playersByName.put(player.username(), player);
         return this;
     }
 
@@ -228,39 +228,9 @@ public class FakePlatform implements Platform {
         return null;
     }
 
-    public static final class JsonMessage {
-        private final UUID uuid;
-        private final String json;
-
-        public JsonMessage(UUID uuid, String json) {
-            this.uuid = uuid;
-            this.json = json;
-        }
-
-        public UUID uuid() {
-            return uuid;
-        }
-
-        public String json() {
-            return json;
-        }
+    public record JsonMessage(UUID uuid, String json) {
     }
 
-    public static final class Message {
-        private final UUID uuid;
-        private final String message;
-
-        public Message(UUID uuid, String message) {
-            this.uuid = uuid;
-            this.message = message;
-        }
-
-        public UUID uuid() {
-            return uuid;
-        }
-
-        public String message() {
-            return message;
-        }
+    public record Message(UUID uuid, String message) {
     }
 }

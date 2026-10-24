@@ -38,7 +38,7 @@ class MigrationServiceFactory {
             }
             databaseProvider = new JdbcDatabaseProvider(databaseConfig, logger);
         }
-        return new MigrationService(logger, httpClientHolder.getClient(), dataFolder, databaseProvider,
+        return new MigrationService(logger, httpClientHolder.client(), dataFolder, databaseProvider,
                 localeManager.getMessage("config.default_reason"));
     }
 }

@@ -41,8 +41,8 @@ public abstract class AbstractAnticheatHook<E> implements AntiCheatHook {
             if (flag == null) return;
 
             logDebugFlag(flag);
-            violationTracker.addViolation(flag.getUuid(), source, flag.getCheckName(), flag.getVerbose());
-            autoReporter.checkAndReport(flag.getUuid(), flag.getPlayerName(), source, flag.getCheckName());
+            violationTracker.addViolation(flag.uuid(), source, flag.checkName(), flag.verbose());
+            autoReporter.checkAndReport(flag.uuid(), flag.playerName(), source, flag.checkName());
         } catch (Exception e) {
             plugin.getLogger().warning("Error processing " + logLabel + " " + eventNoun() + " event: " + e.getMessage());
         }
@@ -72,10 +72,10 @@ public abstract class AbstractAnticheatHook<E> implements AntiCheatHook {
 
     private void logDebugFlag(AnticheatFlag flag) {
         if (!config.isDebug()) return;
-        int currentCount = violationTracker.getViolationCount(flag.getUuid(), source, flag.getCheckName());
-        plugin.getLogger().info("[DEBUG] " + logLabel + " " + eventNoun() + ": player=" + flag.getPlayerName()
-                + " check=" + flag.getCheckName() + " currentVL=" + (currentCount + 1)
-                + " threshold=" + config.getReportViolationThreshold(flag.getCheckName())
-                + " " + verboseLabel() + "=" + flag.getVerbose());
+        int currentCount = violationTracker.getViolationCount(flag.uuid(), source, flag.checkName());
+        plugin.getLogger().info("[DEBUG] " + logLabel + " " + eventNoun() + ": player=" + flag.playerName()
+                + " check=" + flag.checkName() + " currentVL=" + (currentCount + 1)
+                + " threshold=" + config.getReportViolationThreshold(flag.checkName())
+                + " " + verboseLabel() + "=" + flag.verbose());
     }
 }

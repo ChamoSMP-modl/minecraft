@@ -11,7 +11,6 @@ import gg.modl.minecraft.core.punishment.PunishmentMessageService;
 import gg.modl.minecraft.core.service.MaintenanceService;
 import gg.modl.minecraft.core.service.sync.SyncService;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 
 import java.util.Map;
 import java.util.UUID;
@@ -45,11 +44,10 @@ public final class LoginService {
     }
 
     public interface LoginResult {
-        @Data @AllArgsConstructor final class Allowed implements LoginResult {
-            private final PlayerLoginResponse response;
+        record Allowed(PlayerLoginResponse response) implements LoginResult {
         }
-        @Data @AllArgsConstructor final class Denied implements LoginResult {
-            private final String message;
+
+        record Denied(String message) implements LoginResult {
         }
     }
 
@@ -102,7 +100,7 @@ public final class LoginService {
     public String denialMessage(LoginResult result) {
         if (result instanceof LoginResult.Allowed) return null;
         if (result instanceof LoginResult.Denied) {
-            String message = ((LoginResult.Denied) result).getMessage();
+            String message = ((LoginResult.Denied) result).message();
             if (message != null && !message.isEmpty()) return message;
         }
         return unverifiableBanStatusMessage();

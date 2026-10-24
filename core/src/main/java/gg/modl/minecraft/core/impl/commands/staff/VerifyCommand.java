@@ -46,7 +46,7 @@ public class VerifyCommand {
             return;
         }
 
-        httpClientHolder.getClient().generateStaff2faToken(senderUuid.toString(), player.getIpAddress()).thenAccept(response -> platform.runOnMainThread(() -> {
+        httpClientHolder.client().generateStaff2faToken(senderUuid.toString(), player.ipAddress()).thenAccept(response -> platform.runOnMainThread(() -> {
             actor.reply(localeManager.getMessage("verify.header"));
             actor.reply(localeManager.getMessage("verify.instructions"));
 

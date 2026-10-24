@@ -12,11 +12,11 @@ final class LiteBansMigrationMapper {
 
     static StreamingJsonWriter.PlayerData toPlayerData(LiteBansMigrationRepository.PlayerRecord player) {
         return new StreamingJsonWriter.PlayerData(
-                player.getMinecraftUuid(),
-                convertUsernames(player.getUsernames()),
+                player.minecraftUuid(),
+                convertUsernames(player.usernames()),
                 Collections.emptyList(),
-                convertIpList(player.getIpList()),
-                convertPunishments(player.getPunishments()),
+                convertIpList(player.ipList()),
+                convertPunishments(player.punishments()),
                 null
         );
     }
@@ -24,7 +24,7 @@ final class LiteBansMigrationMapper {
     private static List<StreamingJsonWriter.UsernameEntry> convertUsernames(List<LiteBansMigrationRepository.UsernameRecord> usernames) {
         List<StreamingJsonWriter.UsernameEntry> result = new ArrayList<>();
         for (LiteBansMigrationRepository.UsernameRecord username : usernames) {
-            result.add(new StreamingJsonWriter.UsernameEntry(username.getUsername(), username.getDate()));
+            result.add(new StreamingJsonWriter.UsernameEntry(username.username(), username.date()));
         }
         return result;
     }
@@ -33,14 +33,14 @@ final class LiteBansMigrationMapper {
         List<StreamingJsonWriter.IpEntry> result = new ArrayList<>();
         for (LiteBansMigrationRepository.IpRecord ip : ipList) {
             result.add(new StreamingJsonWriter.IpEntry(
-                    ip.getIpAddress(),
-                    ip.getCountry(),
-                    ip.getRegion(),
-                    ip.getAsn(),
-                    ip.isProxy(),
-                    ip.isHosting(),
-                    ip.getFirstLogin(),
-                    new ArrayList<>(ip.getLogins())
+                    ip.ipAddress(),
+                    ip.country(),
+                    ip.region(),
+                    ip.asn(),
+                    ip.proxy(),
+                    ip.hosting(),
+                    ip.firstLogin(),
+                    new ArrayList<>(ip.logins())
             ));
         }
         return result;
@@ -50,9 +50,9 @@ final class LiteBansMigrationMapper {
         List<StreamingJsonWriter.PunishmentEntry> result = new ArrayList<>();
         for (LiteBansMigrationRepository.PunishmentRecord p : punishments) {
             result.add(new StreamingJsonWriter.PunishmentEntry(
-                    p.getId(), p.getType(), p.getTypeOrdinal(), p.getReason(), p.getIssued(),
-                    p.getIssuerName(), p.getDuration(), p.getStarted(), p.getData(),
-                    p.getNotes(), p.getEvidence(), p.getAttachedTicketIds(), Collections.emptyList()
+                    p.id(), p.type(), p.typeOrdinal(), p.reason(), p.issued(),
+                    p.issuerName(), p.duration(), p.started(), p.data(),
+                    p.notes(), p.evidence(), p.attachedTicketIds(), Collections.emptyList()
             ));
         }
         return result;

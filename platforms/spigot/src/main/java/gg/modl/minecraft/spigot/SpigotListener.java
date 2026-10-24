@@ -17,18 +17,22 @@ import gg.modl.minecraft.core.locale.LocaleManager;
 import gg.modl.minecraft.core.login.LoginPipeline;
 import gg.modl.minecraft.core.login.LoginService;
 import gg.modl.minecraft.core.service.ChatMessageCache;
+import io.papermc.paper.connection.PlayerConfigurationConnection;
+import io.papermc.paper.connection.PlayerLoginConnection;
+import io.papermc.paper.event.connection.PlayerConnectionValidateLoginEvent;
+import io.papermc.paper.event.player.AsyncChatEvent;
 import lombok.RequiredArgsConstructor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -49,18 +53,18 @@ public class SpigotListener implements Listener {
     private final PendingIpLookupService pendingIpLookupService;
 
     private ModlHttpClient getHttpClient() {
-        return httpClientHolder.getClient();
+        return httpClientHolder.client();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onAsyncPlayerPreLogin(AsyncPlayerPreLoginEvent event) {
         String ipAddress = event.getAddress().getHostAddress();
 
-        LoginCache.CachedLoginResult cached = loginPipeline.getLoginCache().getCachedLoginResult(event.getUniqueId());
+        LoginCache.CachedLoginResult cached = loginPipeline.loginCache().getCachedLoginResult(event.getUniqueId());
         if (cached != null) {
             platform.getLogger().debug("Using cached login result for " + event.getName());
-            loginPipeline.getLoginCache().storePreLoginResult(event.getUniqueId(),
-                new LoginCache.PreLoginResult(cached.getResponse(), cached.getIpInfo(), cached.getSkinHash()));
+            loginPipeline.loginCache().storePreLoginResult(event.getUniqueId(),
+                    new LoginCache.PreLoginResult(cached.response(), cached.ipInfo(), cached.skinHash()));
             return;
         }
 
@@ -68,93 +72,119 @@ public class SpigotListener implements Listener {
         CompletableFuture<WebPlayer> webPlayerFuture = MojangProfiles.client().get(event.getUniqueId());
 
         CompletableFuture<Void> combinedFuture = ipInfoFuture
-            .thenCombine(webPlayerFuture, (ipInfo, webPlayer) -> {
-                String skinHash = (webPlayer != null && webPlayer.isValid()) ? webPlayer.getSkin() : null;
-                PlayerLoginRequest request = new PlayerLoginRequest(
-                        event.getUniqueId().toString(), event.getName(),
-                        ipAddress, skinHash, platform.getServerName(), ipInfo,
-                        StartupClient.getServerInstanceId());
-                return new Object[] { request, ipInfo, skinHash };
-            })
-            .thenCompose(data -> {
-                PlayerLoginRequest request = (PlayerLoginRequest) data[0];
-                @SuppressWarnings("unchecked")
-                Map<String, Object> ipInfo = (Map<String, Object>) data[1];
-                String skinHash = (String) data[2];
-                return getHttpClient().playerLogin(request)
-                    .thenAccept(response -> {
-                        loginPipeline.getLoginCache().cacheLoginResult(event.getUniqueId(), response, ipInfo, skinHash);
-                        loginPipeline.getLoginCache().storePreLoginResult(event.getUniqueId(),
-                            new LoginCache.PreLoginResult(response, ipInfo, skinHash));
-                        pendingIpLookupService.handlePendingIpLookups(response, event.getUniqueId().toString(), ipAddress, CompletableFuture.completedFuture(ipInfo));
-                    });
-            })
-            .exceptionally(throwable -> {
-                platform.getLogger().warning("Failed to check punishments for " + event.getName() + ": " + throwable.getMessage());
-                Exception error = throwable instanceof Exception ? (Exception) throwable : new RuntimeException(throwable);
-                loginPipeline.getLoginCache().storePreLoginResult(event.getUniqueId(), new LoginCache.PreLoginResult(error));
-                return null;
-            });
+                .thenCombine(webPlayerFuture, (ipInfo, webPlayer) -> {
+                    String skinHash = (webPlayer != null && webPlayer.valid()) ? webPlayer.skin() : null;
+                    PlayerLoginRequest request = new PlayerLoginRequest(
+                            event.getUniqueId().toString(), event.getName(),
+                            ipAddress, skinHash, platform.getServerName(), ipInfo,
+                            StartupClient.getServerInstanceId());
+                    return new Object[]{request, ipInfo, skinHash};
+                })
+                .thenCompose(data -> {
+                    PlayerLoginRequest request = (PlayerLoginRequest) data[0];
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> ipInfo = (Map<String, Object>) data[1];
+                    String skinHash = (String) data[2];
+                    return getHttpClient().playerLogin(request)
+                            .thenAccept(response -> {
+                                loginPipeline.loginCache().cacheLoginResult(event.getUniqueId(), response, ipInfo, skinHash);
+                                loginPipeline.loginCache().storePreLoginResult(event.getUniqueId(),
+                                        new LoginCache.PreLoginResult(response, ipInfo, skinHash));
+                                pendingIpLookupService.handlePendingIpLookups(response, event.getUniqueId().toString(), ipAddress, CompletableFuture.completedFuture(ipInfo));
+                            });
+                })
+                .exceptionally(throwable -> {
+                    platform.getLogger().warning("Failed to check punishments for " + event.getName() + ": " + throwable.getMessage());
+                    Exception error = throwable instanceof Exception ? (Exception) throwable : new RuntimeException(throwable);
+                    loginPipeline.loginCache().storePreLoginResult(event.getUniqueId(), new LoginCache.PreLoginResult(error));
+                    return null;
+                });
 
         try {
             combinedFuture.get(PRE_LOGIN_TIMEOUT_SECONDS, TimeUnit.SECONDS);
         } catch (Exception e) {
             platform.getLogger().warning("Async pre-login timed out for " + event.getName() + ": " + e.getMessage());
-            loginPipeline.getLoginCache().storePreLoginResult(event.getUniqueId(), new LoginCache.PreLoginResult(e));
+            loginPipeline.loginCache().storePreLoginResult(event.getUniqueId(), new LoginCache.PreLoginResult(e));
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerLogin(PlayerLoginEvent event) {
-        LoginCache.PreLoginResult preLoginResult = loginPipeline.getLoginCache().getAndRemovePreLoginResult(event.getPlayer().getUniqueId());
+    public void onPlayerLogin(PlayerConnectionValidateLoginEvent event) {
+        String playerName = null;
+        UUID playerUuid = null;
+        if (event.getConnection() instanceof PlayerLoginConnection conn) {
+            playerName = Objects.requireNonNull(conn.getAuthenticatedProfile()).getName();
+            playerUuid = Objects.requireNonNull(conn.getAuthenticatedProfile()).getId();
+        } else if (event.getConnection() instanceof PlayerConfigurationConnection conn) {
+            playerName = Objects.requireNonNull(conn.getProfile()).getName();
+            playerUuid = Objects.requireNonNull(conn.getProfile()).getId();
+        }
+
+        if (playerUuid == null || playerName == null) {
+            platform.getLogger().warning("Could not get a player's name or uuid - blocking login for safety");
+            denyLoginUnverified(event);
+            return;
+        }
+
+        LoginCache.PreLoginResult preLoginResult = loginPipeline.loginCache().getAndRemovePreLoginResult(playerUuid);
 
         if (preLoginResult == null) {
-            platform.getLogger().warning("No pre-login result found for " + event.getPlayer().getName() + " - blocking login for safety");
+            platform.getLogger().warning("No pre-login result found for " + playerName + " - blocking login for safety");
             denyLoginUnverified(event);
             return;
         }
 
         if (preLoginResult.hasError()) {
             if (preLoginResult.getError() instanceof PanelUnavailableException) {
-                platform.getLogger().warning("Panel 502 during login check for " + event.getPlayer().getName() + " - blocking login for safety");
+                platform.getLogger().warning("Panel 502 during login check for " + playerName + " - blocking login for safety");
             }
-            event.setResult(PlayerLoginEvent.Result.KICK_OTHER);
-            event.setKickMessage(loginPipeline.getLoginService().denialMessage(
-                    loginPipeline.getLoginService().handleLoginError(preLoginResult.getError())));
+
+            // Yeah, this is a big wall of text
+            event.kickMessage(
+                    MiniMessage.miniMessage().deserialize(
+                            Objects.requireNonNull(
+                                    loginPipeline.loginService().denialMessage(
+                                            loginPipeline.loginService().handleLoginError(
+                                                    preLoginResult.getError()
+                                            )
+                                    )
+                            )
+                    )
+            );
             return;
         }
 
         if (!preLoginResult.isSuccess()) {
-            platform.getLogger().warning("Invalid pre-login result for " + event.getPlayer().getName() + " - blocking login for safety");
+            platform.getLogger().warning("Invalid pre-login result for " + playerName + " - blocking login for safety");
             denyLoginUnverified(event);
             return;
         }
 
-        LoginService.LoginResult result = loginPipeline.getLoginService().processLoginResponse(
-                preLoginResult.getResponse(), event.getPlayer().getUniqueId());
+        LoginService.LoginResult result = loginPipeline.loginService().processLoginResponse(
+                preLoginResult.getResponse(), playerUuid);
 
-        String denialMessage = loginPipeline.getLoginService().denialMessage(result);
+        String denialMessage = loginPipeline.loginService().denialMessage(result);
         if (denialMessage != null) {
-            event.setResult(PlayerLoginEvent.Result.KICK_BANNED);
-            event.setKickMessage(denialMessage);
+            event.kickMessage(MiniMessage.miniMessage().deserialize(denialMessage));
         }
     }
 
-    private void denyLoginUnverified(PlayerLoginEvent event) {
-        event.setResult(PlayerLoginEvent.Result.KICK_OTHER);
-        event.setKickMessage(localeManager.getMessage("api_errors.ban_check_failed"));
+    private void denyLoginUnverified(PlayerConnectionValidateLoginEvent event) {
+        event.kickMessage(
+                MiniMessage.miniMessage().deserialize(localeManager.getMessage("api_errors.ban_check_failed"))
+        );
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
 
-        loginPipeline.getPlayerSessionService().handlePlayerJoin(uuid, event.getPlayer().getName());
+        loginPipeline.playerSessionService().handlePlayerJoin(uuid, event.getPlayer().getName());
         cacheSkinTexture(uuid);
         chatMessageCache.updatePlayerServer(platform.getServerName(), uuid.toString());
 
-        LoginCache.CachedLoginResult cachedResult = loginPipeline.getLoginCache().getCachedLoginResult(uuid);
-        loginPipeline.getLoginService().cacheLoginData(uuid, cachedResult != null ? cachedResult.getResponse() : null);
+        LoginCache.CachedLoginResult cachedResult = loginPipeline.loginCache().getCachedLoginResult(uuid);
+        loginPipeline.loginService().cacheLoginData(uuid, cachedResult != null ? cachedResult.response() : null);
     }
 
     private void cacheSkinTexture(UUID uuid) {
@@ -165,21 +195,21 @@ public class SpigotListener implements Listener {
         }
         MojangProfiles.client().get(uuid)
                 .thenAccept(webPlayer -> {
-                    if (webPlayer != null && webPlayer.isValid() && webPlayer.getTextureValue() != null)
-                        cache.cacheSkinTexture(uuid, webPlayer.getTextureValue());
+                    if (webPlayer != null && webPlayer.valid() && webPlayer.textureValue() != null)
+                        cache.cacheSkinTexture(uuid, webPlayer.textureValue());
                 })
-                .exceptionally(throwable -> null);
+                .exceptionally(_ -> null);
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        loginPipeline.getPlayerSessionService().handlePlayerDisconnect(event.getPlayer().getUniqueId(), event.getPlayer().getName());
+        loginPipeline.playerSessionService().handlePlayerDisconnect(event.getPlayer().getUniqueId(), event.getPlayer().getName());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerChat(AsyncPlayerChatEvent event) {
+    public void onPlayerChat(AsyncChatEvent event) {
         ChatService.Result result = chatService.handleChat(
-                event.getPlayer().getUniqueId(), event.getPlayer().getName(), event.getMessage(),
+                event.getPlayer().getUniqueId(), event.getPlayer().getName(), MiniMessage.miniMessage().serialize(event.message()),
                 platform.getServerName(),
                 msg -> event.getPlayer().sendMessage(msg));
         if (result == ChatService.Result.CANCELLED) event.setCancelled(true);
@@ -193,8 +223,8 @@ public class SpigotListener implements Listener {
 
         if (result != CommandInterceptService.CommandResult.ALLOWED) {
             event.setCancelled(true);
-            event.getPlayer().sendMessage(commandInterceptService.getBlockMessage(
-                    result, event.getPlayer().getUniqueId()));
+            event.getPlayer().sendRichMessage(Objects.requireNonNull(commandInterceptService.getBlockMessage(
+                    result, event.getPlayer().getUniqueId())));
         }
     }
 

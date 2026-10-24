@@ -1,7 +1,5 @@
 package gg.modl.minecraft.core.impl.menus.util;
 
-import org.junit.jupiter.api.Test;
-
 import gg.modl.minecraft.api.Account;
 import gg.modl.minecraft.core.Platform;
 import gg.modl.minecraft.core.cache.Cache;
@@ -10,23 +8,17 @@ import gg.modl.minecraft.core.integration.mojang.WebPlayer;
 import gg.modl.minecraft.core.support.FakePlatform;
 import gg.modl.minecraft.core.support.TestAccounts;
 import gg.modl.minecraft.core.support.TestPluginServices;
+import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BooleanSupplier;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
+import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerHeadItemBuilderTest {
     @Test
@@ -36,8 +28,8 @@ class PlayerHeadItemBuilderTest {
         vars.put("country", null);
 
         List<String> rendered = assertDoesNotThrow(() -> PlayerHeadItemBuilder.renderLoreLines(
-            Collections.singletonList("&7Region: &f{region} (Country: {country})"),
-            vars
+                Collections.singletonList("&7Region: &f{region} (Country: {country})"),
+                vars
         ));
 
         assertEquals(Collections.singletonList("&7Region: &fUnknown (Country: Unknown)"), rendered);
@@ -49,7 +41,7 @@ class PlayerHeadItemBuilderTest {
         Cache cache = new Cache(new CachedProfileRegistry());
         Platform platform = platform(cache);
         Account account = TestAccounts.account(targetUuid, "modltarget");
-        PlayerHeadItemBuilder builder = new PlayerHeadItemBuilder(uuid -> new CompletableFuture<>());
+        PlayerHeadItemBuilder builder = new PlayerHeadItemBuilder(_ -> new CompletableFuture<>());
 
         assertTimeoutPreemptively(
                 Duration.ofMillis(200),
@@ -64,7 +56,7 @@ class PlayerHeadItemBuilderTest {
         Account account = TestAccounts.account(targetUuid, "modltarget");
         CompletableFuture<WebPlayer> textureFuture = new CompletableFuture<>();
         AtomicInteger lookupCount = new AtomicInteger();
-        PlayerHeadItemBuilder builder = new PlayerHeadItemBuilder(uuid -> {
+        PlayerHeadItemBuilder builder = new PlayerHeadItemBuilder(_ -> {
             lookupCount.incrementAndGet();
             return textureFuture;
         });

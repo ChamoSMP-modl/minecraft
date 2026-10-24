@@ -58,7 +58,7 @@ public class VelocityPlatform implements Platform {
     }
 
     private static Component colorize(String string) {
-        return Colors.legacy(string);
+        return Colors.get(string);
     }
 
     private boolean isAuthenticatedStaff(Player player) {
@@ -117,10 +117,9 @@ public class VelocityPlatform implements Platform {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Lamp<VelocityCommandActor> buildLamp(Consumer<Lamp.Builder<? extends CommandActor>> configurator) {
         Lamp.Builder<VelocityCommandActor> builder = VelocityLamp.builder(plugin, server);
-        configurator.accept((Lamp.Builder) builder);
+        configurator.accept(builder);
         return builder.build();
     }
 
@@ -169,7 +168,7 @@ public class VelocityPlatform implements Platform {
         }
 
         if (webPlayer == null) return null;
-        return new AbstractPlayer(webPlayer.getUuid(), webPlayer.getName(), null, false);
+        return new AbstractPlayer(webPlayer.uuid(), webPlayer.name(), null, false);
     }
 
     @Override
@@ -232,7 +231,7 @@ public class VelocityPlatform implements Platform {
     @Override
     public void kickPlayer(AbstractPlayer player, String reason) {
         if (player == null) return;
-        server.getPlayer(player.getUuid()).ifPresent(velocityPlayer -> velocityPlayer.disconnect(toKickComponent(reason)));
+        server.getPlayer(player.uuid()).ifPresent(velocityPlayer -> velocityPlayer.disconnect(toKickComponent(reason)));
     }
 
     @Override

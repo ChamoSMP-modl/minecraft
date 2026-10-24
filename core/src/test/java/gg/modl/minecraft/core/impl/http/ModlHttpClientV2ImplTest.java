@@ -17,9 +17,7 @@ import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ModlHttpClientV2ImplTest {
     @Test
@@ -138,7 +136,7 @@ class ModlHttpClientV2ImplTest {
             captured[0] = throwable;
             return null;
         }).join();
-        assertTrue(captured[0] instanceof PanelUnavailableException);
+        assertInstanceOf(PanelUnavailableException.class, captured[0]);
     }
 
     private Gson extractGson() throws Exception {

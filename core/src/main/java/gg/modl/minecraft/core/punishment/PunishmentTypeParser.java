@@ -22,16 +22,16 @@ public final class PunishmentTypeParser {
             classifier.registerAdministrativeTypes();
 
             for (PunishmentTypesResponse.PunishmentTypeData type : types) {
-                int ordinal = type.getOrdinal();
+                int ordinal = type.ordinal();
                 if (ordinal <= MAX_ADMINISTRATIVE_ORDINAL) continue;
 
-                if (Boolean.TRUE.equals(type.getPermanentUntilSkinChange()) ||
-                    Boolean.TRUE.equals(type.getPermanentUntilUsernameChange())) {
+                if (Boolean.TRUE.equals(type.permanentUntilSkinChange()) ||
+                    Boolean.TRUE.equals(type.permanentUntilUsernameChange())) {
                     classifier.register(ordinal, true, false);
                     continue;
                 }
 
-                Object durations = type.getDurations();
+                Object durations = type.durations();
                 if (durations != null) {
                     DurationInfo info = parseDurations(durations);
                     classifier.register(ordinal, info.hasBan, info.hasMute);
@@ -75,12 +75,6 @@ public final class PunishmentTypeParser {
         return new DurationInfo(hasBan, hasMute);
     }
 
-    private static class DurationInfo {
-        final boolean hasBan, hasMute;
-
-        DurationInfo(boolean hasBan, boolean hasMute) {
-            this.hasBan = hasBan;
-            this.hasMute = hasMute;
-        }
+    private record DurationInfo(boolean hasBan, boolean hasMute) {
     }
 }

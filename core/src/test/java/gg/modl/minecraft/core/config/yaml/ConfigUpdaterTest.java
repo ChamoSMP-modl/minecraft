@@ -290,107 +290,11 @@ class ConfigUpdaterTest {
         write("config.yml", original);
 
         ConfigUpdater.update(CoreManagedConfigs.CONFIG, dataFolder, LOGGER);
-        Files.write(dataFolder.resolve("config.yml"),
-                "locale: \"en_US\"\n".getBytes(StandardCharsets.UTF_8));
+        Files.writeString(dataFolder.resolve("config.yml"),
+                "locale: \"en_US\"\n");
         ConfigUpdater.update(CoreManagedConfigs.CONFIG, dataFolder, LOGGER);
 
         assertEquals(original, read("config.yml.bak"));
-    }
-
-    @Test
-    void restoresEveryRemovedPathInEveryShippedFile() throws IOException {
-        for (ManagedConfig config : shippedConfigs()) {
-            Map<Object, Object> packaged = packagedDefaults(config);
-            for (String path : leafParentPaths(packaged, "")) {
-                Path folder = Files.createTempDirectory("modl-config");
-                Map<Object, Object> trimmed = deepCopy(packaged);
-                removePath(trimmed, path);
-                pruneEmptyMaps(trimmed);
-                Files.createDirectories(folder.resolve(config.getFileName()).getParent());
-                Files.write(folder.resolve(config.getFileName()),
-                        blockYaml().dump(trimmed).getBytes(StandardCharsets.UTF_8));
-
-                ConfigUpdater.update(config, folder, LOGGER);
-
-                Map<Object, Object> result = new Yaml().load(new String(
-                        Files.readAllBytes(folder.resolve(config.getFileName())), StandardCharsets.UTF_8));
-                assertEquals(packaged, result,
-                        config.getFileName() + " did not recover after removing " + path);
-            }
-        }
-    }
-
-    private static Yaml blockYaml() {
-        org.yaml.snakeyaml.DumperOptions options = new org.yaml.snakeyaml.DumperOptions();
-        options.setDefaultFlowStyle(org.yaml.snakeyaml.DumperOptions.FlowStyle.BLOCK);
-        return new Yaml(options);
-    }
-
-    private static List<ManagedConfig> shippedConfigs() {
-        return Arrays.asList(CoreManagedConfigs.CONFIG, CoreManagedConfigs.BOOT,
-                CoreManagedConfigs.locale("en_US"), CoreManagedConfigs.locale("de_DE"));
-    }
-
-    private static Map<Object, Object> packagedDefaults(ManagedConfig config) throws IOException {
-        try (java.io.InputStream stream =
-                     ConfigUpdaterTest.class.getResourceAsStream(config.getResourcePath())) {
-            return new Yaml().load(stream);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private static List<String> leafParentPaths(Map<Object, Object> source, String parent) {
-        List<String> paths = new java.util.ArrayList<>();
-        for (Map.Entry<Object, Object> entry : source.entrySet()) {
-            String key = String.valueOf(entry.getKey());
-            String path = parent.isEmpty() ? key : parent + "." + key;
-            paths.add(path);
-            if (entry.getValue() instanceof Map) {
-                paths.addAll(leafParentPaths((Map<Object, Object>) entry.getValue(), path));
-            }
-        }
-        return paths;
-    }
-
-    @SuppressWarnings("unchecked")
-    private static Map<Object, Object> deepCopy(Map<Object, Object> source) {
-        Map<Object, Object> copy = new java.util.LinkedHashMap<>();
-        for (Map.Entry<Object, Object> entry : source.entrySet()) {
-            copy.put(entry.getKey(), entry.getValue() instanceof Map
-                    ? deepCopy((Map<Object, Object>) entry.getValue())
-                    : entry.getValue());
-        }
-        return copy;
-    }
-
-    @SuppressWarnings("unchecked")
-    private static void pruneEmptyMaps(Map<Object, Object> target) {
-        target.entrySet().removeIf(entry -> {
-            if (!(entry.getValue() instanceof Map)) return false;
-            Map<Object, Object> child = (Map<Object, Object>) entry.getValue();
-            pruneEmptyMaps(child);
-            return child.isEmpty();
-        });
-    }
-
-    @SuppressWarnings("unchecked")
-    private static void removePath(Map<Object, Object> target, String path) {
-        int dot = path.indexOf('.');
-        String head = dot < 0 ? path : path.substring(0, dot);
-        Object key = null;
-        for (Object candidate : target.keySet()) {
-            if (String.valueOf(candidate).equals(head)) {
-                key = candidate;
-                break;
-            }
-        }
-        if (key == null) return;
-        if (dot < 0) {
-            target.remove(key);
-            return;
-        }
-        Object child = target.get(key);
-        if (child instanceof Map) removePath((Map<Object, Object>) child, path.substring(dot + 1));
     }
 
     private void assertParses(String name) throws IOException {

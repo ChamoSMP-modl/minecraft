@@ -29,7 +29,7 @@ class SpigotPlatformTest {
 
     private static JavaPlugin mockPlugin() {
         JavaPlugin plugin = mock(JavaPlugin.class);
-        when(plugin.getName()).thenReturn("modl");
+        when(plugin.getName()).thenReturn("chamosmp-modl");
         return plugin;
     }
 }

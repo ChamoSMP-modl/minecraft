@@ -331,11 +331,11 @@ class StaffModeCoreTest {
 
         ScoreboardContent content = ops.scoreboards.get(staff);
         assertNotNull(content);
-        assertTrue(content.getTitle().contains("Server 1"));
-        assertEquals("Players: 1", content.getLines().get(0).getText());
-        assertEquals("Me: Staffer", content.getLines().get(1).getText());
-        assertEquals(2, content.getLines().get(0).getScore());
-        assertEquals(1, content.getLines().get(1).getScore());
+        assertTrue(content.title().contains("Server 1"));
+        assertEquals("Players: 1", content.lines().get(0).text());
+        assertEquals("Me: Staffer", content.lines().get(1).text());
+        assertEquals(2, content.lines().get(0).score());
+        assertEquals(1, content.lines().get(1).score());
     }
 
     @Test
@@ -355,9 +355,9 @@ class StaffModeCoreTest {
 
         core.enterStaffMode(staff.toString());
 
-        List<ScoreboardContent.Line> lines = ops.scoreboards.get(staff).getLines();
-        assertEquals(40, lines.get(0).getText().length());
-        assertEquals(longLine.substring(0, 40), lines.get(0).getText());
+        List<ScoreboardContent.Line> lines = ops.scoreboards.get(staff).lines();
+        assertEquals(40, lines.get(0).text().length());
+        assertEquals(longLine.substring(0, 40), lines.get(0).text());
     }
 
     @Test
@@ -378,9 +378,9 @@ class StaffModeCoreTest {
 
         core.enterStaffMode(staff.toString());
 
-        List<ScoreboardContent.Line> lines = ops.scoreboards.get(staff).getLines();
+        List<ScoreboardContent.Line> lines = ops.scoreboards.get(staff).lines();
         assertEquals(2, lines.size());
-        assertNotEquals(lines.get(0).getText(), lines.get(1).getText());
+        assertNotEquals(lines.get(0).text(), lines.get(1).text());
     }
 
     private StaffModeConfig config(String... lines) throws IOException {

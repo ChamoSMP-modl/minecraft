@@ -159,7 +159,7 @@ class BridgeConfigTest {
         return BridgeConfig.builder()
                 .proxyHost("10.0.0.9")
                 .proxyPort(26000)
-                .statWipeCommands(Arrays.asList("wipe {player}"))
+                .statWipeCommands(List.of("wipe {player}"))
                 .anticheatName("Grim")
                 .anticheatHookEnabled(false)
                 .serverName("Hub")
@@ -186,14 +186,14 @@ class BridgeConfigTest {
     private Map<String, Object> loadClasspathBridgeConfig() throws IOException {
         try (InputStream input = BridgeConfigTest.class.getResourceAsStream("/bridge-config.yml")) {
             assertNotNull(input);
-            return (Map<String, Object>) new Yaml().load(input);
+            return new Yaml().load(input);
         }
     }
 
     @SuppressWarnings("unchecked")
     private Map<String, Object> loadYaml(Path path) throws IOException {
         try (InputStream input = Files.newInputStream(path)) {
-            return (Map<String, Object>) new Yaml().load(input);
+            return new Yaml().load(input);
         }
     }
 

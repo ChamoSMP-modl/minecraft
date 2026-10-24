@@ -56,23 +56,23 @@ public final class PlayerProtoMapper {
 
     public static gg.modl.proto.modl.v1.PlayerLoginRequest toProto(PlayerLoginRequest request) {
         gg.modl.proto.modl.v1.PlayerLoginRequest.Builder builder = gg.modl.proto.modl.v1.PlayerLoginRequest.newBuilder()
-            .setMinecraftUuid(request.getMinecraftUuid())
-            .setUsername(request.getUsername());
+            .setMinecraftUuid(request.minecraftUuid())
+            .setUsername(request.username());
 
-        if (request.getIpAddress() != null) builder.setIpAddress(request.getIpAddress());
-        if (request.getSkinHash() != null) builder.setSkinHash(request.getSkinHash());
-        if (request.getServerName() != null) builder.setServerName(request.getServerName());
-        if (request.getServerInstanceId() != null) builder.setServerInstanceId(request.getServerInstanceId());
-        if (request.getIpInfo() != null) builder.setIpInfo(ProtoConversions.mapToStruct(request.getIpInfo()));
+        if (request.ipAddress() != null) builder.setIpAddress(request.ipAddress());
+        if (request.skinHash() != null) builder.setSkinHash(request.skinHash());
+        if (request.serverName() != null) builder.setServerName(request.serverName());
+        if (request.serverInstanceId() != null) builder.setServerInstanceId(request.serverInstanceId());
+        if (request.ipInfo() != null) builder.setIpInfo(ProtoConversions.mapToStruct(request.ipInfo()));
         return builder.build();
     }
 
     public static gg.modl.proto.modl.v1.PlayerDisconnectRequest toProto(PlayerDisconnectRequest request) {
         gg.modl.proto.modl.v1.PlayerDisconnectRequest.Builder builder =
             gg.modl.proto.modl.v1.PlayerDisconnectRequest.newBuilder()
-                .setMinecraftUuid(request.getMinecraftUuid())
-                .setSessionDurationMs(request.getSessionDurationMs());
-        if (request.getServerInstanceId() != null) builder.setServerInstanceId(request.getServerInstanceId());
+                .setMinecraftUuid(request.minecraftUuid())
+                .setSessionDurationMs(request.sessionDurationMs());
+        if (request.serverInstanceId() != null) builder.setServerInstanceId(request.serverInstanceId());
         return builder.build();
     }
 
@@ -103,20 +103,20 @@ public final class PlayerProtoMapper {
     public static gg.modl.proto.modl.v1.CreatePlayerNoteRequest toProto(CreatePlayerNoteRequest request) {
         gg.modl.proto.modl.v1.CreatePlayerNoteRequest.Builder builder =
             gg.modl.proto.modl.v1.CreatePlayerNoteRequest.newBuilder()
-                .setText(request.getText());
-        if (request.getIssuerName() != null) builder.setIssuerName(request.getIssuerName());
-        if (request.getIssuerId() != null) builder.setIssuerId(request.getIssuerId());
+                .setText(request.text());
+        if (request.issuerName() != null) builder.setIssuerName(request.issuerName());
+        if (request.issuerId() != null) builder.setIssuerId(request.issuerId());
         return builder.build();
     }
 
     public static gg.modl.proto.modl.v1.PardonPlayerRequest toProto(PardonPlayerRequest request) {
         gg.modl.proto.modl.v1.PardonPlayerRequest.Builder builder =
             gg.modl.proto.modl.v1.PardonPlayerRequest.newBuilder()
-                .setPlayerName(request.getPlayerName());
-        if (request.getIssuerName() != null) builder.setIssuerName(request.getIssuerName());
-        if (request.getIssuerId() != null) builder.setIssuerId(request.getIssuerId());
-        if (request.getPunishmentType() != null) builder.setPunishmentType(request.getPunishmentType());
-        if (request.getReason() != null) builder.setReason(request.getReason());
+                .setPlayerName(request.playerName());
+        if (request.issuerName() != null) builder.setIssuerName(request.issuerName());
+        if (request.issuerId() != null) builder.setIssuerId(request.issuerId());
+        if (request.punishmentType() != null) builder.setPunishmentType(request.punishmentType());
+        if (request.reason() != null) builder.setReason(request.reason());
         return builder.build();
     }
 
@@ -130,26 +130,26 @@ public final class PlayerProtoMapper {
     public static gg.modl.proto.modl.v1.PunishmentAcknowledgeRequest toProto(PunishmentAcknowledgeRequest request) {
         gg.modl.proto.modl.v1.PunishmentAcknowledgeRequest.Builder builder =
             gg.modl.proto.modl.v1.PunishmentAcknowledgeRequest.newBuilder()
-                .setPunishmentId(request.getPunishmentId())
-                .setPlayerUuid(request.getPlayerUuid())
-                .setExecutedAt(request.getExecutedAt())
-                .setSuccess(request.isSuccess());
-        if (request.getErrorMessage() != null) builder.setErrorMessage(request.getErrorMessage());
+                .setPunishmentId(request.punishmentId())
+                .setPlayerUuid(request.playerUuid())
+                .setExecutedAt(request.executedAt())
+                .setSuccess(request.success());
+        if (request.errorMessage() != null) builder.setErrorMessage(request.errorMessage());
         return builder.build();
     }
 
     public static gg.modl.proto.modl.v1.AcknowledgeNotificationsRequest toProto(NotificationAcknowledgeRequest request) {
         return gg.modl.proto.modl.v1.AcknowledgeNotificationsRequest.newBuilder()
-            .setPlayerUuid(request.getPlayerUuid())
-            .setAcknowledgedAt(request.getAcknowledgedAt())
-            .addAllNotificationIds(request.getNotificationIds())
+            .setPlayerUuid(request.playerUuid())
+            .setAcknowledgedAt(request.acknowledgedAt())
+            .addAllNotificationIds(request.notificationIds())
             .build();
     }
 
     public static gg.modl.proto.modl.v1.ChatLogBatchRequest toProto(ChatLogBatchRequest request) {
         gg.modl.proto.modl.v1.ChatLogBatchRequest.Builder builder = gg.modl.proto.modl.v1.ChatLogBatchRequest.newBuilder();
-        if (request.getEntries() != null) {
-            request.getEntries().forEach(entry -> builder.addEntries(gg.modl.proto.modl.v1.ChatLogEntry.newBuilder()
+        if (request.entries() != null) {
+            request.entries().forEach(entry -> builder.addEntries(gg.modl.proto.modl.v1.ChatLogEntry.newBuilder()
                 .setUuid(ProtoConversions.nullToEmpty(entry.getUuid()))
                 .setUsername(ProtoConversions.nullToEmpty(entry.getUsername()))
                 .setMessage(ProtoConversions.nullToEmpty(entry.getMessage()))
@@ -163,8 +163,8 @@ public final class PlayerProtoMapper {
     public static gg.modl.proto.modl.v1.CommandLogBatchRequest toProto(CommandLogBatchRequest request) {
         gg.modl.proto.modl.v1.CommandLogBatchRequest.Builder builder =
             gg.modl.proto.modl.v1.CommandLogBatchRequest.newBuilder();
-        if (request.getEntries() != null) {
-            request.getEntries().forEach(entry -> builder.addEntries(gg.modl.proto.modl.v1.CommandLogEntry.newBuilder()
+        if (request.entries() != null) {
+            request.entries().forEach(entry -> builder.addEntries(gg.modl.proto.modl.v1.CommandLogEntry.newBuilder()
                 .setUuid(ProtoConversions.nullToEmpty(entry.getUuid()))
                 .setUsername(ProtoConversions.nullToEmpty(entry.getUsername()))
                 .setCommand(ProtoConversions.nullToEmpty(entry.getCommand()))

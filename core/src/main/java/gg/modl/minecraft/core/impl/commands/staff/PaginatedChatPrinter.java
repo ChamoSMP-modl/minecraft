@@ -16,7 +16,7 @@ final class PaginatedChatPrinter {
 
     static Pagination.Page printPage(List<?> entries, int perPage, int page, EntryRenderer renderer) {
         Pagination.Page pg = Pagination.paginate(entries, perPage, page);
-        for (int i = pg.getStart(); i < pg.getEnd(); i++) {
+        for (int i = pg.start(); i < pg.end(); i++) {
             renderer.render(i, i + 1);
         }
         return pg;
@@ -27,8 +27,8 @@ final class PaginatedChatPrinter {
         Pagination.Page pg = printPage(entries, perPage, page, renderer);
         actor.reply(localeManager.getMessage(totalKey, mapOf(
                 "count", String.valueOf(entries.size()),
-                "page", String.valueOf(pg.getPage()),
-                "total_pages", String.valueOf(pg.getTotalPages())
+                "page", String.valueOf(pg.page()),
+                "total_pages", String.valueOf(pg.totalPages())
         )));
     }
 }

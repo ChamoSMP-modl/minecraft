@@ -12,7 +12,6 @@ import gg.modl.minecraft.core.service.ChatMessageCache;
 import gg.modl.minecraft.core.service.TicketService;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
 import static gg.modl.minecraft.core.util.Java8Collections.listOf;
 import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 
@@ -38,27 +37,27 @@ public class ChatReportCommand {
 
         if (ticketUtil.denySelfReport(actor, reporter, targetPlayer)) return;
 
-        String chatLog = chatMessageCache.getChatLogForReport(targetPlayer.getUuid().toString());
+        String chatLog = chatMessageCache.getChatLogForReport(targetPlayer.uuid().toString());
 
         if (chatLog.isEmpty()) {
-            actor.reply(localeManager.getMessage("messages.no_chat_logs_available", mapOf("player", targetPlayer.getUsername())));
+            actor.reply(localeManager.getMessage("messages.no_chat_logs_available", mapOf("player", targetPlayer.username())));
             return;
         }
 
-        String description = "**Chat Report for " + targetPlayer.getUsername() + "**\n\n" +
-                             "Reported by: " + reporter.getUsername() + "\n\n" +
+        String description = "**Chat Report for " + targetPlayer.username() + "**\n\n" +
+                             "Reported by: " + reporter.username() + "\n\n" +
                              "**Chat Log:**\n```\n" + chatLog + "\n```";
 
         String createdServer = platform.getPlayerServer(actor.uniqueId());
 
         CreateTicketRequest request = CreateTicketRequest.builder()
-            .creatorUuid(reporter.getUuid().toString())
+            .creatorUuid(reporter.uuid().toString())
             .type("chat")
-            .creatorName(reporter.getUsername())
-            .subject("Chat Report: " + targetPlayer.getUsername())
+            .creatorName(reporter.username())
+            .subject("Chat Report: " + targetPlayer.username())
             .description(description)
-            .reportedPlayerUuid(targetPlayer.getUuid().toString())
-            .reportedPlayerName(targetPlayer.getUsername())
+            .reportedPlayerUuid(targetPlayer.uuid().toString())
+            .reportedPlayerName(targetPlayer.username())
             .priority("normal")
             .createdServer(createdServer)
             .chatMessages(listOf(chatLog.split("\n")))

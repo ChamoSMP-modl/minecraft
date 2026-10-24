@@ -1,7 +1,5 @@
 package gg.modl.minecraft.core.util;
 
-import lombok.Value;
-
 import java.util.List;
 
 public final class Pagination {
@@ -44,19 +42,13 @@ public final class Pagination {
         return printMode ? page : 0;
     }
 
-    @Value
-    public static class Page {
-        int page;
-        int totalPages;
-        int start;
-        int end;
+    public record Page(int page, int totalPages, int start, int end) {
+            public boolean hasNextPage() {
+                return page < totalPages;
+            }
 
-        public boolean hasNextPage() {
-            return page < totalPages;
+            public boolean isOutOfRange() {
+                return page > totalPages;
+            }
         }
-
-        public boolean isOutOfRange() {
-            return page > totalPages;
-        }
-    }
 }

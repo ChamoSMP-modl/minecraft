@@ -6,30 +6,32 @@ import gg.modl.minecraft.api.AbstractPlayer;
 import gg.modl.minecraft.api.DatabaseProvider;
 import gg.modl.minecraft.core.Platform;
 import gg.modl.minecraft.core.StaffAudience;
-import revxrsal.commands.Lamp;
-import revxrsal.commands.command.CommandActor;
-import revxrsal.commands.bukkit.BukkitLamp;
-import revxrsal.commands.bukkit.BukkitLampConfig;
-import revxrsal.commands.bukkit.actor.BukkitCommandActor;
 import gg.modl.minecraft.core.service.database.LiteBansDatabaseProvider;
+import gg.modl.minecraft.core.util.PluginLogger;
 import gg.modl.minecraft.core.util.StringUtil;
 import gg.modl.minecraft.spigot.bridge.folia.FoliaScheduler;
 import lombok.Setter;
-import net.md_5.bungee.chat.ComponentSerializer;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import java.util.function.Consumer;
+import revxrsal.commands.Lamp;
+import revxrsal.commands.bukkit.BukkitLamp;
+import revxrsal.commands.bukkit.BukkitLampConfig;
+import revxrsal.commands.bukkit.actor.BukkitCommandActor;
+import revxrsal.commands.command.CommandActor;
+
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import gg.modl.minecraft.core.util.PluginLogger;
 
 public class SpigotPlatform implements Platform {
     private final Logger logger;
@@ -66,22 +68,24 @@ public class SpigotPlatform implements Platform {
 
     @Override
     public void broadcast(String string) {
-        runOnMainThread(() -> Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', string)));
+        runOnMainThread(() -> Bukkit.broadcast(MiniMessage.miniMessage().deserialize(string)));
     }
 
     @Override
     public void staffBroadcast(String string) {
-        String message = ChatColor.translateAlternateColorCodes('&', string);
+        Component message = MiniMessage.miniMessage().deserialize(string);
         runOnMainThread(() -> Bukkit.getOnlinePlayers().stream()
-            .filter(player -> staffAudience != null && staffAudience.includes(player.getUniqueId()))
-            .forEach(player -> player.sendMessage(message)));
+                .filter(player -> staffAudience != null && staffAudience.includes(player.getUniqueId()))
+                .forEach(player -> player.sendMessage(message)));
     }
 
     @Override
     public void staffJsonBroadcast(String jsonMessage) {
         runOnMainThread(() -> Bukkit.getOnlinePlayers().stream()
-            .filter(player -> staffAudience != null && staffAudience.includes(player.getUniqueId()))
-            .forEach(player -> player.spigot().sendMessage(ComponentSerializer.parse(jsonMessage))));
+                .filter(player -> staffAudience != null && staffAudience.includes(player.getUniqueId()))
+                .forEach(player -> player.sendMessage(
+                        GsonComponentSerializer.gson().deserialize(jsonMessage)
+                )));
     }
 
     @Override
@@ -93,7 +97,10 @@ public class SpigotPlatform implements Platform {
     @Override
     public void sendJsonMessage(UUID uuid, String jsonMessage) {
         Player player = Bukkit.getPlayer(uuid);
-        if (player != null && player.isOnline()) player.spigot().sendMessage(ComponentSerializer.parse(jsonMessage));
+        if (player != null && player.isOnline())
+            player.sendMessage(
+                    GsonComponentSerializer.gson().deserialize(jsonMessage)
+            );
     }
 
     @Override
@@ -103,17 +110,16 @@ public class SpigotPlatform implements Platform {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Lamp<BukkitCommandActor> buildLamp(Consumer<Lamp.Builder<? extends CommandActor>> configurator) {
         Lamp.Builder<BukkitCommandActor> builder = BukkitLamp.builder(createLampConfig());
-        configurator.accept((Lamp.Builder) builder);
+        configurator.accept(builder);
         return builder.build();
     }
 
     BukkitLampConfig<BukkitCommandActor> createLampConfig() {
-        return BukkitLampConfig.<BukkitCommandActor>builder(plugin)
-            .disableBrigadier(shouldDisableBrigadier())
-            .build();
+        return BukkitLampConfig.builder(plugin)
+                .disableBrigadier(shouldDisableBrigadier())
+                .build();
     }
 
     boolean shouldDisableBrigadier() {
@@ -137,7 +143,8 @@ public class SpigotPlatform implements Platform {
 
         if (!queryMojang) return null;
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(username);
-        if (offlinePlayer.hasPlayedBefore()) return new AbstractPlayer(offlinePlayer.getUniqueId(), offlinePlayer.getName(), null, false);
+        if (offlinePlayer.hasPlayedBefore())
+            return new AbstractPlayer(offlinePlayer.getUniqueId(), offlinePlayer.getName(), null, false);
         return null;
     }
 
@@ -150,8 +157,8 @@ public class SpigotPlatform implements Platform {
     @Override
     public Collection<AbstractPlayer> getOnlinePlayers() {
         return Bukkit.getOnlinePlayers().stream()
-            .map(this::toAbstractPlayer)
-            .collect(Collectors.toList());
+                .map(this::toAbstractPlayer)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -176,22 +183,15 @@ public class SpigotPlatform implements Platform {
 
     @Override
     public void runOnMainThread(Runnable task) {
-        if (FoliaScheduler.isFolia()) {
-            foliaScheduler.runGlobal(task);
-            return;
-        }
-        if (Bukkit.isPrimaryThread()) {
-            task.run();
-            return;
-        }
-        Bukkit.getScheduler().runTask(plugin, task);
+        foliaScheduler.runGlobal(task);
     }
 
     @Override
     public void kickPlayer(AbstractPlayer player, String reason) {
         if (player == null) return;
-        Player bukkitPlayer = Bukkit.getPlayer(player.getUuid());
-        if (bukkitPlayer != null && bukkitPlayer.isOnline()) bukkitPlayer.kickPlayer(StringUtil.unescapeNewlines(reason));
+        Player bukkitPlayer = Bukkit.getPlayer(player.uuid());
+        if (bukkitPlayer != null && bukkitPlayer.isOnline())
+            bukkitPlayer.kick(MiniMessage.miniMessage().deserialize(StringUtil.unescapeNewlines(reason)));
     }
 
     @Override
@@ -231,11 +231,7 @@ public class SpigotPlatform implements Platform {
     public void dispatchPlayerCommand(UUID uuid, String command) {
         Player player = Bukkit.getPlayer(uuid);
         if (player == null) return;
-        if (FoliaScheduler.isFolia()) {
-            foliaScheduler.runForEntity(player, () -> player.performCommand(command));
-        } else {
-            Bukkit.getScheduler().runTask(plugin, () -> player.performCommand(command));
-        }
+        foliaScheduler.runForEntity(player, () -> player.performCommand(command));
     }
 
     @Override

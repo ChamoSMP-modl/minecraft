@@ -33,7 +33,7 @@ public abstract class AbstractManualPunishmentCommand {
     protected abstract long getDefaultDuration();
 
     protected ModlHttpClient getHttpClient() {
-        return httpClientHolder.getClient();
+        return httpClientHolder.client();
     }
 
     protected void executePunishment(CommandActor actor, Account target, String args) {

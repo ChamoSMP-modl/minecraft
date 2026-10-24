@@ -74,7 +74,7 @@ class SyncRequestUsernameFilterTest {
 
     @Test
     void bedrockDefaultUsernamePassesRegex() {
-        List<ChatLogEntry> input = Arrays.asList(chat(".Player_1"));
+        List<ChatLogEntry> input = List.of(chat(".Player_1"));
         List<ChatLogEntry> result = SyncService.filterByUsername(input, ChatLogEntry::getUsername);
         assertEquals(1, result.size());
         assertEquals(".Player_1", result.get(0).getUsername());

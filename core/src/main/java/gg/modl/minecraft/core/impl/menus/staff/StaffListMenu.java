@@ -31,18 +31,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class StaffListMenu extends BaseStaffListMenu<StaffListMenu.StaffMember> {
-    @Getter
-    public static class StaffMember {
-        private final String id;
-        private final UUID uuid;
-        private final String username, currentRole;
-
-        public StaffMember(String id, UUID uuid, String username, String currentRole) {
-            this.id = id;
-            this.uuid = uuid;
-            this.username = username;
-            this.currentRole = currentRole;
-        }
+    public record StaffMember(String id, UUID uuid, String username, String currentRole) {
 
     }
 
@@ -54,7 +43,7 @@ public class StaffListMenu extends BaseStaffListMenu<StaffListMenu.StaffMember> 
     private String viewerRole;
     private final Map<String, String> selectedRoles = new HashMap<>();
     private final boolean hasPermission;
-    @Getter private CompletableFuture<Void> dataFuture;
+    @Getter private final CompletableFuture<Void> dataFuture;
 
     public StaffListMenu(Platform platform, ModlHttpClient httpClient, UUID viewerUuid, String viewerName,
                          boolean isAdmin, String panelUrl, Consumer<CirrusPlayerWrapper> backAction) {
@@ -126,7 +115,7 @@ public class StaffListMenu extends BaseStaffListMenu<StaffListMenu.StaffMember> 
             }
 
             for (StaffMember staff : staffMembers) {
-                SkinTextureCache.ensureCached(staff.getUuid());
+                SkinTextureCache.ensureCached(staff.uuid());
             }
         });
 
@@ -138,11 +127,11 @@ public class StaffListMenu extends BaseStaffListMenu<StaffListMenu.StaffMember> 
     }
 
     private boolean isSuperAdmin(StaffMember staff) {
-        return SUPER_ADMIN_ROLE.equals(staff.getCurrentRole());
+        return SUPER_ADMIN_ROLE.equals(staff.currentRole());
     }
 
     private boolean isViewerSelf(StaffMember staff) {
-        return staff.getUuid() != null && staff.getUuid().equals(viewerUuid);
+        return staff.uuid() != null && staff.uuid().equals(viewerUuid);
     }
 
     private boolean canModify(StaffMember staff) {
@@ -154,7 +143,7 @@ public class StaffListMenu extends BaseStaffListMenu<StaffListMenu.StaffMember> 
         if (!viewerIsSuperAdmin && viewerRole == null) return false;
 
         int viewerOrder = viewerIsSuperAdmin ? Integer.MIN_VALUE : getRoleOrder(viewerRole);
-        int targetOrder = getRoleOrder(staff.getCurrentRole());
+        int targetOrder = getRoleOrder(staff.currentRole());
         return viewerOrder < targetOrder;
     }
 
@@ -169,7 +158,7 @@ public class StaffListMenu extends BaseStaffListMenu<StaffListMenu.StaffMember> 
 
     @Override
     protected CirrusItem map(StaffMember staff) {
-        if ("no_permission".equals(staff.getId())) {
+        if ("no_permission".equals(staff.id())) {
             return CirrusItem.of(
                     CirrusItemType.BARRIER,
                     CirrusChatElement.ofLegacyText(MenuItems.COLOR_RED + "No Permission"),
@@ -179,7 +168,7 @@ public class StaffListMenu extends BaseStaffListMenu<StaffListMenu.StaffMember> 
                     )
             );
         }
-        if (staff.getId() == null)
+        if (staff.id() == null)
             return createEmptyPlaceholder("No staff members");
 
         boolean canMod = canModify(staff);
@@ -188,18 +177,18 @@ public class StaffListMenu extends BaseStaffListMenu<StaffListMenu.StaffMember> 
         CirrusItem headItem = CirrusItem.of(
                 CirrusItemType.PLAYER_HEAD,
                 CirrusChatElement.ofLegacyText(
-                        (canMod ? MenuItems.COLOR_GOLD : MenuItems.COLOR_GRAY) + staff.getUsername()),
+                        (canMod ? MenuItems.COLOR_GOLD : MenuItems.COLOR_GRAY) + staff.username()),
                 MenuItems.lore(lore)
         );
 
-        headItem = SkinTextureCache.applyCachedOrFetch(headItem, staff.getUuid());
+        headItem = SkinTextureCache.applyCachedOrFetch(headItem, staff.uuid());
 
         return headItem;
     }
 
     private List<String> buildLockedStaffLore(StaffMember staff) {
         List<String> lore = new ArrayList<>();
-        lore.add(MenuItems.COLOR_GRAY + "Role: " + MenuItems.COLOR_WHITE + staff.getCurrentRole());
+        lore.add(MenuItems.COLOR_GRAY + "Role: " + MenuItems.COLOR_WHITE + staff.currentRole());
         lore.add("");
         if (isSuperAdmin(staff)) {
             lore.add(MenuItems.COLOR_RED + "Super Admins cannot be modified");
@@ -214,13 +203,13 @@ public class StaffListMenu extends BaseStaffListMenu<StaffListMenu.StaffMember> 
 
     private List<String> buildSelectableStaffLore(StaffMember staff) {
         List<String> lore = new ArrayList<>();
-        String selectedRole = selectedRoles.getOrDefault(staff.getId(), staff.getCurrentRole());
+        String selectedRole = selectedRoles.getOrDefault(staff.id(), staff.currentRole());
 
         lore.add(MenuItems.COLOR_GRAY + "Roles:");
         for (String role : availableRoles) {
-            if (role.equals(staff.getCurrentRole())) {
+            if (role.equals(staff.currentRole())) {
                 lore.add(MenuItems.COLOR_GREEN + "  §l" + role + " §r§7(current)");
-            } else if (role.equals(selectedRole) && !role.equals(staff.getCurrentRole())) {
+            } else if (role.equals(selectedRole) && !role.equals(staff.currentRole())) {
                 lore.add(MenuItems.COLOR_GREEN + "  " + role + " §7(selected)");
             } else {
                 lore.add(MenuItems.COLOR_GRAY + "  " + role);
@@ -234,7 +223,7 @@ public class StaffListMenu extends BaseStaffListMenu<StaffListMenu.StaffMember> 
 
     @Override
     protected void handleClick(Click click, StaffMember staff) {
-        if (staff.getId() == null || "no_permission".equals(staff.getId()) || !hasPermission) {
+        if (staff.id() == null || "no_permission".equals(staff.id()) || !hasPermission) {
             return;
         }
 
@@ -254,12 +243,12 @@ public class StaffListMenu extends BaseStaffListMenu<StaffListMenu.StaffMember> 
             return;
         }
 
-        String currentSelected = selectedRoles.getOrDefault(staff.getId(), staff.getCurrentRole());
+        String currentSelected = selectedRoles.getOrDefault(staff.id(), staff.currentRole());
         int currentIndex = availableRoles.indexOf(currentSelected);
         int nextIndex = (currentIndex + 1) % availableRoles.size();
         String nextRole = availableRoles.get(nextIndex);
 
-        selectedRoles.put(staff.getId(), nextRole);
+        selectedRoles.put(staff.id(), nextRole);
         sendMessage(MenuItems.COLOR_YELLOW + "Selected role: " + MenuItems.COLOR_GREEN + nextRole +
                 MenuItems.COLOR_GRAY + " (left-click to apply)");
 
@@ -269,20 +258,20 @@ public class StaffListMenu extends BaseStaffListMenu<StaffListMenu.StaffMember> 
     }
 
     private void applyRole(Click click, StaffMember staff) {
-        String selectedRole = selectedRoles.getOrDefault(staff.getId(), staff.getCurrentRole());
+        String selectedRole = selectedRoles.getOrDefault(staff.id(), staff.currentRole());
 
-        if (selectedRole.equals(staff.getCurrentRole())) {
-            sendMessage(MenuItems.COLOR_GRAY + "This is already " + staff.getUsername() + "'s current role.");
+        if (selectedRole.equals(staff.currentRole())) {
+            sendMessage(MenuItems.COLOR_GRAY + "This is already " + staff.username() + "'s current role.");
             return;
         }
 
         sendMessage(MenuItems.COLOR_YELLOW + "Applying role " + MenuItems.COLOR_GREEN + selectedRole +
-                MenuItems.COLOR_YELLOW + " to " + staff.getUsername() + "...");
+                MenuItems.COLOR_YELLOW + " to " + staff.username() + "...");
 
         String actingStaffId = PluginServices.cache() != null ? PluginServices.cache().getStaffId(viewerUuid) : null;
-        httpClient.updateStaffRole(staff.getId(), selectedRole, actingStaffId).thenAccept(v -> {
+        httpClient.updateStaffRole(staff.id(), selectedRole, actingStaffId).thenAccept(v -> {
             sendMessage(MenuItems.COLOR_GREEN + "Role updated successfully!");
-            selectedRoles.remove(staff.getId());
+            selectedRoles.remove(staff.id());
 
             httpClient.getStaffPermissions().exceptionally(e -> null);
 

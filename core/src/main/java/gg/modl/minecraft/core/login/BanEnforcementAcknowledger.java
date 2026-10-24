@@ -29,7 +29,7 @@ public final class BanEnforcementAcknowledger {
                     true
             );
 
-            ModlHttpClient httpClient = httpClientHolder.getClient();
+            ModlHttpClient httpClient = httpClientHolder.client();
             httpClient.acknowledgePunishment(request).thenAccept(response -> {
                 if (debugMode) logger.info("Successfully acknowledged ban enforcement for punishment " + ban.getId());
             }).exceptionally(throwable -> {

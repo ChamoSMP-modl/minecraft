@@ -15,7 +15,7 @@ public final class ConfigSchema {
     }
 
     public static ConfigSchema fixed() {
-        return new ConfigSchema(Collections.<String>emptySet());
+        return new ConfigSchema(Collections.emptySet());
     }
 
     public static ConfigSchema withDynamicSections(String... paths) {

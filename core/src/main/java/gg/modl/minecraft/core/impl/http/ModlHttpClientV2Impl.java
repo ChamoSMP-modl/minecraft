@@ -1,81 +1,22 @@
 package gg.modl.minecraft.core.impl.http;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
 import gg.modl.minecraft.api.http.ApiClientException;
 import gg.modl.minecraft.api.http.ModlHttpClient;
 import gg.modl.minecraft.api.http.PanelUnavailableException;
-import gg.modl.minecraft.api.http.request.AddPunishmentEvidenceRequest;
-import gg.modl.minecraft.api.http.request.AddPunishmentNoteRequest;
-import gg.modl.minecraft.api.http.request.ChangePunishmentDurationRequest;
-import gg.modl.minecraft.api.http.request.ChatLogBatchRequest;
-import gg.modl.minecraft.api.http.request.ClaimTicketRequest;
-import gg.modl.minecraft.api.http.request.CommandLogBatchRequest;
-import gg.modl.minecraft.api.http.request.CreatePlayerNoteRequest;
-import gg.modl.minecraft.api.http.request.CreatePunishmentRequest;
-import gg.modl.minecraft.api.http.request.CreateTicketRequest;
-import gg.modl.minecraft.api.http.request.MigrationStatusUpdateRequest;
-import gg.modl.minecraft.api.http.request.ModifyPunishmentTicketsRequest;
-import gg.modl.minecraft.api.http.request.NotificationAcknowledgeRequest;
-import gg.modl.minecraft.api.http.request.PardonPlayerRequest;
-import gg.modl.minecraft.api.http.request.PardonPunishmentRequest;
-import gg.modl.minecraft.api.http.request.PlayerDisconnectRequest;
-import gg.modl.minecraft.api.http.request.PlayerGetRequest;
-import gg.modl.minecraft.api.http.request.PlayerLoginRequest;
-import gg.modl.minecraft.api.http.request.PlayerLookupRequest;
-import gg.modl.minecraft.api.http.request.PlayerNameRequest;
-import gg.modl.minecraft.api.http.request.PunishmentAcknowledgeRequest;
-import gg.modl.minecraft.api.http.request.PunishmentCreateRequest;
-import gg.modl.minecraft.api.http.request.StatWipeAcknowledgeRequest;
-import gg.modl.minecraft.api.http.request.SyncRequest;
-import gg.modl.minecraft.api.http.request.TogglePunishmentOptionRequest;
-import gg.modl.minecraft.api.http.response.ChatLogsResponse;
-import gg.modl.minecraft.api.http.response.ClaimTicketResponse;
-import gg.modl.minecraft.api.http.response.CommandLogsResponse;
-import gg.modl.minecraft.api.http.response.CreateTicketResponse;
-import gg.modl.minecraft.api.http.response.DashboardStatsResponse;
-import gg.modl.minecraft.api.http.response.EvidenceUploadTokenResponse;
-import gg.modl.minecraft.api.http.response.LinkedAccountsResponse;
-import gg.modl.minecraft.api.http.response.OnlinePlayersResponse;
-import gg.modl.minecraft.api.http.response.PaginatedNotesResponse;
-import gg.modl.minecraft.api.http.response.PaginatedPunishmentsResponse;
-import gg.modl.minecraft.api.http.response.PardonResponse;
-import gg.modl.minecraft.api.http.response.PlayerGetResponse;
-import gg.modl.minecraft.api.http.response.PlayerLoginResponse;
-import gg.modl.minecraft.api.http.response.PlayerLookupResponse;
-import gg.modl.minecraft.api.http.response.PlayerNameResponse;
-import gg.modl.minecraft.api.http.response.PlayerNoteCreateResponse;
-import gg.modl.minecraft.api.http.response.PlayerProfileResponse;
-import gg.modl.minecraft.api.http.response.PunishmentCreateResponse;
-import gg.modl.minecraft.api.http.response.PunishmentDetailResponse;
-import gg.modl.minecraft.api.http.response.PunishmentPreviewResponse;
-import gg.modl.minecraft.api.http.response.PunishmentTypesResponse;
-import gg.modl.minecraft.api.http.response.RecentPunishmentsResponse;
-import gg.modl.minecraft.api.http.response.ReportsResponse;
-import gg.modl.minecraft.api.http.response.RolesListResponse;
-import gg.modl.minecraft.api.http.response.Staff2faTokenResponse;
-import gg.modl.minecraft.api.http.response.StaffListResponse;
-import gg.modl.minecraft.api.http.response.StaffPermissionsResponse;
-import gg.modl.minecraft.api.http.response.SyncResponse;
-import gg.modl.minecraft.api.http.response.TicketsResponse;
+import gg.modl.minecraft.api.http.request.*;
+import gg.modl.minecraft.api.http.response.*;
 import gg.modl.minecraft.core.boot.StartupClient;
 import gg.modl.minecraft.core.plugin.PluginInfo;
-import org.jetbrains.annotations.NotNull;
-
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
@@ -84,14 +25,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TimeZone;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
@@ -105,7 +39,8 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
             "MMM d, yyyy, h:mm:ss a",
     };
 
-    private @NotNull final Gson gson;
+    private @NotNull
+    final Gson gson;
 
     public ModlHttpClientV2Impl(@NotNull String baseUrl, @NotNull String apiKey, @NotNull String serverDomain, boolean debugMode) {
         super(baseUrl, apiKey, serverDomain, debugMode, "V2", "modl-http-");
@@ -115,49 +50,45 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
     }
 
     private static JsonDeserializer<Date> flexibleDateDeserializer() {
-        return new JsonDeserializer<Date>() {
-            @Override
-            public Date deserialize(JsonElement json, Type typeOfT,
-                                    JsonDeserializationContext context) throws JsonParseException {
-                if (json == null || json.isJsonNull()) {
-                    return null;
-                }
-                if (!json.isJsonPrimitive()) {
-                    throw new JsonParseException("Unsupported date payload: " + json);
-                }
-                if (json.getAsJsonPrimitive().isNumber()) {
-                    return new Date(json.getAsLong());
-                }
-                String value = json.getAsString();
-                if (value == null) {
-                    return null;
-                }
-                String trimmed = value.trim();
-                if (trimmed.isEmpty() || "null".equalsIgnoreCase(trimmed)) {
-                    return null;
-                }
-                try {
-                    return Date.from(Instant.parse(trimmed));
-                } catch (DateTimeParseException ignored) {
-                }
-                try {
-                    return Date.from(OffsetDateTime.parse(trimmed).toInstant());
-                } catch (DateTimeParseException ignored) {
-                }
-                try {
-                    return new Date(Long.parseLong(trimmed));
-                } catch (NumberFormatException ignored) {
-                }
-                for (String pattern : FALLBACK_DATE_PATTERNS) {
-                    try {
-                        SimpleDateFormat format = new SimpleDateFormat(pattern, Locale.US);
-                        format.setTimeZone(TimeZone.getTimeZone("UTC"));
-                        return format.parse(trimmed);
-                    } catch (ParseException ignored) {
-                    }
-                }
-                throw new JsonParseException(trimmed);
+        return (json, _, _) -> {
+            if (json == null || json.isJsonNull()) {
+                return null;
             }
+            if (!json.isJsonPrimitive()) {
+                throw new JsonParseException("Unsupported date payload: " + json);
+            }
+            if (json.getAsJsonPrimitive().isNumber()) {
+                return new Date(json.getAsLong());
+            }
+            String value = json.getAsString();
+            if (value == null) {
+                return null;
+            }
+            String trimmed = value.trim();
+            if (trimmed.isEmpty() || "null".equalsIgnoreCase(trimmed)) {
+                return null;
+            }
+            try {
+                return Date.from(Instant.parse(trimmed));
+            } catch (DateTimeParseException ignored) {
+            }
+            try {
+                return Date.from(OffsetDateTime.parse(trimmed).toInstant());
+            } catch (DateTimeParseException ignored) {
+            }
+            try {
+                return new Date(Long.parseLong(trimmed));
+            } catch (NumberFormatException ignored) {
+            }
+            for (String pattern : FALLBACK_DATE_PATTERNS) {
+                try {
+                    SimpleDateFormat format = new SimpleDateFormat(pattern, Locale.US);
+                    format.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    return format.parse(trimmed);
+                } catch (ParseException ignored) {
+                }
+            }
+            throw new JsonParseException(trimmed);
         };
     }
 
@@ -229,21 +160,24 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
         return new RequestBuilder(baseUrl + endpoint);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<PlayerProfileResponse> getPlayerProfile(@NotNull UUID uuid) {
         return sendAsync(requestBuilder("/minecraft/players/" + uuid + "?punishmentLimit=14&noteLimit=14")
                 .GET()
                 .build(), PlayerProfileResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<LinkedAccountsResponse> getLinkedAccounts(@NotNull UUID uuid) {
         return sendAsync(requestBuilder("/minecraft/players/" + uuid + "/linked-accounts")
                 .GET()
                 .build(), LinkedAccountsResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<PlayerLoginResponse> playerLogin(@NotNull PlayerLoginRequest request) {
         String requestBody = gson.toJson(request);
         if (debugMode) logger.info(String.format("[V2] Player login request body: %s", requestBody));
@@ -255,7 +189,8 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), PlayerLoginResponse.class, "LOGIN", loginLane);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<Void> playerDisconnect(@NotNull PlayerDisconnectRequest request) {
         return sendAsync(requestBuilder("/minecraft/players/disconnect")
                 .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
@@ -263,7 +198,8 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), Void.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<CreateTicketResponse> createTicket(@NotNull CreateTicketRequest request) {
         return sendAsync(requestBuilder("/minecraft/tickets")
                 .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
@@ -271,7 +207,8 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), CreateTicketResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<CreateTicketResponse> createUnfinishedTicket(@NotNull CreateTicketRequest request) {
         String requestBody = gson.toJson(request);
         if (debugMode) logger.info(String.format("[V2] Create unfinished ticket request body: %s", requestBody));
@@ -282,7 +219,8 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), CreateTicketResponse.class, "CREATE_UNFINISHED_TICKET");
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<Void> createPunishment(@NotNull CreatePunishmentRequest request) {
 
         return sendAsync(requestBuilder("/minecraft/punishments/create")
@@ -291,15 +229,17 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), Void.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<Void> createPlayerNote(@NotNull CreatePlayerNoteRequest request) {
-        return sendAsync(requestBuilder("/minecraft/players/" + request.getTargetUuid() + "/notes")
+        return sendAsync(requestBuilder("/minecraft/players/" + request.targetUuid() + "/notes")
                 .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
                 .POST(gson.toJson(request))
                 .build(), Void.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<PunishmentCreateResponse> createPunishmentWithResponse(@NotNull PunishmentCreateRequest request) {
         return sendAsync(requestBuilder("/minecraft/punishments/dynamic")
                 .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
@@ -307,29 +247,33 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), PunishmentCreateResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<PlayerGetResponse> getPlayer(@NotNull PlayerGetRequest request) {
-        return sendAsync(requestBuilder("/minecraft/players?minecraftUuid=" + request.getMinecraftUuid())
+        return sendAsync(requestBuilder("/minecraft/players?minecraftUuid=" + request.minecraftUuid())
                 .GET()
                 .build(), PlayerGetResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<PlayerNameResponse> getPlayer(@NotNull PlayerNameRequest request) {
-        return sendAsync(requestBuilder("/minecraft/players/by-name?username=" + request.getMinecraftUsername())
+        return sendAsync(requestBuilder("/minecraft/players/by-name?username=" + request.minecraftUsername())
                 .GET()
                 .build(), PlayerNameResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<PlayerNoteCreateResponse> createPlayerNoteWithResponse(@NotNull CreatePlayerNoteRequest request) {
-        return sendAsync(requestBuilder("/minecraft/players/" + request.getTargetUuid() + "/notes")
+        return sendAsync(requestBuilder("/minecraft/players/" + request.targetUuid() + "/notes")
                 .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
                 .POST(gson.toJson(request))
                 .build(), PlayerNoteCreateResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<SyncResponse> sync(@NotNull SyncRequest request) {
         String requestBody = gson.toJson(request);
         if (debugMode) logger.info(String.format("[V2] Sync request body: %s", requestBody));
@@ -347,7 +291,8 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
         return index >= 0 ? baseUrl.substring(0, index) + "/v2" : baseUrl;
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<Void> acknowledgePunishment(@NotNull PunishmentAcknowledgeRequest request) {
         return sendAsync(requestBuilder("/minecraft/punishments/acknowledge")
                 .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
@@ -355,7 +300,8 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), Void.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<Void> acknowledgeNotifications(@NotNull NotificationAcknowledgeRequest request) {
         return sendAsync(requestBuilder("/minecraft/notifications/acknowledge")
                 .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
@@ -363,21 +309,24 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), Void.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<PunishmentTypesResponse> getPunishmentTypes() {
         return sendAsync(requestBuilder("/minecraft/punishments/types")
                 .GET()
                 .build(), PunishmentTypesResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<StaffPermissionsResponse> getStaffPermissions() {
         return sendAsync(requestBuilder("/minecraft/staff/permissions")
                 .GET()
                 .build(), StaffPermissionsResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<PlayerLookupResponse> lookupPlayer(@NotNull PlayerLookupRequest request) {
         return sendAsync(requestBuilder("/minecraft/players/lookup")
                 .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
@@ -385,7 +334,8 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), PlayerLookupResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<PlayerProfileResponse> lookupPlayerProfile(@NotNull PlayerLookupRequest request) {
         return sendAsync(requestBuilder("/minecraft/players/lookup-profile?punishmentLimit=14&noteLimit=14")
                 .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
@@ -393,15 +343,17 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), PlayerProfileResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<PardonResponse> pardonPunishment(@NotNull PardonPunishmentRequest request) {
-        return sendAsync(requestBuilder("/minecraft/punishments/" + request.getPunishmentId() + "/pardon")
+        return sendAsync(requestBuilder("/minecraft/punishments/" + request.punishmentId() + "/pardon")
                 .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
                 .POST(gson.toJson(request))
                 .build(), PardonResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<PardonResponse> pardonPlayer(@NotNull PardonPlayerRequest request) {
         return sendAsync(requestBuilder("/minecraft/players/pardon")
                 .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
@@ -409,7 +361,8 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), PardonResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<Void> updateMigrationStatus(@NotNull MigrationStatusUpdateRequest request) {
         return sendAsync(requestBuilder("/minecraft/migration/progress")
                 .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
@@ -417,9 +370,10 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), Void.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<Void> submitIpInfo(@NotNull String minecraftUUID, @NotNull String ip,
-                                                 String country, String region, String asn, boolean proxy, boolean hosting) {
+                                                String country, String region, String asn, boolean proxy, boolean hosting) {
         Map<String, Object> body = new HashMap<>();
         body.put("minecraftUUID", minecraftUUID);
         body.put("ip", ip);
@@ -434,21 +388,24 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), Void.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<OnlinePlayersResponse> getOnlinePlayers() {
         return sendAsync(requestBuilder("/minecraft/players/online")
                 .GET()
                 .build(), OnlinePlayersResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<RecentPunishmentsResponse> getRecentPunishments(int hours) {
         return sendAsync(requestBuilder("/minecraft/punishments/recent?hours=" + hours)
                 .GET()
                 .build(), RecentPunishmentsResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<ReportsResponse> getReports(String status) {
         String endpoint = "/minecraft/reports";
         if (status != null && !status.isEmpty()) endpoint += "?status=" + status;
@@ -457,7 +414,8 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), ReportsResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<ReportsResponse> getPlayerReports(@NotNull UUID playerUuid, String status) {
         String endpoint = "/minecraft/reports/player/" + playerUuid;
         if (status != null && !status.isEmpty()) endpoint += "?status=" + status;
@@ -466,7 +424,8 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), ReportsResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<Void> dismissReport(@NotNull String reportId, String dismissedBy, String reason) {
         Map<String, String> body = new HashMap<>();
         if (dismissedBy != null) body.put("dismissedBy", dismissedBy);
@@ -478,7 +437,8 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), Void.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<Void> resolveReport(@NotNull String reportId, String resolvedBy, String resolution, String punishmentId) {
         Map<String, String> body = new HashMap<>();
         if (resolvedBy != null) body.put("resolvedBy", resolvedBy);
@@ -491,7 +451,8 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), Void.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<TicketsResponse> getTickets(String status, String type) {
         StringBuilder endpoint = new StringBuilder("/minecraft/tickets");
         boolean hasParam = false;
@@ -507,14 +468,16 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), TicketsResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<DashboardStatsResponse> getDashboardStats() {
         return sendAsync(requestBuilder("/minecraft/dashboard/stats")
                 .GET()
                 .build(), DashboardStatsResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<PunishmentPreviewResponse> getPunishmentPreview(@NotNull UUID playerUuid, int typeOrdinal) {
         String endpoint = "/minecraft/punishments/preview?playerUuid=" + playerUuid + "&typeOrdinal=" + typeOrdinal;
         return sendAsync(requestBuilder(endpoint)
@@ -522,79 +485,86 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), PunishmentPreviewResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<Void> addPunishmentNote(@NotNull AddPunishmentNoteRequest request) {
         Map<String, String> body = new HashMap<>();
-        body.put("issuerName", request.getIssuerName());
-        if (request.getIssuerId() != null) body.put("issuerId", request.getIssuerId());
-        body.put("note", request.getNote());
+        body.put("issuerName", request.issuerName());
+        if (request.issuerId() != null) body.put("issuerId", request.issuerId());
+        body.put("note", request.note());
 
-        return sendAsync(requestBuilder("/minecraft/punishments/" + request.getPunishmentId() + "/note")
+        return sendAsync(requestBuilder("/minecraft/punishments/" + request.punishmentId() + "/note")
                 .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
                 .POST(gson.toJson(body))
                 .build(), Void.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<Void> addPunishmentEvidence(@NotNull AddPunishmentEvidenceRequest request) {
         Map<String, String> body = new HashMap<>();
-        body.put("issuerName", request.getIssuerName());
-        if (request.getIssuerId() != null) body.put("issuerId", request.getIssuerId());
-        body.put("evidenceUrl", request.getEvidenceUrl());
+        body.put("issuerName", request.issuerName());
+        if (request.issuerId() != null) body.put("issuerId", request.issuerId());
+        body.put("evidenceUrl", request.evidenceUrl());
 
-        return sendAsync(requestBuilder("/minecraft/punishments/" + request.getPunishmentId() + "/evidence")
+        return sendAsync(requestBuilder("/minecraft/punishments/" + request.punishmentId() + "/evidence")
                 .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
                 .POST(gson.toJson(body))
                 .build(), Void.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<Void> changePunishmentDuration(@NotNull ChangePunishmentDurationRequest request) {
         Map<String, Object> body = new HashMap<>();
-        body.put("issuerName", request.getIssuerName());
-        if (request.getIssuerId() != null) body.put("issuerId", request.getIssuerId());
-        body.put("newDuration", request.getNewDuration());
+        body.put("issuerName", request.issuerName());
+        if (request.issuerId() != null) body.put("issuerId", request.issuerId());
+        body.put("newDuration", request.newDuration());
 
-        return sendAsync(requestBuilder("/minecraft/punishments/" + request.getPunishmentId() + "/duration")
+        return sendAsync(requestBuilder("/minecraft/punishments/" + request.punishmentId() + "/duration")
                 .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
                 .POST(gson.toJson(body))
                 .build(), Void.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<Void> togglePunishmentOption(@NotNull TogglePunishmentOptionRequest request) {
         Map<String, Object> body = new HashMap<>();
-        body.put("issuerName", request.getIssuerName());
-        if (request.getIssuerId() != null) body.put("issuerId", request.getIssuerId());
-        body.put("option", request.getOption());
-        body.put("enabled", request.isEnabled());
+        body.put("issuerName", request.issuerName());
+        if (request.issuerId() != null) body.put("issuerId", request.issuerId());
+        body.put("option", request.option());
+        body.put("enabled", request.enabled());
 
-        return sendAsync(requestBuilder("/minecraft/punishments/" + request.getPunishmentId() + "/toggle")
+        return sendAsync(requestBuilder("/minecraft/punishments/" + request.punishmentId() + "/toggle")
                 .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
                 .POST(gson.toJson(body))
                 .build(), Void.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<ClaimTicketResponse> claimTicket(@NotNull ClaimTicketRequest request) {
         Map<String, String> body = new HashMap<>();
-        body.put("playerUuid", request.getPlayerUuid());
-        body.put("playerName", request.getPlayerName());
+        body.put("playerUuid", request.playerUuid());
+        body.put("playerName", request.playerName());
 
-        return sendAsync(requestBuilder("/minecraft/tickets/" + request.getTicketId() + "/claim")
+        return sendAsync(requestBuilder("/minecraft/tickets/" + request.ticketId() + "/claim")
                 .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
                 .POST(gson.toJson(body))
                 .build(), ClaimTicketResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<StaffListResponse> getStaffList() {
         return sendAsync(requestBuilder("/minecraft/staff")
                 .GET()
                 .build(), StaffListResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<Void> reportStaffDisconnect(@NotNull String minecraftUuid, long sessionDurationMs) {
         Map<String, Object> body = new HashMap<>();
         body.put("minecraftUuid", minecraftUuid);
@@ -606,28 +576,32 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), Void.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<Void> updateStaffRole(@NotNull String staffId, @NotNull String roleName, String actingStaffId) {
         Map<String, String> body = new HashMap<>();
         body.put("role", roleName);
 
         RequestBuilder builder = requestBuilder("/minecraft/staff/" + staffId + "/role")
                 .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON);
-        if (actingStaffId != null && !actingStaffId.trim().isEmpty()) builder.header(HEADER_ACTING_STAFF_ID, actingStaffId);
+        if (actingStaffId != null && !actingStaffId.trim().isEmpty())
+            builder.header(HEADER_ACTING_STAFF_ID, actingStaffId);
 
         return sendAsync(builder
                 .method("PATCH", gson.toJson(body))
                 .build(), Void.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<RolesListResponse> getRoles() {
         return sendAsync(requestBuilder("/minecraft/roles")
                 .GET()
                 .build(), RolesListResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<Boolean> uploadMigrationFile(@NotNull File file) {
         return CompletableFuture.supplyAsync(() -> {
             String uploadUrl = baseUrl + "/minecraft/migration/upload";
@@ -655,28 +629,32 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
         }, backgroundLane.executor());
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<Void> updateRolePermissions(@NotNull String roleId, @NotNull List<String> permissions, String actingStaffId) {
         Map<String, Object> body = new HashMap<>();
         body.put("permissions", permissions);
 
         RequestBuilder builder = requestBuilder("/minecraft/roles/" + roleId + "/permissions")
                 .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON);
-        if (actingStaffId != null && !actingStaffId.trim().isEmpty()) builder.header(HEADER_ACTING_STAFF_ID, actingStaffId);
+        if (actingStaffId != null && !actingStaffId.trim().isEmpty())
+            builder.header(HEADER_ACTING_STAFF_ID, actingStaffId);
 
         return sendAsync(builder
                 .method("PATCH", gson.toJson(body))
                 .build(), Void.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<PunishmentDetailResponse> getPunishmentDetail(@NotNull String punishmentId) {
         return sendAsync(requestBuilder("/minecraft/punishments/" + punishmentId)
                 .GET()
                 .build(), PunishmentDetailResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<EvidenceUploadTokenResponse> createEvidenceUploadToken(@NotNull String punishmentId, @NotNull String issuerName) {
         Map<String, String> body = new HashMap<>();
         body.put("issuerName", issuerName);
@@ -687,7 +665,8 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), EvidenceUploadTokenResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<Void> updatePlayerServer(@NotNull String minecraftUuid, @NotNull String serverName) {
         Map<String, String> body = new HashMap<>();
         body.put("minecraftUuid", minecraftUuid);
@@ -700,35 +679,38 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), Void.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<Void> modifyPunishmentTickets(@NotNull ModifyPunishmentTicketsRequest request) {
         Map<String, Object> body = new HashMap<>();
-        body.put("issuerName", request.getIssuerName());
-        if (request.getIssuerId() != null) body.put("issuerId", request.getIssuerId());
-        body.put("addTicketIds", request.getAddTicketIds());
-        body.put("removeTicketIds", request.getRemoveTicketIds());
-        body.put("modifyAssociatedTickets", request.isModifyAssociatedTickets());
+        body.put("issuerName", request.issuerName());
+        if (request.issuerId() != null) body.put("issuerId", request.issuerId());
+        body.put("addTicketIds", request.addTicketIds());
+        body.put("removeTicketIds", request.removeTicketIds());
+        body.put("modifyAssociatedTickets", request.modifyAssociatedTickets());
 
-        return sendAsync(requestBuilder("/minecraft/punishments/" + request.getPunishmentId() + "/tickets")
+        return sendAsync(requestBuilder("/minecraft/punishments/" + request.punishmentId() + "/tickets")
                 .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
                 .POST(gson.toJson(body))
                 .build(), Void.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<Void> acknowledgeStatWipe(@NotNull StatWipeAcknowledgeRequest request) {
         Map<String, Object> body = new HashMap<>();
-        body.put("punishmentId", request.getPunishmentId());
-        body.put("serverName", request.getServerName());
-        body.put("success", request.isSuccess());
+        body.put("punishmentId", request.punishmentId());
+        body.put("serverName", request.serverName());
+        body.put("success", request.success());
 
-        return sendAsync(requestBuilder("/minecraft/punishments/" + request.getPunishmentId() + "/stat-wipe-acknowledge")
+        return sendAsync(requestBuilder("/minecraft/punishments/" + request.punishmentId() + "/stat-wipe-acknowledge")
                 .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
                 .POST(gson.toJson(body))
                 .build(), Void.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<TicketsResponse> getTicketsByIds(@NotNull List<String> ticketIds) {
         Map<String, Object> body = new HashMap<>();
         body.put("ids", ticketIds);
@@ -739,7 +721,8 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), TicketsResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<Staff2faTokenResponse> generateStaff2faToken(@NotNull String minecraftUuid, @NotNull String ip) {
         Map<String, String> body = new HashMap<>();
         body.put("minecraftUuid", minecraftUuid);
@@ -750,7 +733,8 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), Staff2faTokenResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<Void> submitChatLogs(@NotNull ChatLogBatchRequest chatLogBatch) {
         return sendAsync(requestBuilder("/minecraft/players/chat-log")
                 .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
@@ -758,7 +742,8 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), Void.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<Void> submitCommandLogs(@NotNull CommandLogBatchRequest commandLogBatch) {
         return sendAsync(requestBuilder("/minecraft/players/command-log")
                 .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
@@ -766,35 +751,40 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
                 .build(), Void.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<ChatLogsResponse> getChatLogs(@NotNull String playerUuid, int limit) {
         return sendAsync(requestBuilder("/minecraft/players/" + playerUuid + "/chat-logs?limit=" + limit)
                 .GET()
                 .build(), ChatLogsResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<CommandLogsResponse> getCommandLogs(@NotNull String playerUuid, int limit) {
         return sendAsync(requestBuilder("/minecraft/players/" + playerUuid + "/command-logs?limit=" + limit)
                 .GET()
                 .build(), CommandLogsResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<PaginatedPunishmentsResponse> getPlayerPunishments(@NotNull UUID uuid, int page, int limit) {
         return sendAsync(requestBuilder("/minecraft/players/" + uuid + "/punishments?page=" + page + "&limit=" + limit)
                 .GET()
                 .build(), PaginatedPunishmentsResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<PaginatedNotesResponse> getPlayerNotes(@NotNull UUID uuid, int page, int limit) {
         return sendAsync(requestBuilder("/minecraft/players/" + uuid + "/notes?page=" + page + "&limit=" + limit)
                 .GET()
                 .build(), PaginatedNotesResponse.class);
     }
 
-    @NotNull @Override
+    @NotNull
+    @Override
     public CompletableFuture<LinkedAccountsResponse> getLinkedAccounts(@NotNull UUID uuid, int page, int limit) {
         return sendAsync(requestBuilder("/minecraft/players/" + uuid + "/linked-accounts?page=" + page + "&limit=" + limit)
                 .GET()
@@ -822,7 +812,8 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
         String text = new String(responseBody, StandardCharsets.UTF_8);
         try {
             T result = gson.fromJson(text, responseType);
-            if (debugMode) logger.info(String.format("[V2-REQ-%s] Successfully parsed response to %s", requestId, responseType.getSimpleName()));
+            if (debugMode)
+                logger.info(String.format("[V2-REQ-%s] Successfully parsed response to %s", requestId, responseType.getSimpleName()));
             return result;
         } catch (Exception e) {
             logger.severe(String.format("[V2-REQ-%s] Failed to parse response: %s", requestId, e.getMessage()));
@@ -860,7 +851,8 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
             return new PanelUnavailableException(request.url, statusCode,
                     "V2 API is temporarily unavailable (HTTP " + statusCode + ")");
         } else if (statusCode == HttpURLConnection.HTTP_NOT_FOUND) {
-            if (debugMode) logger.fine(String.format("[V2-REQ-%s] Not found (404): %s - %s", requestId, request.url, errorMessage));
+            if (debugMode)
+                logger.fine(String.format("[V2-REQ-%s] Not found (404): %s - %s", requestId, request.url, errorMessage));
         } else if (statusCode == 401 || statusCode == 403) {
             logger.severe(String.format("[V2-REQ-%s] Authentication failed - check API key and server domain", requestId));
         } else if (statusCode == 405) {

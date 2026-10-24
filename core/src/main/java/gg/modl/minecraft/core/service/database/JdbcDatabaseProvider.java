@@ -28,7 +28,7 @@ public class JdbcDatabaseProvider implements DatabaseProvider {
         try {
             Class.forName(config.getDriverClass());
             logger.info("Connecting to database: " + config.getJdbcUrl());
-            return DriverManager.getConnection(config.getJdbcUrl(), config.getUsername(), config.getPassword());
+            return DriverManager.getConnection(config.getJdbcUrl(), config.username(), config.password());
         } catch (ClassNotFoundException e) {
             throw new SQLException("Database driver not found: " + config.getDriverClass(), e);
         }
@@ -58,7 +58,7 @@ public class JdbcDatabaseProvider implements DatabaseProvider {
     private String replaceTableTokens(String query) {
         String result = query;
         for (String[] token : TABLE_TOKENS) {
-            result = result.replace(token[0], config.getTablePrefix() + token[1]);
+            result = result.replace(token[0], config.tablePrefix() + token[1]);
         }
         return result;
     }

@@ -3,45 +3,36 @@ package gg.modl.minecraft.spigot.bridge.command;
 import gg.modl.minecraft.bridge.locale.BridgeLocaleManager;
 import gg.modl.minecraft.bridge.query.BridgeQueryClient;
 import lombok.RequiredArgsConstructor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
+import net.strokkur.commands.Command;
+import net.strokkur.commands.Executes;
+import net.strokkur.commands.arguments.StringArg;
+import net.strokkur.commands.arguments.StringArgType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 
+@Command("proxycmd")
 @RequiredArgsConstructor
-public class ProxyCmdCommand implements CommandExecutor {
+public class ProxyCmdCommand {
     private static final String PROXY_CMD_ACTION = "PROXY_CMD";
 
     private final JavaPlugin plugin;
     private final BridgeLocaleManager localeManager;
     private final BridgeQueryClient bridgeClient;
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    @Executes
+    public void onExecute(CommandSender sender, @StringArg(StringArgType.GREEDY) String command) {
         if (sender instanceof Player) {
             sender.sendMessage(localeManager.getMessage("command.proxycmd.console_only"));
-            return true;
         }
-
-        if (args.length == 0) {
-            sender.sendMessage(localeManager.getMessage("command.proxycmd.usage"));
-            return true;
-        }
-
         if (!bridgeClient.isConnected()) {
             sender.sendMessage(localeManager.getMessage("command.proxycmd.not_connected"));
-            return true;
         }
 
-        String fullCommand = String.join(" ", args);
-
-        bridgeClient.sendMessage(PROXY_CMD_ACTION, fullCommand);
-        plugin.getLogger().info("Forwarded command to proxy: " + fullCommand);
-        sender.sendMessage(localeManager.getMessage("command.proxycmd.sent", mapOf("command", fullCommand)));
-
-        return true;
+        bridgeClient.sendMessage(PROXY_CMD_ACTION, command);
+        plugin.getLogger().info("Forwarded command to proxy: " + command);
+        sender.sendMessage(localeManager.getMessage("command.proxycmd.sent", mapOf("command", command)));
     }
 }

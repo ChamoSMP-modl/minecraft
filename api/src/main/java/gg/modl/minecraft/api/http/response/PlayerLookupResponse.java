@@ -39,4 +39,9 @@ public class PlayerLookupResponse extends StatusResponse {
     public static class RecentTicket {
         private String id, title, category, status, createdAt, lastUpdated;
     }
+
+    @SuppressWarnings("all")
+    public int getStatus() {
+        return status;
+    }
 }

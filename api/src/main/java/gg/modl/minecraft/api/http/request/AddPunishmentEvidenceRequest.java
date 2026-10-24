@@ -1,8 +1,5 @@
 package gg.modl.minecraft.api.http.request;
 
-import lombok.Value;
-
-@Value
-public class AddPunishmentEvidenceRequest {
-    String punishmentId, issuerName, issuerId, evidenceUrl;
+public record AddPunishmentEvidenceRequest(String punishmentId, String issuerName, String issuerId,
+                                           String evidenceUrl) {
 }

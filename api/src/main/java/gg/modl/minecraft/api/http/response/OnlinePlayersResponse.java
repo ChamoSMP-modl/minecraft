@@ -18,4 +18,9 @@ public class OnlinePlayersResponse extends StatusResponse {
         private Date joinedAt;
         private Long totalPlaytimeMs;
     }
+
+    @SuppressWarnings("all")
+    public int getStatus() {
+        return status;
+    }
 }

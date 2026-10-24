@@ -49,10 +49,10 @@ public class HistoryCommand {
         }
 
         UUID senderUuid = actor.uniqueId();
-        ProfileMenuOpener.openProfileMenu(actor, httpClientHolder.getClient(), platform, cache, localeManager, playerQuery,
+        ProfileMenuOpener.openProfileMenu(actor, httpClientHolder.client(), platform, cache, localeManager, playerQuery,
                 (profileResponse, senderName, viewer) -> {
                     HistoryMenu menu = new HistoryMenu(
-                        platform, httpClientHolder.getClient(), senderUuid, senderName,
+                        platform, httpClientHolder.client(), senderUuid, senderName,
                         profileResponse.getProfile(), null);
                     MenuAsync.displayWhenLoaded(platform, menu.getDataFuture(), viewer, menu::display);
                 });
@@ -61,7 +61,7 @@ public class HistoryCommand {
     private void printHistory(CommandActor actor, String playerQuery, int page) {
         actor.reply(localeManager.getMessage("player_lookup.looking_up", mapOf("player", playerQuery)));
 
-        StaffProfileLookup.lookupPlayerProfile(httpClientHolder.getClient(), platform, playerQuery).thenAccept(profileResponse -> {
+        StaffProfileLookup.lookupPlayerProfile(httpClientHolder.client(), platform, playerQuery).thenAccept(profileResponse -> {
             if (profileResponse.getStatus() == 200) {
                 Account profile = profileResponse.getProfile();
                 List<Account.Username> usernames = profile.getUsernames();

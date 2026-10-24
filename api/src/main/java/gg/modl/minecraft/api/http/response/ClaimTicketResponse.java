@@ -14,4 +14,9 @@ public class ClaimTicketResponse extends StatusResponse {
     public boolean isSuccess() {
         return success && super.isSuccess();
     }
+
+    @SuppressWarnings("all")
+    public int getStatus() {
+        return status;
+    }
 }

@@ -24,7 +24,6 @@ import revxrsal.commands.annotation.Named;
 import revxrsal.commands.command.CommandActor;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import static gg.modl.minecraft.core.util.Java8Collections.listOf;
 import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
@@ -77,10 +76,10 @@ public class ReportsCommand {
             return;
         }
 
-        ProfileMenuOpener.openProfileMenu(actor, httpClientHolder.getClient(), platform, cache, localeManager, actualPlayerQuery,
+        ProfileMenuOpener.openProfileMenu(actor, httpClientHolder.client(), platform, cache, localeManager, actualPlayerQuery,
                 (profileResponse, senderName, viewer) -> {
                     ReportsMenu menu = new ReportsMenu(
-                        platform, httpClientHolder.getClient(), senderUuid, senderName,
+                        platform, httpClientHolder.client(), senderUuid, senderName,
                         profileResponse.getProfile(), null);
                     MenuAsync.displayWhenLoaded(platform, menu.getDataFuture(), viewer, menu::display);
                 });
@@ -91,12 +90,12 @@ public class ReportsCommand {
 
         PlayerLookupRequest request = PlayerLookupRequest.builder().query(playerQuery).build();
 
-        httpClientHolder.getClient().lookupPlayer(request).thenAccept(response -> {
+        httpClientHolder.client().lookupPlayer(request).thenAccept(response -> {
             if (response.isSuccess() && response.getData() != null) {
                 String playerName = response.getData().getCurrentUsername();
                 UUID targetUuid = UUID.fromString(response.getData().getMinecraftUuid());
 
-                httpClientHolder.getClient().getPlayerReports(targetUuid, "all").thenAccept(reportsResponse -> {
+                httpClientHolder.client().getPlayerReports(targetUuid, "all").thenAccept(reportsResponse -> {
                     if (reportsResponse.isSuccess()) {
                         displayReports(actor, playerName, reportsResponse.getReports(), page);
                     } else displayReports(actor, playerName, listOf(), page);
@@ -170,7 +169,7 @@ public class ReportsCommand {
         String senderName = CommandUtil.resolveSenderName(senderUuid, cache, platform);
 
         StaffReportsMenu menu = new StaffReportsMenu(
-            platform, httpClientHolder.getClient(), senderUuid, senderName,
+            platform, httpClientHolder.client(), senderUuid, senderName,
             isAdmin, panelUrl, null
         );
         MenuAsync.displayWhenLoaded(platform, menu.getDataFuture(),

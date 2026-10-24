@@ -1,18 +1,13 @@
 package gg.modl.minecraft.velocity;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public final class Colors {
-    private static final char SECTION_SIGN = '§';
-
-    private Colors() {}
-
-    public static Component get(String string) {
-        return legacy(string.replace(SECTION_SIGN, '&'));
+    private Colors() {
     }
 
-    public static Component legacy(String string) {
-        return LegacyComponentSerializer.legacyAmpersand().deserialize(string);
+    public static Component get(String string) {
+        return MiniMessage.miniMessage().deserialize(string);
     }
 }

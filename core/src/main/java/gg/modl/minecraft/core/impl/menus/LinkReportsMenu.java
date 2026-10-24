@@ -104,16 +104,16 @@ public class LinkReportsMenu extends ChromeListMenu<LinkableReport> {
     protected CirrusItem map(LinkableReport report) {
         LocaleManager locale = PluginServices.locale();
 
-        if (report.getId() == null) return createEmptyPlaceholder(locale.getMessage("menus.empty.reports"));
+        if (report.id() == null) return createEmptyPlaceholder(locale.getMessage("menus.empty.reports"));
 
         return ReportRenderUtil.mapLinkableReport(report, selectedReportIds, locale);
     }
 
     @Override
     protected void handleClick(Click click, LinkableReport report) {
-        if (report.getId() == null) return;
+        if (report.id() == null) return;
 
-        ReportRenderUtil.toggleReportSelection(selectedReportIds, report.getId());
+        ReportRenderUtil.toggleReportSelection(selectedReportIds, report.id());
 
         ActionHandlers.openMenu(rebuild()).handle(click);
     }
@@ -135,8 +135,8 @@ public class LinkReportsMenu extends ChromeListMenu<LinkableReport> {
         });
 
         for (LinkableReport report : reports) {
-            if (report.getId() != null) {
-                registerActionHandler("toggleReport_" + report.getId(), click -> {
+            if (report.id() != null) {
+                registerActionHandler("toggleReport_" + report.id(), click -> {
                     handleClick(click, report);
                     return CallResult.DENY_GRABBING;
                 });

@@ -38,7 +38,7 @@ public final class PendingIpLookupService {
     private void submitIpInfoIfSuccess(String minecraftUUID, String ip, Map<String, Object> ipInfo) {
         if (ipInfo == null || !"success".equals(ipInfo.get("status"))) return;
 
-        ModlHttpClient httpClient = httpClientHolder.getClient();
+        ModlHttpClient httpClient = httpClientHolder.client();
         httpClient.submitIpInfo(
                 minecraftUUID,
                 ip,

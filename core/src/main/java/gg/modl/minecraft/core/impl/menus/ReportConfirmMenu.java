@@ -24,7 +24,6 @@ import gg.modl.minecraft.core.util.ClickableJsonMessage;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import static gg.modl.minecraft.core.util.Java8Collections.listOf;
@@ -55,7 +54,7 @@ public class ReportConfirmMenu extends SimpleMenu {
         this.chatMessageCache = chatMessageCache;
         this.reportData = reportData;
 
-        title(locale.getMessage("messages.report_gui_title", mapOf("player", target.getUsername())));
+        title(locale.getMessage("messages.report_gui_title", mapOf("player", target.username())));
         type(CirrusInventoryType.GENERIC_9X3);
         buildMenu();
     }
@@ -142,19 +141,19 @@ public class ReportConfirmMenu extends SimpleMenu {
         if (reportData.getChatLog() != null) description.append("\n\n**Chat Log:**\n```\n").append(reportData.getChatLog()).append("\n```");
 
         String ticketType = reportData.isChatReport() ? "chat" : "player";
-        String subject = (reportData.isChatReport() ? "Chat Report" : "Player Report") + ": " + target.getUsername();
+        String subject = (reportData.isChatReport() ? "Chat Report" : "Player Report") + ": " + target.username();
 
         List<String> chatMessages = null;
         if (reportData.getChatLog() != null) chatMessages = listOf(reportData.getChatLog().split("\n"));
 
-        String createdServer = platform.getPlayerServer(reporter.getUuid());
+        String createdServer = platform.getPlayerServer(reporter.uuid());
 
         sendMessage(locale.getMessage("messages.submitting", mapOf("type", "report")));
 
         CompletableFuture<String> replayFuture;
         ReplayService replayService = PluginServices.replay();
-        if (reportData.isAttachReplay() && replayService != null && replayService.shouldAttemptCapture(target.getUuid())) {
-            replayFuture = replayService.captureReplay(target.getUuid(), target.getUsername());
+        if (reportData.isAttachReplay() && replayService != null && replayService.shouldAttemptCapture(target.uuid())) {
+            replayFuture = replayService.captureReplay(target.uuid(), target.username());
         } else {
             replayFuture = CompletableFuture.completedFuture(null);
         }
@@ -164,13 +163,13 @@ public class ReportConfirmMenu extends SimpleMenu {
             if (replayEx != null) replayUrl = null;
 
             CreateTicketRequest request = CreateTicketRequest.builder()
-                    .creatorUuid(reporter.getUuid().toString())
+                    .creatorUuid(reporter.uuid().toString())
                     .type(ticketType)
-                    .creatorName(reporter.getUsername())
+                    .creatorName(reporter.username())
                     .subject(subject)
                     .description(description.toString())
-                    .reportedPlayerUuid(target.getUuid().toString())
-                    .reportedPlayerName(target.getUsername())
+                    .reportedPlayerUuid(target.uuid().toString())
+                    .reportedPlayerName(target.username())
                     .priority("normal")
                     .createdServer(createdServer)
                     .chatMessages(finalChatMessages)
@@ -182,7 +181,7 @@ public class ReportConfirmMenu extends SimpleMenu {
 
             future.thenAccept(response -> {
                 if (response.isSuccess() && response.getTicketId() != null) {
-                    PluginServices.ticket().setCooldown(reporter.getUuid(),
+                    PluginServices.ticket().setCooldown(reporter.uuid(),
                             reportData.isChatReport() ? "chat" : "player");
 
                     sendMessage(locale.getMessage("messages.success", mapOf("type", "Report")));
@@ -218,11 +217,11 @@ public class ReportConfirmMenu extends SimpleMenu {
                         .hoverText("Click to view ticket " + ticketId))
                 .toJson();
 
-        UUID reporterUuid = reporter.getUuid();
+        UUID reporterUuid = reporter.uuid();
         platform.runOnMainThread(() -> platform.sendJsonMessage(reporterUuid, clickableMessage));
     }
 
     private void sendMessage(String message) {
-        platform.sendMessage(reporter.getUuid(), message);
+        platform.sendMessage(reporter.uuid(), message);
     }
 }

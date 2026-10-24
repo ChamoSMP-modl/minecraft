@@ -135,7 +135,7 @@ class NotificationService {
 
     private boolean deliverNotificationToPlayerAndCheck(UUID playerUuid, SyncResponse.PlayerNotification notification) {
         AbstractPlayer player = platform.getPlayer(playerUuid);
-        if (player == null || !player.isOnline()) {
+        if (player == null || !player.online()) {
             if (debugMode) logger.info("Player " + playerUuid + " is offline, notification " + notification.getId() + " deferred");
             return false;
         }
@@ -165,7 +165,7 @@ class NotificationService {
     private void handleNotificationForAllOnlinePlayers(SyncResponse.PlayerNotification notification) {
         for (AbstractPlayer player : platform.getOnlinePlayers()) {
             try {
-                UUID playerUuid = player.getUuid();
+                UUID playerUuid = player.uuid();
                 CachedProfile profile = cache.getPlayerProfile(playerUuid);
                 if (profile != null) profile.addNotification(notification);
                 deliverNotificationToPlayerAndCheck(playerUuid, notification);
@@ -197,16 +197,16 @@ class NotificationService {
 
     private void deliverPendingNotificationToPlayer(UUID playerUuid, CachedProfile.PendingNotification pending) {
         AbstractPlayer player = platform.getPlayer(playerUuid);
-        if (player == null || !player.isOnline()) return;
+        if (player == null || !player.online()) return;
 
-        Map<String, Object> data = pending.getData();
+        Map<String, Object> data = pending.data();
         if (data != null && data.containsKey("ticketUrl")) {
             String ticketId = extractString(data, "ticketId");
             String ticketUrl = resolveTicketUrl(data);
-            String json = buildClickableTicketJson(pending.getMessage(), ticketUrl, ticketId);
+            String json = buildClickableTicketJson(pending.message(), ticketUrl, ticketId);
             platform.runOnMainThread(() -> platform.sendJsonMessage(playerUuid, json));
         } else {
-            String message = pending.getMessage();
+            String message = pending.message();
             platform.runOnMainThread(() -> platform.sendMessage(playerUuid, message));
         }
     }
@@ -230,20 +230,20 @@ class NotificationService {
         CachedProfile.PendingNotification pending = notifications.get(index);
         try {
             if (pending.isExpired()) {
-                expiredIds.add(pending.getId());
+                expiredIds.add(pending.id());
             } else {
                 AbstractPlayer player = platform.getPlayer(playerUuid);
-                if (player == null || !player.isOnline()) {
+                if (player == null || !player.online()) {
                     if (debugMode) logger.info("Player " + playerUuid + " disconnected during notification delivery");
                     finalizePendingNotificationDelivery(playerUuid, deliveredIds, expiredIds);
                     return;
                 }
                 deliverPendingNotificationToPlayer(playerUuid, pending);
-                deliveredIds.add(pending.getId());
-                if (debugMode) logger.info("Delivered pending notification " + pending.getId() + " to " + playerUuid);
+                deliveredIds.add(pending.id());
+                if (debugMode) logger.info("Delivered pending notification " + pending.id() + " to " + playerUuid);
             }
         } catch (Exception e) {
-            logger.warning("Error delivering pending notification " + pending.getId() + ": " + e.getMessage());
+            logger.warning("Error delivering pending notification " + pending.id() + ": " + e.getMessage());
         }
 
         executor.schedule(() ->
@@ -288,7 +288,7 @@ class NotificationService {
             NotificationAcknowledgeRequest request = new NotificationAcknowledgeRequest(
                     playerUuid.toString(), Instant.now().toString(), batch);
 
-            orTimeout(httpClientHolder.getClient().acknowledgeNotifications(request)
+            orTimeout(httpClientHolder.client().acknowledgeNotifications(request)
                     .thenAccept(response -> {
                         if (debugMode) logger.info("Acknowledged " + batch.size() + " notifications for " + playerUuid);
                     })

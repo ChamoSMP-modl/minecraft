@@ -38,12 +38,12 @@ public class TargetCommand {
             handleNoTarget(actor, staffUuid);
             return;
         }
-        if (target.getUuid().equals(staffUuid)) {
+        if (target.uuid().equals(staffUuid)) {
             actor.reply(localeManager.getMessage("target.cannot_target_self"));
             return;
         }
 
-        UUID targetUuid = target.getUuid();
+        UUID targetUuid = target.uuid();
         String targetName = target.getName();
 
         connectToTargetServerIfNeeded(actor, staffUuid, targetUuid, targetName);

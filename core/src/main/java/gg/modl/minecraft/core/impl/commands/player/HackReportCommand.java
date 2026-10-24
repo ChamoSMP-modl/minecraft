@@ -51,8 +51,8 @@ public class HackReportCommand {
 
         ReplayService replayService = PluginServices.replay();
         CompletableFuture<String> replayFuture;
-        if (replayService != null && replayService.shouldAttemptCapture(targetPlayer.getUuid())) {
-            replayFuture = replayService.captureReplay(targetPlayer.getUuid(), targetPlayer.getUsername());
+        if (replayService != null && replayService.shouldAttemptCapture(targetPlayer.uuid())) {
+            replayFuture = replayService.captureReplay(targetPlayer.uuid(), targetPlayer.username());
         } else {
             replayFuture = CompletableFuture.completedFuture(null);
         }
@@ -61,13 +61,13 @@ public class HackReportCommand {
             if (replayEx != null) replayUrl = null;
 
             CreateTicketRequest request = CreateTicketRequest.builder()
-                .creatorUuid(reporter.getUuid().toString())
+                .creatorUuid(reporter.uuid().toString())
                 .type("player")
-                .creatorName(reporter.getUsername())
-                .subject("Cheating: " + targetPlayer.getUsername())
+                .creatorName(reporter.username())
+                .subject("Cheating: " + targetPlayer.username())
                 .description(description)
-                .reportedPlayerUuid(targetPlayer.getUuid().toString())
-                .reportedPlayerName(targetPlayer.getUsername())
+                .reportedPlayerUuid(targetPlayer.uuid().toString())
+                .reportedPlayerName(targetPlayer.username())
                 .priority("normal")
                 .createdServer(createdServer)
                 .tags(listOf("report", "cheating"))

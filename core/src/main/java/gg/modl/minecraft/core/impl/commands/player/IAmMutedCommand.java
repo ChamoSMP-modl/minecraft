@@ -42,21 +42,21 @@ public class IAmMutedCommand {
             actor.reply(localeManager.getMessage("general.player_not_found"));
             return;
         }
-        if (!targetPlayer.isOnline()) {
+        if (!targetPlayer.online()) {
             actor.reply(localeManager.getMessage("messages.player_not_online"));
             return;
         }
-        if (targetPlayer.getUuid().equals(senderUuid)) {
+        if (targetPlayer.uuid().equals(senderUuid)) {
             actor.reply(localeManager.getMessage("iammuted.cannot_message_self"));
             return;
         }
 
         AbstractPlayer senderPlayer = platform.getAbstractPlayer(senderUuid, false);
-        platform.sendMessage(targetPlayer.getUuid(), localeManager.getMessage("iammuted.notification_to_target", mapOf(
-            "sender", senderPlayer.getUsername()
+        platform.sendMessage(targetPlayer.uuid(), localeManager.getMessage("iammuted.notification_to_target", mapOf(
+            "sender", senderPlayer.username()
         )));
         actor.reply(localeManager.getMessage("iammuted.success_message", mapOf(
-            "target", targetPlayer.getUsername()
+            "target", targetPlayer.username()
         )));
 
         senderProfile.getCooldowns().set(COOLDOWN_KEY);

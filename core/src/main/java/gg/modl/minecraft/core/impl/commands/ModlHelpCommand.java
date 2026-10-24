@@ -12,7 +12,6 @@ import gg.modl.minecraft.core.util.Pagination;
 import gg.modl.minecraft.core.staff.PermissionUtil;
 import gg.modl.minecraft.core.util.Permissions;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,23 +102,23 @@ public class ModlHelpCommand {
         actor.reply("");
         actor.reply(localeManager.getMessage("help.header", mapOf(
                 "version", PluginInfo.VERSION,
-                "page", String.valueOf(pg.getPage()),
-                "total_pages", String.valueOf(pg.getTotalPages())
+                "page", String.valueOf(pg.page()),
+                "total_pages", String.valueOf(pg.totalPages())
         )));
 
-        for (int i = pg.getStart(); i < pg.getEnd(); i++) {
+        for (int i = pg.start(); i < pg.end(); i++) {
             HelpEntry entry = entries.get(i);
             actor.reply(localeManager.getMessage("help.entry", mapOf(
-                    "command", entry.getCommand(),
-                    "description", entry.getDescription()
+                    "command", entry.command(),
+                    "description", entry.description()
             )));
         }
 
         if (pg.hasNextPage())
             actor.reply(localeManager.getMessage("help.footer", mapOf(
-                    "page", String.valueOf(pg.getPage()),
-                    "total_pages", String.valueOf(pg.getTotalPages()),
-                    "next_page", String.valueOf(pg.getPage() + 1)
+                    "page", String.valueOf(pg.page()),
+                    "total_pages", String.valueOf(pg.totalPages()),
+                    "next_page", String.valueOf(pg.page() + 1)
             )));
         actor.reply("");
     }
@@ -137,9 +136,6 @@ public class ModlHelpCommand {
         entries.add(new HelpEntry(usage, description));
     }
 
-    @Value
-    private static class HelpEntry {
-        String command;
-        String description;
+    private record HelpEntry(String command, String description) {
     }
 }

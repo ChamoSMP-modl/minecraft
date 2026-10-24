@@ -22,7 +22,6 @@ import revxrsal.commands.annotation.Named;
 import revxrsal.commands.command.CommandActor;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import static gg.modl.minecraft.core.util.Java8Collections.listOf;
 import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
@@ -51,10 +50,10 @@ public class AltsCommand {
         }
 
         UUID senderUuid = actor.uniqueId();
-        ProfileMenuOpener.openProfileMenu(actor, httpClientHolder.getClient(), platform, cache, localeManager, playerQuery,
+        ProfileMenuOpener.openProfileMenu(actor, httpClientHolder.client(), platform, cache, localeManager, playerQuery,
                 (profileResponse, senderName, viewer) -> {
                     AltsMenu menu = new AltsMenu(
-                        platform, httpClientHolder.getClient(), senderUuid, senderName,
+                        platform, httpClientHolder.client(), senderUuid, senderName,
                         profileResponse.getProfile(), null);
                     MenuAsync.displayWhenLoaded(platform, menu.getDataFuture(), viewer, menu::display);
                 });
@@ -65,12 +64,12 @@ public class AltsCommand {
 
         PlayerLookupRequest request = PlayerLookupRequest.builder().query(playerQuery).build();
 
-        httpClientHolder.getClient().lookupPlayer(request).thenAccept(response -> {
+        httpClientHolder.client().lookupPlayer(request).thenAccept(response -> {
             if (response.isSuccess() && response.getData() != null) {
                 String playerName = response.getData().getCurrentUsername();
                 UUID targetUuid = UUID.fromString(response.getData().getMinecraftUuid());
 
-                httpClientHolder.getClient().getLinkedAccounts(targetUuid).thenAccept(linkedResponse -> displayAlts(actor, playerName, linkedResponse.getLinkedAccounts(), page)).exceptionally(throwable -> {
+                httpClientHolder.client().getLinkedAccounts(targetUuid).thenAccept(linkedResponse -> displayAlts(actor, playerName, linkedResponse.getLinkedAccounts(), page)).exceptionally(throwable -> {
                     if (throwable.getCause() instanceof PanelUnavailableException) actor.reply(localeManager.getMessage("api_errors.panel_restarting"));
                     else displayAlts(actor, playerName, listOf(), page);
                     return null;

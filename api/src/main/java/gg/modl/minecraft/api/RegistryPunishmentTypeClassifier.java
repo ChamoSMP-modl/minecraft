@@ -1,7 +1,5 @@
 package gg.modl.minecraft.api;
 
-import lombok.Value;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -66,9 +64,6 @@ public class RegistryPunishmentTypeClassifier implements RebuildablePunishmentTy
         return ordinal == ORDINAL_KICK;
     }
 
-    @Value
-    private static class PunishmentTypeInfo {
-        boolean isBan;
-        boolean isMute;
+    private record PunishmentTypeInfo(boolean isBan, boolean isMute) {
     }
 }

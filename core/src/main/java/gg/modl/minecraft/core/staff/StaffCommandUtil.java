@@ -64,7 +64,7 @@ public final class StaffCommandUtil {
     }
 
     private static String playerName(AbstractPlayer player, boolean useUsername) {
-        return useUsername ? player.getUsername() : player.getName();
+        return useUsername ? player.username() : player.getName();
     }
 
     public static final class StaffDisplay {

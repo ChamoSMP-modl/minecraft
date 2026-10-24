@@ -2,7 +2,6 @@ package gg.modl.minecraft.core.cache;
 
 import gg.modl.minecraft.api.http.response.PlayerLoginResponse;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
 import java.util.Map;
@@ -68,17 +67,12 @@ public class LoginCache {
         preLoginResults.clear();
     }
 
-    @Getter @RequiredArgsConstructor
-    public static class CachedLoginResult {
-        private final PlayerLoginResponse response;
-        private final Map<String, Object> ipInfo;
-        private final String skinHash;
-        private final Instant timestamp;
-
-        public boolean isExpired() {
-            return Instant.now().isAfter(timestamp.plusSeconds(LOGIN_RESULT_EXPIRY_SECONDS));
+    public record CachedLoginResult(PlayerLoginResponse response, Map<String, Object> ipInfo, String skinHash,
+                                    Instant timestamp) {
+            public boolean isExpired() {
+                return Instant.now().isAfter(timestamp.plusSeconds(LOGIN_RESULT_EXPIRY_SECONDS));
+            }
         }
-    }
 
     @Getter
     public static class PreLoginResult {

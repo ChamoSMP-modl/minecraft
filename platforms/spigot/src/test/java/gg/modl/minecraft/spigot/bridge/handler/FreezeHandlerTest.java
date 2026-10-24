@@ -9,13 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerPortalEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
@@ -24,14 +18,12 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.MockedStatic;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class FreezeHandlerTest {
 
@@ -47,6 +39,7 @@ class FreezeHandlerTest {
     FreezeHandlerTest() {
         when(world.getUID()).thenReturn(worldId);
         when(frozenPlayer.getUniqueId()).thenReturn(frozenUuid);
+        when(frozenPlayer.teleportAsync(any())).thenReturn(CompletableFuture.completedFuture(null));
     }
 
     private void freezeAndAnchorAt(double x, double y, double z) {
@@ -61,6 +54,7 @@ class FreezeHandlerTest {
         PlayerMoveEvent event = mock(PlayerMoveEvent.class);
         when(event.getPlayer()).thenReturn(frozenPlayer);
         when(event.getFrom()).thenReturn(from);
+        when(event.getPlayer().teleportAsync(any())).thenReturn(CompletableFuture.completedFuture(true));
         when(event.getTo()).thenReturn(to);
         return event;
     }
@@ -108,7 +102,7 @@ class FreezeHandlerTest {
         verify(inNether, never()).setTo(any(Location.class));
 
         ArgumentCaptor<Location> destination = ArgumentCaptor.forClass(Location.class);
-        verify(frozenPlayer).teleport(destination.capture());
+        verify(frozenPlayer).teleportAsync(destination.capture());
         assertEquals(world, destination.getValue().getWorld());
         assertEquals(10.0, destination.getValue().getX());
         assertEquals(10.0, destination.getValue().getZ());
@@ -270,7 +264,8 @@ class FreezeHandlerTest {
 
         @Override
         public BridgeTask runTimerAsync(Runnable task, long delay, long period, TimeUnit unit) {
-            return () -> {};
+            return () -> {
+            };
         }
 
         @Override

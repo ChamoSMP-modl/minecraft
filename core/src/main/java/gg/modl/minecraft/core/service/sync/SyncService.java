@@ -213,7 +213,7 @@ public class SyncService {
                 Collection<AbstractPlayer> onlinePlayers = platform.getOnlinePlayers();
                 SyncRequest request = buildSyncRequest(onlinePlayers);
 
-                SyncResponse response = orTimeout(httpClientHolder.getClient().sync(request),
+                SyncResponse response = orTimeout(httpClientHolder.client().sync(request),
                     SYNC_HTTP_TIMEOUT_SECONDS, TimeUnit.SECONDS)
                     .join();
                 handleSyncResponse(response);
@@ -266,12 +266,12 @@ public class SyncService {
     private List<SyncRequest.OnlinePlayer> buildOnlinePlayersList(Collection<AbstractPlayer> onlinePlayers) {
         return onlinePlayers.stream()
                 .map(player -> {
-                    CachedProfile profile = cache.getPlayerProfile(player.getUuid());
+                    CachedProfile profile = cache.getPlayerProfile(player.uuid());
                     long sessionDuration = profile != null ? profile.getSessionDuration() : 0;
                     return new SyncRequest.OnlinePlayer(
-                            player.getUuid().toString(),
+                            player.uuid().toString(),
                             player.getName(),
-                            player.getIpAddress(),
+                            player.ipAddress(),
                             sessionDuration
                     );
                 })
@@ -368,7 +368,7 @@ public class SyncService {
             return;
         }
         logger.info("[bridge] Completed for " + statWipe.getUsername() + " on " + serverName + ", acknowledging");
-        httpClientHolder.getClient().acknowledgeStatWipe(
+        httpClientHolder.client().acknowledgeStatWipe(
                 new StatWipeAcknowledgeRequest(statWipe.getPunishmentId(), serverName, true))
                 .exceptionally(throwable -> {
                     logger.warning("[bridge] Failed to acknowledge for " + statWipe.getPunishmentId() + ": " + throwable.getMessage());

@@ -36,7 +36,7 @@ class MojangProfileClientTest {
             assertTrue(thread.isDaemon());
             assertTrue(thread.getName().startsWith("modl-web-player-"));
             assertTrue(executor.getMaximumPoolSize() <= 4);
-            assertFalse(executor.getQueue().remainingCapacity() == Integer.MAX_VALUE);
+            assertNotEquals(Integer.MAX_VALUE, executor.getQueue().remainingCapacity());
             assertInstanceOf(ThreadPoolExecutor.AbortPolicy.class, executor.getRejectedExecutionHandler());
         } finally {
             client.shutdown();
@@ -54,9 +54,9 @@ class MojangProfileClientTest {
             WebPlayer result = lookup.get(2, TimeUnit.SECONDS);
 
             assertEquals(1, opener.openCount());
-            assertTrue(result.isValid());
-            assertEquals("byteful", result.getName());
-            assertEquals(UUID.fromString("00112233-4455-6677-8899-aabbccddeeff"), result.getUuid());
+            assertTrue(result.valid());
+            assertEquals("byteful", result.name());
+            assertEquals(UUID.fromString("00112233-4455-6677-8899-aabbccddeeff"), result.uuid());
             assertNotNull(opener.lastConnectionThread());
             assertNotEquals(callerThread, opener.lastConnectionThread());
         } finally {
@@ -72,7 +72,7 @@ class MojangProfileClientTest {
             WebPlayer result = client.get("byteful").get(2, TimeUnit.SECONDS);
 
             assertEquals(1, opener.openCount());
-            assertFalse(result.isValid());
+            assertFalse(result.valid());
         } finally {
             client.shutdown();
         }

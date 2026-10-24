@@ -46,90 +46,84 @@ class PacketEventsAdventureCompatibilityTest {
         );
     }
 
-    /** Class names referenced by a class file, split by how its method references are encoded. */
-    private static final class ConstantPool {
-        private static final int TAG_UTF8 = 1;
-        private static final int TAG_CLASS = 7;
-        private static final int TAG_METHODREF = 10;
-
-        private final Set<String> referencedClasses;
-        private final Set<String> classMethodOwners;
-
-        private ConstantPool(Set<String> referencedClasses, Set<String> classMethodOwners) {
-            this.referencedClasses = referencedClasses;
-            this.classMethodOwners = classMethodOwners;
-        }
+    /**
+     * Class names referenced by a class file, split by how its method references are encoded.
+     */
+        private record ConstantPool(Set<String> referencedClasses, Set<String> classMethodOwners) {
+            private static final int TAG_UTF8 = 1;
+            private static final int TAG_CLASS = 7;
+            private static final int TAG_METHODREF = 10;
 
         static ConstantPool read(String resource) throws IOException {
-            InputStream resourceStream = PacketEventsAdventureCompatibilityTest.class.getResourceAsStream(resource);
-            assertNotNull(resourceStream, "Missing " + resource + " on the test classpath");
+                InputStream resourceStream = PacketEventsAdventureCompatibilityTest.class.getResourceAsStream(resource);
+                assertNotNull(resourceStream, "Missing " + resource + " on the test classpath");
 
-            try (DataInputStream in = new DataInputStream(resourceStream)) {
-                if (in.readInt() != 0xCAFEBABE) {
-                    throw new IOException(resource + " is not a class file");
-                }
-                in.skipBytes(4); // minor + major version
-
-                int count = in.readUnsignedShort();
-                String[] utf8 = new String[count];
-                int[] classNameIndex = new int[count];
-                int[] methodRefClassIndex = new int[count];
-                Arrays.fill(classNameIndex, -1);
-                Arrays.fill(methodRefClassIndex, -1);
-
-                for (int i = 1; i < count; i++) {
-                    int tag = in.readUnsignedByte();
-                    switch (tag) {
-                        case TAG_UTF8:
-                            utf8[i] = in.readUTF();
-                            break;
-                        case TAG_CLASS:
-                            classNameIndex[i] = in.readUnsignedShort();
-                            break;
-                        case TAG_METHODREF:
-                            methodRefClassIndex[i] = in.readUnsignedShort();
-                            in.skipBytes(2); // name and type index
-                            break;
-                        case 8:  // String
-                        case 16: // MethodType
-                        case 19: // Module
-                        case 20: // Package
-                            in.skipBytes(2);
-                            break;
-                        case 15: // MethodHandle
-                            in.skipBytes(3);
-                            break;
-                        case 3:  // Integer
-                        case 4:  // Float
-                        case 9:  // Fieldref
-                        case 11: // InterfaceMethodref
-                        case 12: // NameAndType
-                        case 17: // Dynamic
-                        case 18: // InvokeDynamic
-                            in.skipBytes(4);
-                            break;
-                        case 5: // Long
-                        case 6: // Double
-                            in.skipBytes(8);
-                            i++; // eight-byte constants occupy two pool slots
-                            break;
-                        default:
-                            throw new IOException("Unknown constant pool tag " + tag + " in " + resource);
+                try (DataInputStream in = new DataInputStream(resourceStream)) {
+                    if (in.readInt() != 0xCAFEBABE) {
+                        throw new IOException(resource + " is not a class file");
                     }
-                }
+                    in.skipBytes(4); // minor + major version
 
-                Set<String> referencedClasses = new HashSet<>();
-                Set<String> classMethodOwners = new HashSet<>();
-                for (int i = 1; i < count; i++) {
-                    if (classNameIndex[i] >= 0) {
-                        referencedClasses.add(utf8[classNameIndex[i]]);
+                    int count = in.readUnsignedShort();
+                    String[] utf8 = new String[count];
+                    int[] classNameIndex = new int[count];
+                    int[] methodRefClassIndex = new int[count];
+                    Arrays.fill(classNameIndex, -1);
+                    Arrays.fill(methodRefClassIndex, -1);
+
+                    for (int i = 1; i < count; i++) {
+                        int tag = in.readUnsignedByte();
+                        switch (tag) {
+                            case TAG_UTF8:
+                                utf8[i] = in.readUTF();
+                                break;
+                            case TAG_CLASS:
+                                classNameIndex[i] = in.readUnsignedShort();
+                                break;
+                            case TAG_METHODREF:
+                                methodRefClassIndex[i] = in.readUnsignedShort();
+                                in.skipBytes(2); // name and type index
+                                break;
+                            case 8:  // String
+                            case 16: // MethodType
+                            case 19: // Module
+                            case 20: // Package
+                                in.skipBytes(2);
+                                break;
+                            case 15: // MethodHandle
+                                in.skipBytes(3);
+                                break;
+                            case 3:  // Integer
+                            case 4:  // Float
+                            case 9:  // Fieldref
+                            case 11: // InterfaceMethodref
+                            case 12: // NameAndType
+                            case 17: // Dynamic
+                            case 18: // InvokeDynamic
+                                in.skipBytes(4);
+                                break;
+                            case 5: // Long
+                            case 6: // Double
+                                in.skipBytes(8);
+                                i++; // eight-byte constants occupy two pool slots
+                                break;
+                            default:
+                                throw new IOException("Unknown constant pool tag " + tag + " in " + resource);
+                        }
                     }
-                    if (methodRefClassIndex[i] >= 0) {
-                        classMethodOwners.add(utf8[classNameIndex[methodRefClassIndex[i]]]);
+
+                    Set<String> referencedClasses = new HashSet<>();
+                    Set<String> classMethodOwners = new HashSet<>();
+                    for (int i = 1; i < count; i++) {
+                        if (classNameIndex[i] >= 0) {
+                            referencedClasses.add(utf8[classNameIndex[i]]);
+                        }
+                        if (methodRefClassIndex[i] >= 0) {
+                            classMethodOwners.add(utf8[classNameIndex[methodRefClassIndex[i]]]);
+                        }
                     }
+                    return new ConstantPool(referencedClasses, classMethodOwners);
                 }
-                return new ConstantPool(referencedClasses, classMethodOwners);
             }
         }
-    }
 }

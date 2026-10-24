@@ -50,7 +50,7 @@ class BridgeYamlResourceTest {
             while ((read = input.read(buffer)) != -1) {
                 output.write(buffer, 0, read);
             }
-            return output.toString(StandardCharsets.UTF_8.name());
+            return output.toString(StandardCharsets.UTF_8);
         }
     }
 
@@ -58,46 +58,36 @@ class BridgeYamlResourceTest {
         return PluginLogger.fromJul(Logger.getLogger("test"));
     }
 
-    private static class TestContext implements BridgePluginContext {
-        private final Path dataFolder;
-
-        private TestContext(Path dataFolder) {
-            this.dataFolder = dataFolder;
-        }
+    private record TestContext(Path dataFolder) implements BridgePluginContext {
 
         @Override
-        public BridgeScheduler getScheduler() {
-            return null;
-        }
+            public BridgeScheduler getScheduler() {
+                return null;
+            }
 
-        @Override
-        public BridgePlayerProvider getPlayerProvider() {
-            return null;
-        }
+            @Override
+            public BridgePlayerProvider getPlayerProvider() {
+                return null;
+            }
 
-        @Override
-        public Path getDataFolder() {
-            return dataFolder;
-        }
-
-        @Override
-        public void saveDefaultResource(String resourcePath) {
-            try {
-                Path target = dataFolder.resolve(resourcePath);
-                Files.createDirectories(target.getParent());
-                try (InputStream input = getClass().getClassLoader().getResourceAsStream(resourcePath)) {
-                    if (input != null) {
-                        Files.copy(input, target);
+            @Override
+            public void saveDefaultResource(String resourcePath) {
+                try {
+                    Path target = dataFolder.resolve(resourcePath);
+                    Files.createDirectories(target.getParent());
+                    try (InputStream input = getClass().getClassLoader().getResourceAsStream(resourcePath)) {
+                        if (input != null) {
+                            Files.copy(input, target);
+                        }
                     }
+                } catch (IOException e) {
+                    throw new IllegalStateException(e);
                 }
-            } catch (IOException e) {
-                throw new IllegalStateException(e);
+            }
+
+            @Override
+            public String getMinecraftVersion() {
+                return "test";
             }
         }
-
-        @Override
-        public String getMinecraftVersion() {
-            return "test";
-        }
-    }
 }

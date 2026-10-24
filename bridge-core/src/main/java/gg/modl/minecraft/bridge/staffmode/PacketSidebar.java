@@ -10,7 +10,7 @@ import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerRe
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerScoreboardObjective;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerUpdateScore;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +32,7 @@ public final class PacketSidebar {
         PacketEventsAPI<?> api = PacketEvents.getAPI();
         if (api == null || player == null) return;
         rendered.remove(uuid);
-        send(api, player, objective(WrapperPlayServerScoreboardObjective.ObjectiveMode.CREATE, content.getTitle()));
+        send(api, player, objective(WrapperPlayServerScoreboardObjective.ObjectiveMode.CREATE, content.title()));
         send(api, player, new WrapperPlayServerDisplayScoreboard(SIDEBAR_DISPLAY_SLOT, objectiveName));
         renderScores(api, uuid, player, content);
     }
@@ -45,8 +45,8 @@ public final class PacketSidebar {
             show(uuid, player, content);
             return;
         }
-        if (!previous.title.equals(content.getTitle())) {
-            send(api, player, objective(WrapperPlayServerScoreboardObjective.ObjectiveMode.UPDATE, content.getTitle()));
+        if (!previous.title.equals(content.title())) {
+            send(api, player, objective(WrapperPlayServerScoreboardObjective.ObjectiveMode.UPDATE, content.title()));
         }
         renderScores(api, uuid, player, content);
     }
@@ -70,14 +70,14 @@ public final class PacketSidebar {
     private void renderScores(PacketEventsAPI<?> api, UUID uuid, Object player, ScoreboardContent content) {
         RenderedSidebar previous = rendered.get(uuid);
         Map<String, Integer> scores = new HashMap<>();
-        for (ScoreboardContent.Line line : content.getLines()) {
-            scores.put(line.getText(), line.getScore());
-            if (previous != null && Integer.valueOf(line.getScore()).equals(previous.scores.get(line.getText()))) {
+        for (ScoreboardContent.Line line : content.lines()) {
+            scores.put(line.text(), line.score());
+            if (previous != null && Integer.valueOf(line.score()).equals(previous.scores.get(line.text()))) {
                 continue;
             }
-            send(api, player, new WrapperPlayServerUpdateScore(line.getText(),
+            send(api, player, new WrapperPlayServerUpdateScore(line.text(),
                     WrapperPlayServerUpdateScore.Action.CREATE_OR_UPDATE_ITEM, objectiveName,
-                    line.getScore(), null, ScoreFormat.blankScore()));
+                    line.score(), null, ScoreFormat.blankScore()));
         }
         if (previous != null) {
             for (String staleEntry : previous.scores.keySet()) {
@@ -86,7 +86,7 @@ public final class PacketSidebar {
                 }
             }
         }
-        rendered.put(uuid, new RenderedSidebar(content.getTitle(), scores));
+        rendered.put(uuid, new RenderedSidebar(content.title(), scores));
     }
 
     private PacketWrapper<?> resetScore(PacketEventsAPI<?> api, String entry) {
@@ -94,13 +94,13 @@ public final class PacketSidebar {
             return new WrapperPlayServerResetScore(entry, objectiveName);
         }
         return new WrapperPlayServerUpdateScore(entry, WrapperPlayServerUpdateScore.Action.REMOVE_ITEM,
-                objectiveName, Optional.<Integer>empty());
+                objectiveName, Optional.empty());
     }
 
     private WrapperPlayServerScoreboardObjective objective(
             WrapperPlayServerScoreboardObjective.ObjectiveMode mode, String title) {
         return new WrapperPlayServerScoreboardObjective(objectiveName, mode,
-                LegacyComponentSerializer.legacySection().deserialize(title),
+                MiniMessage.miniMessage().deserialize(title),
                 WrapperPlayServerScoreboardObjective.RenderType.INTEGER, ScoreFormat.blankScore());
     }
 
@@ -108,13 +108,6 @@ public final class PacketSidebar {
         api.getPlayerManager().sendPacket(player, packet);
     }
 
-    private static final class RenderedSidebar {
-        private final String title;
-        private final Map<String, Integer> scores;
-
-        private RenderedSidebar(String title, Map<String, Integer> scores) {
-            this.title = title;
-            this.scores = scores;
-        }
+    private record RenderedSidebar(String title, Map<String, Integer> scores) {
     }
 }

@@ -56,7 +56,7 @@ public class PunishmentActionCommand {
         UUID senderUuid = actor.uniqueId();
         actor.reply(localeManager.getMessage("player_lookup.looking_up", mapOf("player", "#" + punishmentId)));
 
-        httpClientHolder.getClient().getPunishmentDetail(punishmentId).thenAccept(response -> {
+        httpClientHolder.client().getPunishmentDetail(punishmentId).thenAccept(response -> {
             if (!response.isSuccess() || response.getPunishment() == null) {
                 actor.reply(localeManager.getMessage("print.punishment_detail.not_found", mapOf("id", punishmentId)));
                 return;
@@ -65,7 +65,7 @@ public class PunishmentActionCommand {
             PunishmentDetailResponse.PunishmentDetail detail = response.getPunishment();
             UUID playerUuid = UUID.fromString(detail.getPlayerUuid());
 
-            httpClientHolder.getClient().getPlayerProfile(playerUuid).thenAccept(profileResponse -> {
+            httpClientHolder.client().getPlayerProfile(playerUuid).thenAccept(profileResponse -> {
                 if (profileResponse.getStatus() != 200) {
                     actor.reply(localeManager.getMessage("general.player_not_found"));
                     return;
@@ -87,7 +87,7 @@ public class PunishmentActionCommand {
                 String senderName = CommandUtil.resolveSenderName(senderUuid, cache, platform);
 
                 ModifyPunishmentMenu menu = new ModifyPunishmentMenu(
-                    platform, httpClientHolder.getClient(), senderUuid, senderName,
+                    platform, httpClientHolder.client(), senderUuid, senderName,
                     account, punishment, null, null
                 );
 
@@ -119,7 +119,7 @@ public class PunishmentActionCommand {
                             punishmentId, senderName, issuerId, url
                     );
 
-                    httpClientHolder.getClient().addPunishmentEvidence(request).thenAccept(v -> platform.sendMessage(senderUuid, localeManager.getMessage("punishment_action.evidence_linked", mapOf("id", punishmentId)))).exceptionally(throwable -> {
+                    httpClientHolder.client().addPunishmentEvidence(request).thenAccept(v -> platform.sendMessage(senderUuid, localeManager.getMessage("punishment_action.evidence_linked", mapOf("id", punishmentId)))).exceptionally(throwable -> {
                         platform.sendMessage(senderUuid, localeManager.getMessage("punishment_action.evidence_link_failed", mapOf("error", throwable.getMessage())));
                         return null;
                     });
@@ -134,7 +134,7 @@ public class PunishmentActionCommand {
 
         actor.reply(localeManager.getMessage("punishment_action.generating_upload"));
 
-        httpClientHolder.getClient().createEvidenceUploadToken(punishmentId, senderName).thenAccept(response -> {
+        httpClientHolder.client().createEvidenceUploadToken(punishmentId, senderName).thenAccept(response -> {
             if (!response.isSuccess() || response.getToken() == null) {
                 actor.reply(localeManager.getMessage("punishment_action.upload_failed"));
                 return;

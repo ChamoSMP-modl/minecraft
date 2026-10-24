@@ -32,7 +32,7 @@ class PacketInterceptionPolicyTest {
 
         assertFalse(decision.isEnabled());
         assertEquals(1, decision.getConflicts().size());
-        assertEquals("limboapi", decision.getConflicts().get(0).getPluginId());
+        assertEquals("limboapi", decision.getConflicts().get(0).pluginId());
         assertTrue(decision.getReason().contains(PacketInterceptionPolicy.CONFIG_KEY));
     }
 

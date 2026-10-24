@@ -8,4 +8,9 @@ import lombok.NoArgsConstructor;
 public class PunishmentCreateResponse extends StatusResponse {
     private String message, punishmentId;
     private int status;
+
+    @SuppressWarnings("all")
+    public int getStatus() {
+        return status;
+    }
 }

@@ -1,17 +1,16 @@
 package gg.modl.minecraft.api;
 
-import lombok.Value;
 import lombok.With;
 
-@Value
-public class LibraryRecord {
-    String groupId;
-    String artifactId;
-    String version;
-    String id;
-    @With String[][] relocations;
-    String url;
-    String checksum;
+public record LibraryRecord(
+        String groupId,
+        String artifactId,
+        String version,
+        String id,
+        @With String[][] relocations,
+        String url,
+        String checksum
+) {
 
     public static LibraryRecord of(String groupId, String artifactId, String version, String id) {
         return new LibraryRecord(groupId, artifactId, version, id, null, null, null);

@@ -31,26 +31,13 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class TicketsMenu extends BaseStaffListMenu<TicketsMenu.Ticket> {
-    @Getter
-    public static class Ticket {
-        private final String id, playerName, title;
-        private final Date created;
-        private final String status;
-        private final boolean hasStaffResponse;
-
-        public Ticket(String id, String playerName, String title, Date created, String status, boolean hasStaffResponse) {
-            this.id = id;
-            this.playerName = playerName;
-            this.title = title;
-            this.created = created;
-            this.status = status;
-            this.hasStaffResponse = hasStaffResponse;
-        }
+    public record Ticket(String id, String playerName, String title, Date created, String status,
+                         boolean hasStaffResponse) {
     }
 
     private final List<Ticket> tickets = new ArrayList<>();
     private String currentStatusFilter = "open";
-    @Getter private CompletableFuture<Void> dataFuture;
+    @Getter private final CompletableFuture<Void> dataFuture;
 
     public TicketsMenu(Platform platform, ModlHttpClient httpClient, UUID viewerUuid, String viewerName,
                        boolean isAdmin, String panelUrl, Consumer<CirrusPlayerWrapper> backAction) {
@@ -103,7 +90,7 @@ public class TicketsMenu extends BaseStaffListMenu<TicketsMenu.Ticket> {
         List<Ticket> filtered = new ArrayList<>();
 
         for (Ticket ticket : tickets) {
-            if (ReportRenderUtil.matchesStatusFilter(currentStatusFilter, ticket.getStatus()))
+            if (ReportRenderUtil.matchesStatusFilter(currentStatusFilter, ticket.status()))
                 filtered.add(ticket);
         }
 
@@ -111,10 +98,10 @@ public class TicketsMenu extends BaseStaffListMenu<TicketsMenu.Ticket> {
             return Collections.singletonList(new Ticket(null, null, null, null, null, false));
 
         filtered.sort((t1, t2) -> {
-            if (t1.getCreated() == null && t2.getCreated() == null) return 0;
-            if (t1.getCreated() == null) return 1;
-            if (t2.getCreated() == null) return -1;
-            return t2.getCreated().compareTo(t1.getCreated());
+            if (t1.created() == null && t2.created() == null) return 0;
+            if (t1.created() == null) return 1;
+            if (t2.created() == null) return -1;
+            return t2.created().compareTo(t1.created());
         });
         return filtered;
     }
@@ -123,14 +110,14 @@ public class TicketsMenu extends BaseStaffListMenu<TicketsMenu.Ticket> {
     protected CirrusItem map(Ticket ticket) {
         LocaleManager locale = PluginServices.locale();
 
-        if (ticket.getId() == null) return createEmptyPlaceholder(locale.getMessage("menus.empty.tickets"));
+        if (ticket.id() == null) return createEmptyPlaceholder(locale.getMessage("menus.empty.tickets"));
 
         Map<String, String> vars = new HashMap<>();
-        vars.put("id", ticket.getId());
-        vars.put("player", ticket.getPlayerName() != null ? ticket.getPlayerName() : "Unknown");
-        vars.put("title", ticket.getTitle() != null ? ticket.getTitle() : "No title");
-        vars.put("date", MenuItems.formatDate(ticket.getCreated()));
-        vars.put("status", getStatusColor(ticket.getStatus()) + ticket.getStatus());
+        vars.put("id", ticket.id());
+        vars.put("player", ticket.playerName() != null ? ticket.playerName() : "Unknown");
+        vars.put("title", ticket.title() != null ? ticket.title() : "No title");
+        vars.put("date", MenuItems.formatDate(ticket.created()));
+        vars.put("status", getStatusColor(ticket.status()) + ticket.status());
 
         List<String> lore = new ArrayList<>();
         for (String line : locale.getMessageList("menus.ticket_item.lore")) {
@@ -143,7 +130,7 @@ public class TicketsMenu extends BaseStaffListMenu<TicketsMenu.Ticket> {
 
         String title = locale.getMessage("menus.ticket_item.title", vars);
 
-        CirrusItemType itemType = ticket.isHasStaffResponse() ? CirrusItemType.WRITABLE_BOOK : CirrusItemType.BOOK;
+        CirrusItemType itemType = ticket.hasStaffResponse() ? CirrusItemType.WRITABLE_BOOK : CirrusItemType.BOOK;
 
         return CirrusItem.of(
                 itemType,
@@ -163,13 +150,13 @@ public class TicketsMenu extends BaseStaffListMenu<TicketsMenu.Ticket> {
 
     @Override
     protected void handleClick(Click click, Ticket ticket) {
-        if (ticket.getId() == null) return;
+        if (ticket.id() == null) return;
 
         click.clickedMenu().close();
 
-        String ticketUrl = panelUrl + "/ticket/" + ticket.getId();
+        String ticketUrl = panelUrl + "/ticket/" + ticket.id();
         String json = ClickableJsonMessage.empty()
-                .extra(ClickableJsonMessage.text("Ticket #" + ticket.getId() + ": ").color("gold"))
+                .extra(ClickableJsonMessage.text("Ticket #" + ticket.id() + ": ").color("gold"))
                 .extra(ClickableJsonMessage.text(ticketUrl)
                         .color("aqua")
                         .underlined(true)

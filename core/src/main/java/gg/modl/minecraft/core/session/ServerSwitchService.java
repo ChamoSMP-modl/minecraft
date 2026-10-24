@@ -25,7 +25,7 @@ public final class ServerSwitchService {
     }
 
     public void handleServerSwitch(UUID uuid, String username, String serverName) {
-        ModlHttpClient httpClient = httpClientHolder.getClient();
+        ModlHttpClient httpClient = httpClientHolder.client();
         httpClient.updatePlayerServer(uuid.toString(), serverName)
                 .exceptionally(throwable -> {
                     platform.getLogger().warning("Failed to update server for " + username + ": " + throwable.getMessage());

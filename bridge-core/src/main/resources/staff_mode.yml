@@ -9,121 +9,121 @@ vanish_on_enable: true
 staff_hotbar:
   0:
     item: "minecraft:lead"
-    name: "&aTarget Player"
+    name: "<green>Target Player"
     action: "target_selector"
     lore:
-      - "&7Right-click to select"
-      - "&7a player to target."
+      - "<gray>Right-click to select"
+      - "<gray>a player to target."
   4:
     item: "minecraft:compass"
-    name: "&eRandom Teleport"
+    name: "<yellow>Random Teleport"
     action: "random_teleport"
     lore:
-      - "&7Teleport to a random"
-      - "&7online player."
+      - "<gray>Teleport to a random"
+      - "<gray>online player."
   7:
     item: "minecraft:lime_dye"
-    name: "&aVanish: ON"
+    name: "<green>Vanish: ON"
     action: "vanish_toggle"
     toggle_item: "minecraft:gray_dye"
-    toggle_name: "&7Vanish: OFF"
+    toggle_name: "<gray>Vanish: OFF"
     lore:
-      - "&7You are currently &ahidden"
-      - "&7from all players."
+      - "<gray>You are currently <green>hidden"
+      - "<gray>from all players."
     toggle_lore:
-      - "&7You are currently &cvisible"
-      - "&7to all players."
+      - "<gray>You are currently <red>visible"
+      - "<gray>to all players."
   8:
     item: "minecraft:nether_star"
-    name: "&bStaff Menu"
+    name: "<aqua>Staff Menu"
     action: "staff_menu"
     lore:
-      - "&7Open the staff"
-      - "&7tools menu."
+      - "<gray>Open the staff"
+      - "<gray>tools menu."
 
 # Target mode hotbar layout
 # Actions: freeze_target, stop_target, inspect_target, open_inventory, teleport_to_target, hackreport_target
 target_hotbar:
   0:
     item: "minecraft:ender_eye"
-    name: "&eTeleport to Target"
+    name: "<yellow>Teleport to Target"
     action: "teleport_to_target"
     lore:
-      - "&7Teleport to the"
-      - "&7targeted player."
+      - "<gray>Teleport to the"
+      - "<gray>targeted player."
   1:
     item: "minecraft:chest"
-    name: "&eOpen Target Inventory"
+    name: "<yellow>Open Target Inventory"
     action: "open_inventory"
     lore:
-      - "&7View the target's"
-      - "&7inventory contents."
+      - "<gray>View the target's"
+      - "<gray>inventory contents."
   2:
     item: "minecraft:blaze_rod"
-    name: "&aInspect Target"
+    name: "<green>Inspect Target"
     action: "inspect_target"
     lore:
-      - "&7Open detailed info"
-      - "&7about the target."
+      - "<gray>Open detailed info"
+      - "<gray>about the target."
   4:
     item: "minecraft:ice"
-    name: "&bFreeze Target"
+    name: "<aqua>Freeze Target"
     action: "freeze_target"
     lore:
-      - "&7Freeze the targeted"
-      - "&7player in place."
+      - "<gray>Freeze the targeted"
+      - "<gray>player in place."
   6:
     item: "minecraft:book"
-    name: "&cHack Report"
+    name: "<red>Hack Report"
     action: "hackreport_target"
     lore:
-      - "&7Report the targeted player"
-      - "&7for cheating and capture a replay."
+      - "<gray>Report the targeted player"
+      - "<gray>for cheating and capture a replay."
   7:
     item: "minecraft:lime_dye"
-    name: "&aVanish: ON"
+    name: "<green>Vanish: ON"
     action: "vanish_toggle"
     toggle_item: "minecraft:gray_dye"
-    toggle_name: "&7Vanish: OFF"
+    toggle_name: "<gray>Vanish: OFF"
     lore:
-      - "&7You are currently &ahidden"
-      - "&7from all players."
+      - "<gray>You are currently <green>hidden"
+      - "<gray>from all players."
     toggle_lore:
-      - "&7You are currently &cvisible"
-      - "&7to all players."
+      - "<gray>You are currently <red>visible"
+      - "<gray>to all players."
   8:
     item: "minecraft:red_bed"
-    name: "&cStop Targeting"
+    name: "<red>Stop Targeting"
     action: "stop_target"
     lore:
-      - "&7Stop targeting and"
-      - "&7return to staff mode."
+      - "<gray>Stop targeting and"
+      - "<gray>return to staff mode."
 
 # Staff scoreboard (shown while in staff mode, not targeting)
 # Placeholders: {player_name}, {server}, {online}, {max_players}, {vanish_status}, {staff_online}, {date}, {vanished}
 staff_scoreboard:
   enabled: true
-  vanish: " &7[V]"
-  title: "&b&lMOD MODE{vanish}"
+  vanish: " <gray>[V]"
+  title: "<aqua><bold>MOD MODE{vanish}"
   lines:
-    - "&7{date} &8{server}"
+    - "<gray>{date} <dark_gray>{server}"
     - ""
-    - "&fPlayers: &a{online}"
-    - "&fStaff: &6{staff_online}"
+    - "<white>Players: <green>{online}"
+    - "<white>Staff: <gold>{staff_online}"
     - ""
-    - "&eserver.com"
+    - "<yellow>server.com"
 
 # Target scoreboard (shown while targeting a player)
 # Placeholders: {player_name}, {target_name}, {target_health}, {target_ping}, {freeze_status}, {server}, {online}, {max_players}, {date}, {vanished}
 target_scoreboard:
   enabled: true
-  vanish: " &7[V]"
-  title: "&b&lMOD MODE{vanish}"
+  vanish: " <gray>[V]"
+  title: "<aqua><bold>MOD MODE{vanish}"
   lines:
-    - "&7{date} &8{server}"
+    - "<gray>{date} <dark_gray>{server}"
     - ""
-    - "&fTargeting:"
-    - "&a{target_name}"
-    - "&c{target_health} ❤️ &7| &b{target_ping}ms"
+    - "<white>Targeting:"
+    - "<green>{target_name}"
+    - "<red>{target_health} ❤️ <gray>| <aqua>{target_ping}ms"
     - ""
-    - "&eserver.com"
+    - "<yellow>server.com"

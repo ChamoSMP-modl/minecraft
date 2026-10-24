@@ -9,10 +9,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.nio.file.Path;
 
+@Getter
 public class SpigotBridgePluginContext implements BridgePluginContext {
     private final JavaPlugin plugin;
-    @Getter private final BridgeScheduler scheduler;
-    @Getter private final BridgePlayerProvider playerProvider;
+    private final BridgeScheduler scheduler;
+    private final BridgePlayerProvider playerProvider;
 
     public SpigotBridgePluginContext(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -20,12 +21,8 @@ public class SpigotBridgePluginContext implements BridgePluginContext {
         this.playerProvider = new SpigotPlayerProvider();
     }
 
-    public JavaPlugin getPlugin() {
-        return plugin;
-    }
-
     @Override
-    public Path getDataFolder() {
+    public Path dataFolder() {
         return plugin.getDataFolder().toPath();
     }
 

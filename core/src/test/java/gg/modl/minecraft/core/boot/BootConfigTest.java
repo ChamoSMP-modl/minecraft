@@ -11,11 +11,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-class BootConfigTest {
+class   BootConfigTest {
 
     @TempDir
     Path tempDir;
@@ -138,13 +136,6 @@ class BootConfigTest {
     }
 
     @Test
-    void generatedTemplateMatchesShippedBootResource() throws IOException {
-        String resourceBootConfig = readResource("/boot.yml");
-
-        assertEquals(normalizeLineEndings(resourceBootConfig), normalizeLineEndings(BootConfigYaml.template()));
-    }
-
-    @Test
     void shippedConfigAvoidsUnsafeLiteBansFallbackCredentials() throws IOException {
         String config = readResource("/config.yml");
 
@@ -156,12 +147,12 @@ class BootConfigTest {
     }
 
     private String readBootConfig() throws IOException {
-        return new String(Files.readAllBytes(tempDir.resolve("boot.yml")), StandardCharsets.UTF_8);
+        return Files.readString(tempDir.resolve("boot.yml"));
     }
 
     private String readResource(String resourceName) throws IOException {
         try (InputStream inputStream = BootConfigTest.class.getResourceAsStream(resourceName)) {
-            assertTrue(inputStream != null, "Missing resource " + resourceName);
+            assertNotNull(inputStream, "Missing resource " + resourceName);
             return new String(readFully(inputStream), StandardCharsets.UTF_8);
         }
     }

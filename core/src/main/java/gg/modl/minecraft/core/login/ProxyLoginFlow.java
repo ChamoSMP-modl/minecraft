@@ -9,7 +9,6 @@ import gg.modl.minecraft.core.integration.iplookup.IpEnrichmentService;
 import gg.modl.minecraft.core.integration.iplookup.PendingIpLookupService;
 import gg.modl.minecraft.core.integration.mojang.MojangProfiles;
 import gg.modl.minecraft.core.util.Java8Collections;
-import lombok.Value;
 
 import java.util.Map;
 import java.util.UUID;
@@ -50,14 +49,14 @@ public final class ProxyLoginFlow {
                                                                 String serverName) {
         CompletableFuture<Map<String, Object>> ipInfoFuture = ipEnrichmentService.getIpInfo(ipAddress);
         CompletableFuture<String> skinHashFuture = MojangProfiles.client().get(uuid)
-                .thenApply(profile -> profile != null && profile.isValid() ? profile.getSkin() : null);
+                .thenApply(profile -> profile != null && profile.valid() ? profile.skin() : null);
 
         long enrichmentTimeoutSeconds = Math.max(1, timeoutSeconds * 2 / 5);
         CompletableFuture<LoginExchange> exchange = bestEffort(ipInfoFuture, enrichmentTimeoutSeconds)
                 .thenCombine(bestEffort(skinHashFuture, enrichmentTimeoutSeconds), (ipInfo, skinHash) -> new PlayerLoginRequest(
                         uuid.toString(), username, ipAddress, skinHash, serverName, ipInfo,
                         StartupClient.getServerInstanceId()))
-                .thenComposeAsync(request -> httpClientHolder.getClient().playerLogin(request)
+                .thenComposeAsync(request -> httpClientHolder.client().playerLogin(request)
                         .thenApply(response -> new LoginExchange(request, response)));
 
         return Java8Collections.orTimeout(exchange, timeoutSeconds, TimeUnit.SECONDS)
@@ -69,11 +68,11 @@ public final class ProxyLoginFlow {
     private LoginService.LoginResult settle(LoginExchange exchange, UUID uuid, String ipAddress,
                                             CompletableFuture<Map<String, Object>> ipInfoFuture) {
         try {
-            loginCache.cacheLoginResult(uuid, exchange.getResponse(), exchange.getRequest().getIpInfo(),
-                    exchange.getRequest().getSkinHash());
-            pendingIpLookupService.handlePendingIpLookups(exchange.getResponse(), uuid.toString(), ipAddress,
+            loginCache.cacheLoginResult(uuid, exchange.response(), exchange.request().ipInfo(),
+                    exchange.request().skinHash());
+            pendingIpLookupService.handlePendingIpLookups(exchange.response(), uuid.toString(), ipAddress,
                     ipInfoFuture);
-            return loginService.processLoginResponse(exchange.getResponse(), uuid);
+            return loginService.processLoginResponse(exchange.response(), uuid);
         } catch (Throwable failure) {
             return loginService.handleLoginError(asException(failure));
         }
@@ -91,9 +90,6 @@ public final class ProxyLoginFlow {
         return cause instanceof Exception ? (Exception) cause : new ExecutionException(cause);
     }
 
-    @Value
-    private static class LoginExchange {
-        PlayerLoginRequest request;
-        PlayerLoginResponse response;
+    private record LoginExchange(PlayerLoginRequest request, PlayerLoginResponse response) {
     }
 }

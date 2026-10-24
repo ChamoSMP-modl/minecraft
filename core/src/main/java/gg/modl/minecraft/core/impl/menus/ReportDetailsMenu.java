@@ -49,7 +49,7 @@ public class ReportDetailsMenu extends SimpleMenu {
         this.chatMessageCache = chatMessageCache;
         this.reportData = reportData;
         this.previousMenu = previousMenu;
-        title(locale.getMessage("messages.report_gui_title", mapOf("player", target.getUsername())));
+        title(locale.getMessage("messages.report_gui_title", mapOf("player", target.username())));
         type(CirrusInventoryType.GENERIC_9X3);
         buildMenu();
     }
@@ -77,7 +77,7 @@ public class ReportDetailsMenu extends SimpleMenu {
     }
 
     private void displayMenu(SimpleMenu menu) {
-        CirrusPlayerWrapper playerWrapper = platform.getPlayerWrapper(reporter.getUuid());
+        CirrusPlayerWrapper playerWrapper = platform.getPlayerWrapper(reporter.uuid());
         menu.display(playerWrapper);
     }
 
@@ -85,8 +85,8 @@ public class ReportDetailsMenu extends SimpleMenu {
     protected void registerActionHandlers() {
         registerActionHandler("addDetails", click -> {
             click.clickedMenu().close();
-            String prompt = locale.getMessage("messages.report_details_prompt", mapOf("player", target.getUsername()));
-            PluginServices.chatInput().requestInput(reporter.getUuid(), prompt, input -> {
+            String prompt = locale.getMessage("messages.report_details_prompt", mapOf("player", target.username()));
+            PluginServices.chatInput().requestInput(reporter.uuid(), prompt, input -> {
                 reportData.setDetails(input);
                 displayMenu(new ReportConfirmMenu(
                     reporter, target, httpClient, locale, platform, panelUrl,

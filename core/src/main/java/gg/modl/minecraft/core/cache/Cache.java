@@ -4,17 +4,11 @@ import gg.modl.minecraft.api.http.response.PunishmentTypesResponse;
 import gg.modl.minecraft.api.http.response.SyncResponse;
 import gg.modl.minecraft.core.config.PunishGuiConfig;
 import gg.modl.minecraft.core.config.ReportGuiConfig;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor
@@ -22,7 +16,8 @@ public class Cache {
     private static final long TEXTURE_TTL_MS = 10 * 60 * 1000;
     private static final int TEXTURE_CACHE_MAX_SIZE = 500;
 
-    @Getter private final CachedProfileRegistry registry;
+    @Getter
+    private final CachedProfileRegistry registry;
     private final Map<UUID, StaffPermissions> staffPermissionsCache = new ConcurrentHashMap<>();
     private final Object skinTextureLock = new Object();
     private final Map<UUID, CachedTexture> skinTextureCache =
@@ -32,12 +27,17 @@ public class Cache {
                     return size() > TEXTURE_CACHE_MAX_SIZE;
                 }
             };
-    @Getter private volatile PunishmentTypesResponse cachedPunishmentTypes;
-    @Getter private volatile PunishGuiConfig cachedPunishGuiConfig;
-    @Getter private volatile ReportGuiConfig cachedReportGuiConfig;
+    @Getter
+    private volatile PunishmentTypesResponse cachedPunishmentTypes;
+    @Getter
+    private volatile PunishGuiConfig cachedPunishGuiConfig;
+    @Getter
+    private volatile ReportGuiConfig cachedReportGuiConfig;
     private volatile Map<Integer, String> punishmentTypeItems = Collections.emptyMap();
 
-    @Getter @Setter private boolean queryMojang;
+    @Getter
+    @Setter
+    private boolean queryMojang;
 
     public Map<Integer, String> getPunishmentTypeItems() {
         return punishmentTypeItems;
@@ -78,11 +78,7 @@ public class Cache {
         }
     }
 
-    @AllArgsConstructor
-    private static class CachedTexture {
-        final String value;
-        final long cachedAt;
-
+    private record CachedTexture(String value, long cachedAt) {
         private boolean isExpired(long now) {
             return now - cachedAt > TEXTURE_TTL_MS;
         }
@@ -102,19 +98,20 @@ public class Cache {
 
     public String getStaffDisplayName(UUID playerUuid) {
         StaffPermissions profileView = profileStaffPermissions(playerUuid);
-        if (profileView != null && !profileView.getStaffUsername().isEmpty()) return profileView.getStaffUsername();
+        if (profileView != null && !profileView.staffUsername().isEmpty()) return profileView.staffUsername();
 
         StaffPermissions cachedView = cachedStaffPermissions(playerUuid);
-        if (cachedView != null && cachedView.getStaffUsername() != null && !cachedView.getStaffUsername().isEmpty()) return cachedView.getStaffUsername();
+        if (cachedView != null && cachedView.staffUsername() != null && !cachedView.staffUsername().isEmpty())
+            return cachedView.staffUsername();
         return null;
     }
 
     public String getStaffId(UUID playerUuid) {
         StaffPermissions profileView = profileStaffPermissions(playerUuid);
-        if (profileView != null) return profileView.getStaffId();
+        if (profileView != null) return profileView.staffId();
 
         StaffPermissions cachedView = cachedStaffPermissions(playerUuid);
-        if (cachedView != null && cachedView.getStaffId() != null) return cachedView.getStaffId();
+        if (cachedView != null && cachedView.staffId() != null) return cachedView.staffId();
         return null;
     }
 
@@ -125,10 +122,12 @@ public class Cache {
 
     public boolean hasPermission(UUID playerUuid, String permission) {
         StaffPermissions cachedView = cachedStaffPermissions(playerUuid);
-        if (cachedView != null) return checkRoleAndPermissions(cachedView.getStaffRole(), cachedView.getPermissions(), permission);
+        if (cachedView != null)
+            return checkRoleAndPermissions(cachedView.staffRole(), cachedView.permissions(), permission);
 
         StaffPermissions profileView = profileStaffPermissions(playerUuid);
-        if (profileView != null) return checkRoleAndPermissions(profileView.getStaffRole(), profileView.getPermissions(), permission);
+        if (profileView != null)
+            return checkRoleAndPermissions(profileView.staffRole(), profileView.permissions(), permission);
 
         return false;
     }
@@ -163,7 +162,7 @@ public class Cache {
 
     public String getStaffRole(UUID playerUuid) {
         StaffPermissions cachedView = cachedStaffPermissions(playerUuid);
-        return cachedView != null ? cachedView.getStaffRole() : null;
+        return cachedView != null ? cachedView.staffRole() : null;
     }
 
     public void clear() {
@@ -178,10 +177,7 @@ public class Cache {
         punishmentTypeItems = null;
     }
 
-    @Getter @RequiredArgsConstructor
-    public static class StaffPermissions {
-        private final String staffUsername, staffId, staffRole;
-        private final List<String> permissions;
+    public record StaffPermissions(String staffUsername, String staffId, String staffRole, List<String> permissions) {
     }
 
     public void cachePunishmentTypes(PunishmentTypesResponse response) {

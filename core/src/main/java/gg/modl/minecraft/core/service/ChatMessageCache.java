@@ -1,7 +1,6 @@
 package gg.modl.minecraft.core.service;
 
 import gg.modl.minecraft.core.util.StringUtil;
-import lombok.Value;
 
 import java.time.Instant;
 import java.time.ZoneOffset;
@@ -62,17 +61,17 @@ public class ChatMessageCache {
         Instant startTimestamp = determineReportStartTimestamp(allMessages, reportedPlayerUuid);
 
         List<ChatMessage> relevantMessages = allMessages.stream()
-                .filter(msg -> !msg.getTimestamp().isBefore(startTimestamp))
-                .sorted(Comparator.comparing(ChatMessage::getTimestamp))
+                .filter(msg -> !msg.timestamp().isBefore(startTimestamp))
+                .sorted(Comparator.comparing(ChatMessage::timestamp))
                 .collect(Collectors.toList());
 
         if (relevantMessages.isEmpty()) return "";
 
         StringBuilder chatLog = new StringBuilder();
         for (ChatMessage msg : relevantMessages) {
-            chatLog.append(REPORT_TIME_FORMAT.format(msg.getTimestamp()))
-                   .append(" ").append(msg.getPlayerName())
-                   .append(": ").append(msg.getMessage())
+            chatLog.append(REPORT_TIME_FORMAT.format(msg.timestamp()))
+                   .append(" ").append(msg.playerName())
+                   .append(": ").append(msg.message())
                    .append("\n");
         }
         return chatLog.toString().trim();
@@ -90,7 +89,7 @@ public class ChatMessageCache {
         List<ChatMessage> allMessages = new ArrayList<>();
         for (LinkedBlockingDeque<ChatMessage> queue : serverMessages.values()) {
             boolean containsReported = queue.stream()
-                    .anyMatch(msg -> msg.getPlayerUuid().equals(reportedPlayerUuid));
+                    .anyMatch(msg -> msg.playerUuid().equals(reportedPlayerUuid));
             if (!containsReported) continue;
 
             cleanupOldMessages(queue);
@@ -101,19 +100,19 @@ public class ChatMessageCache {
 
     private Instant determineReportStartTimestamp(List<ChatMessage> allMessages, String reportedPlayerUuid) {
         List<ChatMessage> reportedMessages = allMessages.stream()
-                .filter(msg -> msg.getPlayerUuid().equals(reportedPlayerUuid))
-                .sorted(Comparator.comparing(ChatMessage::getTimestamp))
+                .filter(msg -> msg.playerUuid().equals(reportedPlayerUuid))
+                .sorted(Comparator.comparing(ChatMessage::timestamp))
                 .collect(Collectors.toList());
 
         if (reportedMessages.isEmpty()) {
             return Instant.now().minusSeconds(REPORT_FALLBACK_SECONDS);
         }
 
-        Instant lastReported = reportedMessages.get(reportedMessages.size() - 1).getTimestamp();
+        Instant lastReported = reportedMessages.get(reportedMessages.size() - 1).timestamp();
         Instant timeFloor = lastReported.minusSeconds(REPORT_WINDOW_SECONDS);
 
         int startIndex = Math.max(0, reportedMessages.size() - REPORT_LOOKBACK_MESSAGES);
-        Instant countFloor = reportedMessages.get(startIndex).getTimestamp();
+        Instant countFloor = reportedMessages.get(startIndex).timestamp();
 
         return laterOf(timeFloor, countFloor);
     }
@@ -124,12 +123,10 @@ public class ChatMessageCache {
 
     private void cleanupOldMessages(LinkedBlockingDeque<ChatMessage> queue) {
         Instant cutoff = Instant.now().minusMillis(maxMessageAge);
-        queue.removeIf(message -> message.getTimestamp().isBefore(cutoff));
+        queue.removeIf(message -> message.timestamp().isBefore(cutoff));
     }
 
-    @Value
-    public static class ChatMessage {
-        String playerUuid, playerName, message, serverName;
-        Instant timestamp;
+    public record ChatMessage(String playerUuid, String playerName, String message, String serverName,
+                              Instant timestamp) {
     }
 }

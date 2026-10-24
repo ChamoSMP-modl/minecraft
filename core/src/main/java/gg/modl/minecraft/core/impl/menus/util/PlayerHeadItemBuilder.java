@@ -157,8 +157,8 @@ public final class PlayerHeadItemBuilder {
                             : CompletableFuture.completedFuture(null))
                     .whenComplete((webPlayer, throwable) -> {
                         try {
-                            if (throwable == null && webPlayer != null && webPlayer.isValid() && webPlayer.getTextureValue() != null) {
-                                cache.cacheSkinTexture(targetUuid, webPlayer.getTextureValue());
+                            if (throwable == null && webPlayer != null && webPlayer.valid() && webPlayer.textureValue() != null) {
+                                cache.cacheSkinTexture(targetUuid, webPlayer.textureValue());
                             }
                         } finally {
                             PENDING_TEXTURE_LOOKUPS.remove(targetUuid);

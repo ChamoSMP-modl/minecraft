@@ -41,7 +41,7 @@ public class StaffCommand {
 
         commandExecutor.execute(() -> {
             StaffMenu menu = new StaffMenu(
-                platform, httpClientHolder.getClient(), senderUuid, senderName,
+                platform, httpClientHolder.client(), senderUuid, senderName,
                 isAdmin, panelUrl, null
             );
             CirrusPlayerWrapper player = platform.getPlayerWrapper(senderUuid);

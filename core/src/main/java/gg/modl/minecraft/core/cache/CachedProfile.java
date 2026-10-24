@@ -83,35 +83,30 @@ public class CachedProfile {
     }
 
     public boolean removeNotification(String notificationId) {
-        return pendingNotifications.removeIf(n -> n.getId().equals(notificationId));
+        return pendingNotifications.removeIf(n -> n.id().equals(notificationId));
     }
 
     public void cleanupExpiredNotifications() {
         pendingNotifications.removeIf(PendingNotification::isExpired);
     }
 
-    @Getter
-    public static class PendingNotification {
-        private static final long NOTIFICATION_EXPIRY_MS = 24 * 60 * 60 * 1000L;
+    public record PendingNotification(String id, String message, String type, Long timestamp, Map<String, Object> data,
+                                      long cachedTime) {
+            private static final long NOTIFICATION_EXPIRY_MS = 24 * 60 * 60 * 1000L;
 
-        private final String id, message, type;
-        private final Long timestamp;
-        private final Map<String, Object> data;
-        private final long cachedTime;
+            public PendingNotification(String id, String message, String type, Long timestamp, Map<String, Object> data, long cachedTime) {
+                this.id = id;
+                this.message = message;
+                this.type = type;
+                this.timestamp = timestamp;
+                this.data = data != null ? new HashMap<>(data) : new HashMap<>();
+                this.cachedTime = cachedTime;
+            }
 
-        public PendingNotification(String id, String message, String type, Long timestamp, Map<String, Object> data, long cachedTime) {
-            this.id = id;
-            this.message = message;
-            this.type = type;
-            this.timestamp = timestamp;
-            this.data = data != null ? new HashMap<>(data) : new HashMap<>();
-            this.cachedTime = cachedTime;
+            public boolean isExpired() {
+                return (System.currentTimeMillis() - cachedTime) > NOTIFICATION_EXPIRY_MS;
+            }
         }
-
-        public boolean isExpired() {
-            return (System.currentTimeMillis() - cachedTime) > NOTIFICATION_EXPIRY_MS;
-        }
-    }
 
     public static class CooldownTracker {
         private final Map<String, Long> cooldowns = new ConcurrentHashMap<>();

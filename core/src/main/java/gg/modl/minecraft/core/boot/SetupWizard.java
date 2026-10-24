@@ -450,11 +450,6 @@ public class SetupWizard {
         logger.info("===========================================");
     }
 
-    private static class RegistrationResult {
-        final String apiKey;
-
-        RegistrationResult(String apiKey) {
-            this.apiKey = apiKey;
-        }
+    private record RegistrationResult(String apiKey) {
     }
 }

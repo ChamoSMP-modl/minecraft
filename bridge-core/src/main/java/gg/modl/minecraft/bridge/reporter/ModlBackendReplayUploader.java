@@ -367,17 +367,6 @@ public class ModlBackendReplayUploader implements AutoCloseable {
         });
     }
 
-    private static class InitResponse {
-        final String replayId;
-        final String uploadUrl;
-        final String method;
-        final Map<String, String> requiredHeaders;
-
-        InitResponse(String replayId, String uploadUrl, String method, Map<String, String> requiredHeaders) {
-            this.replayId = replayId;
-            this.uploadUrl = uploadUrl;
-            this.method = method;
-            this.requiredHeaders = requiredHeaders;
-        }
+    private record InitResponse(String replayId, String uploadUrl, String method, Map<String, String> requiredHeaders) {
     }
 }

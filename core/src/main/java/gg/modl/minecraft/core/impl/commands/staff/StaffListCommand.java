@@ -15,7 +15,6 @@ import gg.modl.minecraft.core.util.Pagination;
 import gg.modl.minecraft.core.staff.PermissionUtil;
 import gg.modl.minecraft.core.util.Permissions;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
 import revxrsal.commands.annotation.Optional;
@@ -23,7 +22,6 @@ import revxrsal.commands.command.CommandActor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 
@@ -55,7 +53,7 @@ public class StaffListCommand {
                 Permissions.SETTINGS_VIEW, Permissions.SETTINGS_MODIFY);
 
         StaffMembersMenu menu = new StaffMembersMenu(
-                platform, httpClientHolder.getClient(), viewerUuid, viewerName, isAdmin, panelUrl, null);
+                platform, httpClientHolder.client(), viewerUuid, viewerName, isAdmin, panelUrl, null);
         menu.getDataFuture().whenComplete((unused, throwable) -> {
             if (throwable != null) {
                 CommandUtil.handleException(actor, throwable, localeManager);
@@ -85,12 +83,12 @@ public class StaffListCommand {
         PaginatedChatPrinter.printPageWithTotal(actor, localeManager, staffEntries, ENTRIES_PER_PAGE, page,
                 "print.staff_list.total", (index, ordinal) -> {
                     StaffEntry entry = staffEntries.get(index);
-                    String vanishTag = entry.isVanished() ? localeManager.getMessage("print.staff_list.vanish") : "";
+                    String vanishTag = entry.vanished() ? localeManager.getMessage("print.staff_list.vanish") : "";
                     actor.reply(localeManager.getMessage("print.staff_list.entry", mapOf(
-                            "role", entry.getRole(),
-                            "player", entry.getDisplayName(),
-                            "in-game-name", entry.getInGameName(),
-                            "server", entry.getServer(),
+                            "role", entry.role(),
+                            "player", entry.displayName(),
+                            "in-game-name", entry.inGameName(),
+                            "server", entry.server(),
                             "v", vanishTag
                     )));
                 });
@@ -118,13 +116,7 @@ public class StaffListCommand {
         return entries;
     }
 
-    @Value
-    private static class StaffEntry {
-        String displayName;
-        String inGameName;
-        String role;
-        String server;
-        boolean vanished;
+    private record StaffEntry(String displayName, String inGameName, String role, String server, boolean vanished) {
     }
 }
 

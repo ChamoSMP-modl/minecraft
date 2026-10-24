@@ -1,39 +1,38 @@
 package gg.modl.minecraft.spigot.bridge;
 
+import com.github.retrooper.packetevents.protocol.world.states.WrappedBlockState;
 import gg.modl.minecraft.bridge.AbstractBridgeComponent;
 import gg.modl.minecraft.bridge.BridgeReloadPresenter;
-import gg.modl.minecraft.bridge.BridgePluginContext;
+import gg.modl.minecraft.bridge.BridgeTask;
 import gg.modl.minecraft.bridge.config.BridgeConfig;
 import gg.modl.minecraft.bridge.config.StaffModeConfig;
 import gg.modl.minecraft.bridge.locale.BridgeLocaleManager;
 import gg.modl.minecraft.bridge.query.BridgeMessageHandler;
 import gg.modl.minecraft.bridge.query.BridgeQueryClient;
-import gg.modl.minecraft.bridge.reporter.AutoReporter;
 import gg.modl.minecraft.bridge.reporter.ModlBackendReplayUploader;
-import gg.modl.minecraft.bridge.reporter.detection.ViolationTracker;
 import gg.modl.minecraft.bridge.reporter.hook.AntiCheatHook;
 import gg.modl.minecraft.core.service.ReplayCaptureResult;
 import gg.modl.minecraft.core.service.ReplayCaptureStatus;
 import gg.modl.minecraft.core.service.ReplayService;
 import gg.modl.minecraft.core.util.PluginLogger;
-import gg.modl.minecraft.spigot.bridge.command.ModlBridgeCommand;
-import gg.modl.minecraft.spigot.bridge.command.ProxyCmdCommand;
-import gg.modl.minecraft.spigot.bridge.handler.BridgeOnlyFreezeHandler;
-import gg.modl.minecraft.spigot.bridge.handler.FreezeHandler;
-import gg.modl.minecraft.spigot.bridge.handler.StaffModeHandler;
-import gg.modl.minecraft.spigot.bridge.reporter.hook.GrimHook;
-import gg.modl.minecraft.spigot.bridge.reporter.hook.PolarHook;
-import gg.modl.minecraft.spigot.bridge.reporter.hook.VulcanHook;
 import gg.modl.minecraft.replay.api.ReplayMetadata;
 import gg.modl.minecraft.replay.format.events.BlockChangeEvent;
 import gg.modl.minecraft.replay.recording.PacketRecorder;
 import gg.modl.minecraft.replay.recording.RecordingConfig;
 import gg.modl.minecraft.replay.recording.RecordingManager;
-import lombok.Getter;
+import gg.modl.minecraft.spigot.bridge.command.ModlBridgeCommandBrigadier;
+import gg.modl.minecraft.spigot.bridge.command.ProxyCmdCommandBrigadier;
+import gg.modl.minecraft.spigot.bridge.handler.BridgeOnlyFreezeHandler;
+import gg.modl.minecraft.spigot.bridge.handler.FreezeHandler;
+import gg.modl.minecraft.spigot.bridge.handler.StaffModeHandler;
+import gg.modl.minecraft.spigot.bridge.reporter.hook.IntaveHook;
+import gg.modl.minecraft.spigot.bridge.reporter.hook.PolarHook;
 import io.github.retrooper.packetevents.util.SpigotConversionUtil;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
+import lombok.Getter;
 import org.bukkit.Bukkit;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -43,12 +42,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.material.MaterialData;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -59,13 +55,9 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.RejectedExecutionException;
-import java.util.function.BiFunction;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.logging.Logger;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.protocol.world.states.WrappedBlockState;
-import gg.modl.minecraft.bridge.BridgeTask;
-import java.util.concurrent.TimeUnit;
 
 public class BridgeComponent extends AbstractBridgeComponent implements Listener {
     private static final long MILLIS_PER_MINUTE = 60_000L;
@@ -73,10 +65,13 @@ public class BridgeComponent extends AbstractBridgeComponent implements Listener
 
     private final JavaPlugin plugin;
     private final boolean polarLoaderAvailable;
-    @Getter private FreezeHandler freezeHandler;
+    @Getter
+    private FreezeHandler freezeHandler;
     private BridgeOnlyFreezeHandler bridgeOnlyFreezeHandler;
-    @Getter private StaffModeHandler staffModeHandler;
-    @Getter private SpigotBridgeActions bridgeActions;
+    @Getter
+    private StaffModeHandler staffModeHandler;
+    @Getter
+    private SpigotBridgeActions bridgeActions;
 
     private RecordingManager recordingManager;
     private PacketRecorder packetRecorder;
@@ -104,8 +99,8 @@ public class BridgeComponent extends AbstractBridgeComponent implements Listener
 
     @Override
     protected void initStaffModeHandler(BridgeConfig bridgeConfig,
-                                         BridgeLocaleManager localeManager,
-                                         StaffModeConfig staffModeConfig) {
+                                        BridgeLocaleManager localeManager,
+                                        StaffModeConfig staffModeConfig) {
         staffModeHandler = new StaffModeHandler(plugin, bridgeConfig, freezeHandler, localeManager, pluginLogger,
                 staffModeConfig, context.getScheduler());
         staffModeHandler.register();
@@ -127,22 +122,16 @@ public class BridgeComponent extends AbstractBridgeComponent implements Listener
 
     @Override
     protected void registerAntiCheatHooks(List<AntiCheatHook> hooks) {
-        if (Bukkit.getPluginManager().getPlugin("GrimAC") != null) {
-            GrimHook grimHook = new GrimHook(plugin, bridgeConfig, violationTracker, autoReporter);
-            grimHook.register();
-            hooks.add(grimHook);
-        }
-
-        if (Bukkit.getPluginManager().getPlugin("Vulcan") != null) {
-            VulcanHook vulcanHook = new VulcanHook(plugin, bridgeConfig, violationTracker, autoReporter);
-            vulcanHook.register();
-            hooks.add(vulcanHook);
+        if (Bukkit.getPluginManager().isPluginEnabled("Intave")) {
+            IntaveHook intaveHook = new IntaveHook(plugin, bridgeConfig, violationTracker, autoReporter);
+            intaveHook.register();
+            hooks.add(intaveHook);
         }
 
         attachPolarIfLoaded(hooks);
 
         if (hooks.isEmpty() && !polarLoaderAvailable) {
-            pluginLogger.warning("[bridge] No anticheat plugins detected. Install GrimAC, Vulcan, or Polar for anticheat reporting.");
+            pluginLogger.warning("[bridge] No anticheat plugins detected. Install Intave or Polar for anticheat reporting.");
         }
     }
 
@@ -188,20 +177,46 @@ public class BridgeComponent extends AbstractBridgeComponent implements Listener
             return;
         }
 
-        if (PacketEvents.getAPI() == null) {
-            pluginLogger.warning("[bridge] PacketEvents not initialized, replay recording disabled");
-            return;
-        }
-
         RecordingConfig recordingConfig = new RecordingConfig() {
-            @Override public int bufferDurationSeconds() { return config.getReplayBufferDuration(); }
-            @Override public int maxDurationSeconds() { return config.getReplayMaxDuration(); }
-            @Override public int radiusBlocks() { return config.getReplayRadius(); }
-            @Override public int moveThrottleMs() { return config.getReplayMoveThrottle(); }
-            @Override public String uploadEndpoint() { return backendUrl; }
-            @Override public String uploadApiKey() { return apiKey; }
-            @Override public String viewerBaseUrl() { return ""; }
-            @Override public String mcVersion() { return context.getMinecraftVersion(); }
+            @Override
+            public int bufferDurationSeconds() {
+                return config.getReplayBufferDuration();
+            }
+
+            @Override
+            public int maxDurationSeconds() {
+                return config.getReplayMaxDuration();
+            }
+
+            @Override
+            public int radiusBlocks() {
+                return config.getReplayRadius();
+            }
+
+            @Override
+            public int moveThrottleMs() {
+                return config.getReplayMoveThrottle();
+            }
+
+            @Override
+            public String uploadEndpoint() {
+                return backendUrl;
+            }
+
+            @Override
+            public String uploadApiKey() {
+                return apiKey;
+            }
+
+            @Override
+            public String viewerBaseUrl() {
+                return "";
+            }
+
+            @Override
+            public String mcVersion() {
+                return context.getMinecraftVersion();
+            }
         };
 
         File replaysDir = new File(plugin.getDataFolder(), "replays");
@@ -280,20 +295,16 @@ public class BridgeComponent extends AbstractBridgeComponent implements Listener
 
     @Override
     protected void registerBridgeCommand() {
-        PluginCommand command = plugin.getCommand("modlbridge");
-        if (command == null) {
-            pluginLogger.warning("[bridge] /modlbridge is missing from plugin.yml, reload command unavailable");
-            return;
-        }
-        ModlBridgeCommand executor = new ModlBridgeCommand(
-                new BridgeReloadPresenter(localeManager, this::reload));
-        command.setExecutor(executor);
-        command.setTabCompleter(executor);
+        plugin.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, e -> {
+            ModlBridgeCommandBrigadier.register(e.registrar(), new BridgeReloadPresenter(localeManager, this::reload));
+        });
     }
 
     @Override
     protected void registerProxyCommand(BridgeQueryClient client) {
-        plugin.getCommand("proxycmd").setExecutor(new ProxyCmdCommand(plugin, localeManager, client));
+        plugin.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, e -> {
+            ProxyCmdCommandBrigadier.register(e.registrar(), plugin, localeManager, client);
+        });
     }
 
     @Override
@@ -371,14 +382,14 @@ public class BridgeComponent extends AbstractBridgeComponent implements Listener
     static int toProtocolSlot(int bukkitSlot) {
         if (bukkitSlot <= 8) return 36 + bukkitSlot;
         if (bukkitSlot <= 35) return bukkitSlot;
-        switch (bukkitSlot) {
-            case 36: return 8;
-            case 37: return 7;
-            case 38: return 6;
-            case 39: return 5;
-            case 40: return 45;
-            default: return -1;
-        }
+        return switch (bukkitSlot) {
+            case 36 -> 8;
+            case 37 -> 7;
+            case 38 -> 6;
+            case 39 -> 5;
+            case 40 -> 45;
+            default -> -1;
+        };
     }
 
     @EventHandler
@@ -420,23 +431,12 @@ public class BridgeComponent extends AbstractBridgeComponent implements Listener
         }, 40L);
     }
 
-    static int resolveBlockStateId(Block block, Function<Object, Integer> modernResolver,
-                                   BiFunction<Material, Byte, Integer> legacyResolver) {
-        try {
-            Method getBlockData = block.getClass().getMethod("getBlockData");
-            Object blockData = getBlockData.invoke(block);
-            if (blockData != null) {
-                try {
-                    return modernResolver.apply(blockData);
-                } catch (RuntimeException ignored) {}
-            }
-        } catch (ReflectiveOperationException ignored) {}
-
-        return legacyResolver.apply(block.getType(), block.getData());
+    static int resolveBlockStateId(Block block, Function<Object, Integer> modernResolver) {
+        return modernResolver.apply(block.getBlockData());
     }
 
     static int resolveBlockStateId(Block block) {
-        return resolveBlockStateId(block, BridgeComponent::resolveModernBlockStateId, BridgeComponent::resolveLegacyBlockStateId);
+        return resolveBlockStateId(block, BridgeComponent::resolveModernBlockStateId);
     }
 
     private CompletableFuture<ReplayCaptureResult> uploadAndCleanupReplay(
@@ -507,12 +507,6 @@ public class BridgeComponent extends AbstractBridgeComponent implements Listener
         }
     }
 
-    @SuppressWarnings("deprecation")
-    private static int resolveLegacyBlockStateId(Material material, byte data) {
-        return SpigotConversionUtil.fromBukkitMaterialData(new MaterialData(material, data)).getGlobalId();
-    }
-
-    @SuppressWarnings("deprecation")
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         if (recordingManager == null) return;
@@ -524,7 +518,6 @@ public class BridgeComponent extends AbstractBridgeComponent implements Listener
                 new BlockChangeEvent(recordingDeltaMs(player.getUniqueId()), block.getX(), (short) block.getY(), block.getZ(), stateId));
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         if (recordingManager == null) return;

@@ -33,7 +33,7 @@ public final class StaffPermissionService {
 
     private CompletableFuture<Void> load(boolean clearFirst) {
         if (debugMode) logger.info("Loading staff permissions...");
-        ModlHttpClient httpClient = httpClientHolder.getClient();
+        ModlHttpClient httpClient = httpClientHolder.client();
         return httpClient.getStaffPermissions().thenAccept(response -> {
             if (clearFirst) cache.clearStaffPermissions();
             int loadedCount = 0;

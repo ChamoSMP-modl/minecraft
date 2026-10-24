@@ -55,12 +55,12 @@ public class TicketService {
 
         AbstractPlayer player = platform.getAbstractPlayer(actor.uniqueId(), false);
         String createdServer = platform.getPlayerServer(actor.uniqueId());
-        String title = titlePrefix == null ? null : titlePrefix + player.getUsername();
+        String title = titlePrefix == null ? null : titlePrefix + player.username();
 
         CreateTicketRequest request = CreateTicketRequest.builder()
-            .creatorUuid(player.getUuid().toString())
+            .creatorUuid(player.uuid().toString())
             .type(ticketType)
-            .creatorName(player.getUsername())
+            .creatorName(player.username())
             .subject(title)
             .priority("normal")
             .createdServer(createdServer)
@@ -80,7 +80,7 @@ public class TicketService {
 
     public boolean denySelfReport(CommandActor actor, AbstractPlayer reporter, AbstractPlayer targetPlayer) {
         if (reporter == null || targetPlayer == null) return false;
-        if (!reporter.getUuid().equals(targetPlayer.getUuid())) return false;
+        if (!reporter.uuid().equals(targetPlayer.uuid())) return false;
 
         actor.reply(localeManager.getMessage("messages.cannot_report_self"));
         return true;

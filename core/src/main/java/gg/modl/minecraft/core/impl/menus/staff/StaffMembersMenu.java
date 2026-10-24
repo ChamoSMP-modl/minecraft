@@ -19,7 +19,6 @@ import gg.modl.minecraft.core.impl.menus.util.SkinTextureCache;
 import gg.modl.minecraft.core.impl.menus.util.StaffTabItems.StaffTab;
 import gg.modl.minecraft.core.locale.LocaleManager;
 import lombok.Getter;
-import lombok.Value;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,25 +35,15 @@ import java.util.stream.Collectors;
 import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 
 public class StaffMembersMenu extends BaseStaffListMenu<StaffMembersMenu.StaffMemberEntry> {
-    @Value
-    public static class StaffMemberEntry {
-        String id;
-        String panelName;
-        String role;
-        UUID minecraftUuid;
-        String minecraftUsername;
-        String lastServer;
-        Date lastSeen;
-        Long totalPlaytimeMs;
-        int punishmentsIssuedCount;
-        boolean online;
-        long sessionDuration;
+    public record StaffMemberEntry(String id, String panelName, String role, UUID minecraftUuid,
+                                   String minecraftUsername, String lastServer, Date lastSeen, Long totalPlaytimeMs,
+                                   int punishmentsIssuedCount, boolean online, long sessionDuration) {
     }
 
     private List<StaffMemberEntry> staffMembers = new ArrayList<>();
-    private String currentFilter;
+    private final String currentFilter;
     private final List<String> filterOptions = Arrays.asList("Online", "Offline", "All");
-    @Getter private CompletableFuture<Void> dataFuture;
+    @Getter private final CompletableFuture<Void> dataFuture;
 
     public StaffMembersMenu(Platform platform, ModlHttpClient httpClient, UUID viewerUuid, String viewerName,
                             boolean isAdmin, String panelUrl, Consumer<CirrusPlayerWrapper> backAction) {
@@ -122,35 +111,35 @@ public class StaffMembersMenu extends BaseStaffListMenu<StaffMembersMenu.StaffMe
     }
 
     private String resolveLastSeenOrSessionTime(StaffMemberEntry entry) {
-        if (entry.isOnline())
-            return MenuItems.formatDuration(entry.getSessionDuration());
-        return entry.getLastSeen() != null ? MenuItems.formatDate(entry.getLastSeen()) : "Never";
+        if (entry.online())
+            return MenuItems.formatDuration(entry.sessionDuration());
+        return entry.lastSeen() != null ? MenuItems.formatDate(entry.lastSeen()) : "Never";
     }
 
     private String resolveServer(StaffMemberEntry entry) {
         String server = "Unknown";
-        if (entry.isOnline() && entry.getMinecraftUuid() != null) {
-            String playerServer = platform.getPlayerServer(entry.getMinecraftUuid());
+        if (entry.online() && entry.minecraftUuid() != null) {
+            String playerServer = platform.getPlayerServer(entry.minecraftUuid());
             if (playerServer != null) server = playerServer;
-        } else if (entry.getLastServer() != null) {
-            server = entry.getLastServer();
+        } else if (entry.lastServer() != null) {
+            server = entry.lastServer();
         }
         return server;
     }
 
     private Map<String, String> buildLorePlaceholders(StaffMemberEntry entry) {
         Map<String, String> placeholders = new HashMap<>();
-        placeholders.put("panel_name", entry.getPanelName() != null ? entry.getPanelName() : "Unknown");
-        placeholders.put("role", entry.getRole() != null ? entry.getRole() : "Unknown");
-        placeholders.put("minecraft_username", entry.getMinecraftUsername() != null ? entry.getMinecraftUsername() : "Not linked");
-        placeholders.put("is_online", entry.isOnline() ? "&aYes" : "&cNo");
+        placeholders.put("panel_name", entry.panelName() != null ? entry.panelName() : "Unknown");
+        placeholders.put("role", entry.role() != null ? entry.role() : "Unknown");
+        placeholders.put("minecraft_username", entry.minecraftUsername() != null ? entry.minecraftUsername() : "Not linked");
+        placeholders.put("is_online", entry.online() ? "&aYes" : "&cNo");
         placeholders.put("last_seen_or_session_time", resolveLastSeenOrSessionTime(entry));
         placeholders.put("server", resolveServer(entry));
         placeholders.put("playtime", MenuItems.formatDuration(
-                entry.isOnline()
-                        ? (entry.getTotalPlaytimeMs() != null ? entry.getTotalPlaytimeMs() : 0L) + entry.getSessionDuration()
-                        : (entry.getTotalPlaytimeMs() != null ? entry.getTotalPlaytimeMs() : 0L)));
-        placeholders.put("punishments_count", String.valueOf(entry.getPunishmentsIssuedCount()));
+                entry.online()
+                        ? (entry.totalPlaytimeMs() != null ? entry.totalPlaytimeMs() : 0L) + entry.sessionDuration()
+                        : (entry.totalPlaytimeMs() != null ? entry.totalPlaytimeMs() : 0L)));
+        placeholders.put("punishments_count", String.valueOf(entry.punishmentsIssuedCount()));
 
         return placeholders;
     }
@@ -169,9 +158,9 @@ public class StaffMembersMenu extends BaseStaffListMenu<StaffMembersMenu.StaffMe
     protected Collection<StaffMemberEntry> elements() {
         List<StaffMemberEntry> filtered;
         if ("Online".equals(currentFilter)) {
-            filtered = staffMembers.stream().filter(StaffMemberEntry::isOnline).collect(Collectors.toList());
+            filtered = staffMembers.stream().filter(StaffMemberEntry::online).collect(Collectors.toList());
         } else if ("Offline".equals(currentFilter)) {
-            filtered = staffMembers.stream().filter(e -> !e.isOnline()).collect(Collectors.toList());
+            filtered = staffMembers.stream().filter(e -> !e.online()).collect(Collectors.toList());
         } else {
             filtered = new ArrayList<>(staffMembers);
         }
@@ -183,7 +172,7 @@ public class StaffMembersMenu extends BaseStaffListMenu<StaffMembersMenu.StaffMe
 
     @Override
     protected CirrusItem map(StaffMemberEntry entry) {
-        if (entry.getPanelName() == null) {
+        if (entry.panelName() == null) {
             String emptyMsg = "Online".equals(currentFilter) ? "No staff online" :
                     "Offline".equals(currentFilter) ? "No staff offline" : "No staff members";
             return createEmptyPlaceholder(emptyMsg);
@@ -193,7 +182,7 @@ public class StaffMembersMenu extends BaseStaffListMenu<StaffMembersMenu.StaffMe
 
         LocaleManager localeManager = PluginServices.locale();
         String title = localeManager.getMessage("menus.staff_members.title", mapOf(
-                "panel_name", entry.getPanelName() != null ? entry.getPanelName() : "Unknown"
+                "panel_name", entry.panelName() != null ? entry.panelName() : "Unknown"
         ));
 
         CirrusItem headItem = CirrusItem.of(
@@ -202,7 +191,7 @@ public class StaffMembersMenu extends BaseStaffListMenu<StaffMembersMenu.StaffMe
                 MenuItems.lore(lore)
         );
 
-        headItem = SkinTextureCache.applyCached(headItem, entry.getMinecraftUuid());
+        headItem = SkinTextureCache.applyCached(headItem, entry.minecraftUuid());
 
         return headItem;
     }

@@ -55,14 +55,14 @@ public class ChatCommandLogService {
     }
 
     public CompletableFuture<List<ChatLogEntry>> getChatLogs(HttpClientHolder httpClientHolder, String uuid, int limit) {
-        return httpClientHolder.getClient().getChatLogs(uuid, limit).thenApply(response -> {
+        return httpClientHolder.client().getChatLogs(uuid, limit).thenApply(response -> {
             if (response.getEntries() == null) return listOf();
             return new ArrayList<>(response.getEntries());
         });
     }
 
     public CompletableFuture<List<CommandLogEntry>> getCommandLogs(HttpClientHolder httpClientHolder, String uuid, int limit) {
-        return httpClientHolder.getClient().getCommandLogs(uuid, limit).thenApply(response -> {
+        return httpClientHolder.client().getCommandLogs(uuid, limit).thenApply(response -> {
             if (response.getEntries() == null) return listOf();
             return new ArrayList<>(response.getEntries());
         });

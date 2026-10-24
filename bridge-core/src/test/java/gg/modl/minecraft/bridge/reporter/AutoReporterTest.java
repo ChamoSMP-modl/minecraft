@@ -260,12 +260,7 @@ class AutoReporterTest {
         }
     }
 
-    private static final class CreatedTicket {
-        private final String replayUrl;
-
-        private CreatedTicket(String replayUrl) {
-            this.replayUrl = replayUrl;
-        }
+    private record CreatedTicket(String replayUrl) {
     }
 
     private static final class FakeReplayService implements ReplayService {

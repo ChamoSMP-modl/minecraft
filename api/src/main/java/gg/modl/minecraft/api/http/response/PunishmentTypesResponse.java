@@ -7,21 +7,18 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Getter @NoArgsConstructor @AllArgsConstructor
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class PunishmentTypesResponse extends StatusResponse {
     private List<PunishmentTypeData> data;
     private int status;
 
-    @Getter @AllArgsConstructor
-    public static class PunishmentTypeData {
-        private final String name, category, staffDescription, playerDescription;
-        private final Object durations, points;
-        private final Integer customPoints;
-        private final Boolean canBeAltBlocking, canBeStatWiping, singleSeverityPunishment,
-                permanentUntilSkinChange, permanentUntilUsernameChange;
-        private final int id, ordinal;
-        private final boolean isCustomizable;
-
+    public record PunishmentTypeData(String name, String category, String staffDescription, String playerDescription,
+                                     Object durations, Object points, Integer customPoints, Boolean canBeAltBlocking,
+                                     Boolean canBeStatWiping, Boolean singleSeverityPunishment,
+                                     Boolean permanentUntilSkinChange, Boolean permanentUntilUsernameChange, int id,
+                                     int ordinal, boolean isCustomizable) {
         public boolean isKick() {
             return "KICK".equalsIgnoreCase(category) || ordinal == PunishmentTypeClassifier.ORDINAL_KICK;
         }
@@ -33,5 +30,10 @@ public class PunishmentTypesResponse extends StatusResponse {
         public boolean isMute() {
             return "MUTE".equalsIgnoreCase(category);
         }
+    }
+
+    @SuppressWarnings("all")
+    public int getStatus() {
+        return status;
     }
 }

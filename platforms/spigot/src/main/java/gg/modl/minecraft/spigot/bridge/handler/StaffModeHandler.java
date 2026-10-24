@@ -8,27 +8,20 @@ import gg.modl.minecraft.bridge.query.BridgeQueryClient;
 import gg.modl.minecraft.bridge.staffmode.StaffModeCore;
 import gg.modl.minecraft.core.util.PluginLogger;
 import gg.modl.minecraft.spigot.bridge.folia.AsyncTeleporter;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.Cancellable;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -37,7 +30,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.UUID;
 
 public class StaffModeHandler implements Listener {
-    static final String SILENT_CONTAINER_PREFIX = "§8Viewing: ";
+    static final String SILENT_CONTAINER_PREFIX = "<dark_gray>Viewing: ";
 
     private final JavaPlugin plugin;
     private final StaffModeCore core;
@@ -46,9 +39,20 @@ public class StaffModeHandler implements Listener {
                             BridgeLocaleManager localeManager, PluginLogger pluginLogger,
                             StaffModeConfig staffModeConfig, BridgeScheduler scheduler) {
         this.plugin = plugin;
-        this.core = new StaffModeCore(bridgeConfig, staffModeConfig, localeManager, pluginLogger, scheduler,
+
+        this.core = new StaffModeCore(
+                bridgeConfig,
+                staffModeConfig,
+                localeManager,
+                pluginLogger,
+                scheduler,
                 freezeHandler.getFreezeCore(),
-                new SpigotStaffModeOps(plugin.getLogger(), new AsyncTeleporter(pluginLogger)));
+                new SpigotStaffModeOps(
+                        plugin.getLogger(),
+                        new AsyncTeleporter(pluginLogger),
+                        plugin
+                )
+        );
     }
 
     public void register() {
@@ -113,12 +117,13 @@ public class StaffModeHandler implements Listener {
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && core.isVanished(uuid)) {
             Block block = event.getClickedBlock();
-            if (block != null && block.getState() instanceof InventoryHolder) {
-                InventoryHolder holder = (InventoryHolder) block.getState();
+            if (block != null && block.getState() instanceof InventoryHolder holder) {
                 event.setCancelled(true);
-                Inventory copy = Bukkit.createInventory(null,
+                Inventory copy = Bukkit.createInventory(
+                        null,
                         holder.getInventory().getSize(),
-                        SILENT_CONTAINER_PREFIX + block.getType().name());
+                        MiniMessage.miniMessage().deserialize(SILENT_CONTAINER_PREFIX + block.getType().name())
+                );
                 copy.setContents(holder.getInventory().getContents());
                 player.openInventory(copy);
                 return;
@@ -136,8 +141,7 @@ public class StaffModeHandler implements Listener {
         if (!core.isInStaffMode(uuid)) return;
         event.setCancelled(true);
 
-        if (event.getRightClicked() instanceof Player) {
-            Player clicked = (Player) event.getRightClicked();
+        if (event.getRightClicked() instanceof Player clicked) {
             core.handleTargetSelect(uuid, player.getInventory().getHeldItemSlot(), clicked.getUniqueId());
         }
     }
@@ -154,8 +158,7 @@ public class StaffModeHandler implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onDamage(EntityDamageEvent event) {
-        if (event.getEntity() instanceof Player) {
-            Player player = (Player) event.getEntity();
+        if (event.getEntity() instanceof Player player) {
             if (core.isInStaffMode(player.getUniqueId())) {
                 event.setCancelled(true);
             }
@@ -164,18 +167,16 @@ public class StaffModeHandler implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onDamageOther(EntityDamageByEntityEvent event) {
-        if (event.getDamager() instanceof Player) {
-            Player player = (Player) event.getDamager();
+        if (event.getDamager() instanceof Player player) {
             if (core.isInStaffMode(player.getUniqueId())) {
                 event.setCancelled(true);
             }
         }
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.HIGH)
-    public void onPickup(PlayerPickupItemEvent event) {
-        if (core.isInStaffMode(event.getPlayer().getUniqueId())) {
+    public void onPickup(EntityPickupItemEvent event) {
+        if (event.getEntity() instanceof Player player && core.isInStaffMode(player.getUniqueId())) {
             event.setCancelled(true);
         }
     }
@@ -187,8 +188,7 @@ public class StaffModeHandler implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onFoodChange(FoodLevelChangeEvent event) {
-        if (event.getEntity() instanceof Player) {
-            Player player = (Player) event.getEntity();
+        if (event.getEntity() instanceof Player player) {
             if (core.isInStaffMode(player.getUniqueId())) {
                 event.setCancelled(true);
             }
@@ -197,11 +197,10 @@ public class StaffModeHandler implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryClick(InventoryClickEvent event) {
-        if (!(event.getWhoClicked() instanceof Player)) return;
-        Player player = (Player) event.getWhoClicked();
+        if (!(event.getWhoClicked() instanceof Player player)) return;
         if (!core.isInStaffMode(player.getUniqueId())) return;
 
-        if (event.getView().getTitle().startsWith(SILENT_CONTAINER_PREFIX)) {
+        if (MiniMessage.miniMessage().serialize(event.getView().title()).startsWith(SILENT_CONTAINER_PREFIX)) {
             return;
         }
         event.setCancelled(true);
@@ -209,8 +208,7 @@ public class StaffModeHandler implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityTarget(EntityTargetLivingEntityEvent event) {
-        if (event.getTarget() instanceof Player) {
-            Player player = (Player) event.getTarget();
+        if (event.getTarget() instanceof Player player) {
             if (core.isVanished(player.getUniqueId())) {
                 event.setCancelled(true);
             }

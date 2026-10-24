@@ -50,7 +50,7 @@ class StaffSyncProcessor {
             UUID uuid = UUID.fromString(staffMember.getMinecraftUuid());
             AbstractPlayer player = platform.getPlayer(uuid);
 
-            if (player != null && player.isOnline()) {
+            if (player != null && player.online()) {
                 handle2faForStaffMember(uuid, player, staffMember);
                 updateStaffMemberCache(uuid, staffMember);
             }
@@ -85,7 +85,7 @@ class StaffSyncProcessor {
     }
 
     private void broadcastStaffJoin(UUID uuid, AbstractPlayer player) {
-        String inGameName = player.getUsername();
+        String inGameName = player.username();
         String panelName = cache.getStaffDisplayName(uuid);
         if (panelName == null) panelName = inGameName;
         platform.staffBroadcast(localeManager.getMessage("staff_notifications.join",

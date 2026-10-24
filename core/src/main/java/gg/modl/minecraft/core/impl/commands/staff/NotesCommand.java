@@ -19,7 +19,6 @@ import revxrsal.commands.annotation.Named;
 import revxrsal.commands.command.CommandActor;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 
@@ -45,9 +44,9 @@ public class NotesCommand {
         }
 
         UUID senderUuid = actor.uniqueId();
-        ProfileMenuOpener.openProfileMenu(actor, httpClientHolder.getClient(), platform, cache, localeManager, playerQuery,
+        ProfileMenuOpener.openProfileMenu(actor, httpClientHolder.client(), platform, cache, localeManager, playerQuery,
                 (profileResponse, senderName, viewer) -> new NotesMenu(
-                    platform, httpClientHolder.getClient(), senderUuid, senderName,
+                    platform, httpClientHolder.client(), senderUuid, senderName,
                     profileResponse.getProfile(), null
                 ).display(viewer));
     }
@@ -55,7 +54,7 @@ public class NotesCommand {
     private void printNotes(CommandActor actor, String playerQuery, int page) {
         actor.reply(localeManager.getMessage("player_lookup.looking_up", mapOf("player", playerQuery)));
 
-        StaffProfileLookup.lookupPlayerProfile(httpClientHolder.getClient(), platform, playerQuery).thenAccept(profileResponse -> {
+        StaffProfileLookup.lookupPlayerProfile(httpClientHolder.client(), platform, playerQuery).thenAccept(profileResponse -> {
             if (profileResponse.getStatus() == 200) {
                 Account profile = profileResponse.getProfile();
                 List<Account.Username> usernames = profile.getUsernames();

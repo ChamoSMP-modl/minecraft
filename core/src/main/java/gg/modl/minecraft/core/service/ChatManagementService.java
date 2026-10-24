@@ -41,7 +41,7 @@ public class ChatManagementService {
         long lastTime = profile.getLastChatMessageTime();
         if (lastTime != 0) {
             long elapsed = System.currentTimeMillis() - lastTime;
-            if (elapsed < slowModeSeconds * MILLIS_PER_SECOND) return false;
+            return elapsed >= slowModeSeconds * MILLIS_PER_SECOND;
         }
         return true;
     }

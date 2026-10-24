@@ -31,7 +31,7 @@ public class FreezeCommand {
     @Description("Freeze or unfreeze a player")
     @RequiresPermission(Permissions.MOD_ACTIONS)
     public void onFreeze(CommandActor actor, AbstractPlayer target) {
-        UUID targetUuid = target.getUuid();
+        UUID targetUuid = target.uuid();
         String targetName = target.getName();
 
         if (!platform.isOnline(targetUuid)) {

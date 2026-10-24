@@ -18,7 +18,6 @@ import gg.modl.minecraft.core.impl.menus.util.StaffTabItems.StaffTab;
 import gg.modl.minecraft.core.locale.LocaleManager;
 import gg.modl.minecraft.core.punishment.RecentPunishmentMapper;
 import lombok.Getter;
-import lombok.Value;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,16 +31,11 @@ import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 import java.util.function.Consumer;
 
 public class RecentPunishmentsMenu extends BaseStaffListMenu<RecentPunishmentsMenu.PunishmentWithPlayer> {
-    @Value
-    public static class PunishmentWithPlayer {
-        Punishment punishment;
-        UUID playerUuid;
-        String playerName;
-        Account account;
+    public record PunishmentWithPlayer(Punishment punishment, UUID playerUuid, String playerName, Account account) {
     }
 
     private final List<PunishmentWithPlayer> recentPunishments;
-    @Getter private CompletableFuture<Void> dataFuture;
+    @Getter private final CompletableFuture<Void> dataFuture;
 
     public RecentPunishmentsMenu(Platform platform, ModlHttpClient httpClient, UUID viewerUuid, String viewerName,
                                   boolean isAdmin, String panelUrl, Consumer<CirrusPlayerWrapper> backAction) {
@@ -86,7 +80,7 @@ public class RecentPunishmentsMenu extends BaseStaffListMenu<RecentPunishmentsMe
             return Collections.singletonList(new PunishmentWithPlayer(null, null, null, null));
 
         List<PunishmentWithPlayer> sorted = new ArrayList<>(recentPunishments);
-        sorted.sort(Comparator.comparing((PunishmentWithPlayer p) -> p.getPunishment().getIssued(),
+        sorted.sort(Comparator.comparing((PunishmentWithPlayer p) -> p.punishment().getIssued(),
                 Comparator.nullsLast(Comparator.reverseOrder())));
         return sorted;
     }
@@ -95,9 +89,9 @@ public class RecentPunishmentsMenu extends BaseStaffListMenu<RecentPunishmentsMe
     protected CirrusItem map(PunishmentWithPlayer pwp) {
         LocaleManager locale = PluginServices.locale();
 
-        if (pwp.getPunishment() == null) return createEmptyPlaceholder(locale.getMessage("menus.empty.history"));
+        if (pwp.punishment() == null) return createEmptyPlaceholder(locale.getMessage("menus.empty.history"));
 
-        Punishment punishment = pwp.getPunishment();
+        Punishment punishment = pwp.punishment();
 
         Object typeNameObj = punishment.getDataMap().get("typeName");
         String typeName = typeNameObj != null ? typeNameObj.toString() : punishment.getTypeCategory();
@@ -106,7 +100,7 @@ public class RecentPunishmentsMenu extends BaseStaffListMenu<RecentPunishmentsMe
         boolean isBan = typeName != null && (typeName.toLowerCase().contains("ban") || typeName.toLowerCase().contains("blacklist"));
         boolean isMute = typeName != null && typeName.toLowerCase().contains("mute");
 
-        Map<String, String> extraVars = mapOf("player", pwp.getPlayerName() != null ? pwp.getPlayerName() : "Unknown");
+        Map<String, String> extraVars = mapOf("player", pwp.playerName() != null ? pwp.playerName() : "Unknown");
 
         return PunishmentItemRenderer.render(punishment, isKick, isBan, isMute, typeName,
                 "menus.recent_item", extraVars);
@@ -114,7 +108,7 @@ public class RecentPunishmentsMenu extends BaseStaffListMenu<RecentPunishmentsMe
 
     @Override
     protected void handleClick(Click click, PunishmentWithPlayer pwp) {
-        if (pwp.getPunishment() == null) return;
+        if (pwp.punishment() == null) return;
 
         List<PunishmentWithPlayer> currentData = new ArrayList<>(recentPunishments);
         Consumer<CirrusPlayerWrapper> returnToPunishments = p -> {
@@ -122,17 +116,17 @@ public class RecentPunishmentsMenu extends BaseStaffListMenu<RecentPunishmentsMe
             MenuAsync.displayWhenLoaded(platform, m.getDataFuture(), p, m::display);
         };
 
-        if (pwp.getAccount() != null) {
+        if (pwp.account() != null) {
             ActionHandlers.openMenu(
                     new StaffModifyPunishmentMenu(platform, httpClient, viewerUuid, viewerName,
-                            pwp.getAccount(), pwp.getPunishment(), isAdmin, panelUrl, returnToPunishments))
+                            pwp.account(), pwp.punishment(), isAdmin, panelUrl, returnToPunishments))
                     .handle(click);
         } else {
             click.clickedMenu().close();
-            httpClient.getPlayerProfile(pwp.getPlayerUuid()).thenAccept(response -> {
+            httpClient.getPlayerProfile(pwp.playerUuid()).thenAccept(response -> {
                 if (response.getStatus() == 200) {
                     new StaffModifyPunishmentMenu(platform, httpClient, viewerUuid, viewerName,
-                        response.getProfile(), pwp.getPunishment(), isAdmin, panelUrl, returnToPunishments)
+                        response.getProfile(), pwp.punishment(), isAdmin, panelUrl, returnToPunishments)
                         .display(click.player());
                 } else {
                     sendMessage(MenuItems.COLOR_RED + "Failed to load player profile");

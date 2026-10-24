@@ -1,11 +1,17 @@
-name: ${plugin.name}
-main: ${project.groupId}.minecraft.spigot.SpigotPlugin
-version: ${plugin.version}
-author: '${plugin.author}'
-description: ${plugin.description}
-website: ${plugin.url}
-api-version: 1.13
+name: "ChamoSMP modl"
+provides: [ "modl" ]
+
+main: gg.modl.minecraft.spigot.SpigotPlugin
+paper-plugin-loader: gg.modl.minecraft.spigot.PaperLoader
+
+version: ${version}
+authors: [ "ChamoSMP Development Team", "Chamogelastos", "byteful", "tigerbong" ]
+description: ${description}
+website: "https://github.com/ChamoSMP-modl/minecraft"
+
+api-version: 1.21.11
 folia-supported: true
+
 softdepend:
   - ProtocolLib
   - ProtocolSupport
@@ -15,14 +21,9 @@ softdepend:
   - Geyser-Spigot
   - GrimAC
   - Polar
-  - Vulcan
-commands:
-  proxycmd:
-    description: Forward a command to the proxy plugin via TCP query
-    usage: /proxycmd <command>
-  modlbridge:
-    description: Manage the modl bridge on this server
-    usage: /modlbridge reload
+  - Intave
+  - packetevents
+
 permissions:
   modl.bridge.reload:
     description: Reload the modl bridge configuration

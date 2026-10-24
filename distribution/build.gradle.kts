@@ -1,26 +1,9 @@
-import java.util.zip.ZipFile
-import java.util.Properties
-
 plugins {
-    id("com.gradleup.shadow")
-}
+    id("sub")
+    alias(libs.plugins.shadow)
 
-java {
-    disableAutoTargetJvm()
-}
-
-val rootGradlew = rootProject.file("gradlew")
-val packetEventsDir = rootProject.file("../minecraft-packetevents")
-val packetEventsGradlew = packetEventsDir.resolve("gradlew")
-val nestedPacketEventsFileName = "packetevents-modl.jar"
-
-
-fun packetEventsVersion(): String {
-    val properties = Properties()
-    packetEventsDir.resolve("gradle.properties").inputStream().use(properties::load)
-    val fullVersion = properties.getProperty("fullVersion")
-    val snapshot = properties.getProperty("snapshot").toBoolean()
-    return if (snapshot) "$fullVersion-SNAPSHOT" else fullVersion
+    alias(libs.plugins.run.paper)
+    alias(libs.plugins.run.velocity)
 }
 
 dependencies {
@@ -29,17 +12,10 @@ dependencies {
     implementation(project(":platforms:spigot"))
     implementation(project(":platforms:spigot-sv"))
     implementation(project(":platforms:velocity"))
-    implementation(libs.adventure.api)
-    implementation(libs.adventure.nbt)
-    implementation(libs.adventure.minimessage)
-    implementation(libs.adventure.serializer.legacy)
-    implementation(libs.adventure.serializer.gson)
 }
 
 tasks.shadowJar {
-    dependsOn(":platforms:velocity:check")
-
-    archiveBaseName.set("modl")
+    archiveBaseName.set("chamosmp-modl")
     archiveClassifier.set("")
 
     relocate("com.google.protobuf", "gg.modl.libs.protobuf")
@@ -64,15 +40,8 @@ tasks.shadowJar {
     exclude("org/checkerframework/**")
     exclude("jakarta/**")
     exclude("javax/annotation/**")
-
-    from(rootProject.file("LICENSE.txt"))
 }
 
 tasks.assemble {
     dependsOn(tasks.shadowJar)
 }
-
-val universalDistributionJar = layout.buildDirectory.file("libs/modl-${project.version}.jar")
-
-fun zipEntryNames(file: File): Set<String> =
-    ZipFile(file).use { zip -> zip.entries().asSequence().map { it.name }.toSet() }

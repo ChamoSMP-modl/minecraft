@@ -141,23 +141,10 @@ public class PaginatedDataSource<T> {
         return isFetching.get();
     }
 
-    public static class FetchResult<T> {
-        private final List<T> items;
-        private final int totalCount;
-        private final boolean success;
+    public record FetchResult<T>(List<T> items, int totalCount, boolean success) {
+            public FetchResult(List<T> items, int totalCount) {
+                this(items, totalCount, true);
+            }
 
-        public FetchResult(List<T> items, int totalCount) {
-            this(items, totalCount, true);
-        }
-
-        public FetchResult(List<T> items, int totalCount, boolean success) {
-            this.items = items;
-            this.totalCount = totalCount;
-            this.success = success;
-        }
-
-        public List<T> items() { return this.items; }
-        public int totalCount() { return this.totalCount; }
-        public boolean success() { return this.success; }
     }
 }

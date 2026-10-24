@@ -28,7 +28,7 @@ public final class PlayerLookupService {
         if (player != null) return player;
 
         try {
-            Account account = httpClientHolder.getClient().getPlayer(new PlayerNameRequest(target)).join().getPlayer();
+            Account account = httpClientHolder.client().getPlayer(new PlayerNameRequest(target)).join().getPlayer();
             if (account != null) {
                 String username = !account.getUsernames().isEmpty()
                         ? account.getUsernames().get(account.getUsernames().size() - 1).getUsername()
@@ -47,7 +47,7 @@ public final class PlayerLookupService {
 
     public Account fetchAccount(String target) {
         try {
-            PlayerNameResponse response = httpClientHolder.getClient().getPlayer(new PlayerNameRequest(target)).join();
+            PlayerNameResponse response = httpClientHolder.client().getPlayer(new PlayerNameRequest(target)).join();
             if (response != null && response.isSuccess()) return response.getPlayer();
         } catch (Exception e) {
             logger.log(Level.FINE, "Backend account lookup failed for: " + target, e);

@@ -37,18 +37,18 @@ public class JoinListener {
                             platform.getServerName())
                     .thenAccept(result -> applyLoginResult(event, result)));
         } catch (Throwable failure) {
-            denyLogin(event, loginPipeline.getLoginService().unverifiableBanStatusMessage(), failure);
+            denyLogin(event, loginPipeline.loginService().unverifiableBanStatusMessage(), failure);
             return null;
         }
     }
 
     private void applyLoginResult(LoginEvent event, LoginService.LoginResult result) {
         try {
-            String message = loginPipeline.getLoginService().denialMessage(result);
+            String message = loginPipeline.loginService().denialMessage(result);
             if (message != null) denyLogin(event, message, null);
             else if (debugMode) logger.info("Allowed login for {}", event.getPlayer().getUsername());
         } catch (Throwable failure) {
-            denyLogin(event, loginPipeline.getLoginService().unverifiableBanStatusMessage(), failure);
+            denyLogin(event, loginPipeline.loginService().unverifiableBanStatusMessage(), failure);
         }
     }
 
@@ -61,18 +61,18 @@ public class JoinListener {
     @Subscribe
     public void onPostLogin(PostLoginEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
-        loginPipeline.getPlayerSessionService().handlePlayerJoin(uuid, event.getPlayer().getUsername());
+        loginPipeline.playerSessionService().handlePlayerJoin(uuid, event.getPlayer().getUsername());
 
         String texture = platform.getPlayerSkinTexture(uuid);
         if (texture != null) cache.cacheSkinTexture(uuid, texture);
 
-        LoginCache.CachedLoginResult cachedResult = loginPipeline.getLoginCache().getCachedLoginResult(uuid);
-        loginPipeline.getLoginService().cacheLoginData(uuid, cachedResult != null ? cachedResult.getResponse() : null);
+        LoginCache.CachedLoginResult cachedResult = loginPipeline.loginCache().getCachedLoginResult(uuid);
+        loginPipeline.loginService().cacheLoginData(uuid, cachedResult != null ? cachedResult.response() : null);
     }
 
     @Subscribe
     public void onDisconnect(DisconnectEvent event) {
-        loginPipeline.getPlayerSessionService().handlePlayerDisconnect(
+        loginPipeline.playerSessionService().handlePlayerDisconnect(
                 event.getPlayer().getUniqueId(), event.getPlayer().getUsername());
     }
 

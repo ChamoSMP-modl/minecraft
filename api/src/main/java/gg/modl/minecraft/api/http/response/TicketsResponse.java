@@ -21,4 +21,9 @@ public class TicketsResponse extends StatusResponse {
         private boolean hasStaffResponse, locked;
         private int replyCount;
     }
+
+    @SuppressWarnings("all")
+    public int getStatus() {
+        return status;
+    }
 }

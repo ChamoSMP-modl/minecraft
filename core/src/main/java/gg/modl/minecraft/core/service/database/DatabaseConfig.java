@@ -2,16 +2,9 @@ package gg.modl.minecraft.core.service.database;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 
-@Value
-public class DatabaseConfig {
-    String host;
-    String database, username, password;
-    DatabaseType type;
-    String tablePrefix;
-    int port;
-
+public record DatabaseConfig(String host, String database, String username, String password, DatabaseType type,
+                             String tablePrefix, int port) {
     @RequiredArgsConstructor
     public enum DatabaseType {
         MYSQL("mysql", "com.mysql.cj.jdbc.Driver", "jdbc:mysql://%s:%d/%s?useSSL=false&allowPublicKeyRetrieval=true"),
@@ -20,7 +13,8 @@ public class DatabaseConfig {
         H2("h2", "org.h2.Driver", "jdbc:h2:file:./%s");
 
         private final String configKey;
-        @Getter private final String driverClass;
+        @Getter
+        private final String driverClass;
         private final String urlFormat;
 
         public String buildJdbcUrl(String host, int port, String database) {

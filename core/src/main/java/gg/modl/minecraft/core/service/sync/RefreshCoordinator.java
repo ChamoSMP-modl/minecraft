@@ -55,7 +55,7 @@ class RefreshCoordinator {
     }
 
     void refreshPunishmentTypes() {
-        orTimeout(httpClientHolder.getClient().getPunishmentTypes().thenAccept(response -> {
+        orTimeout(httpClientHolder.client().getPunishmentTypes().thenAccept(response -> {
             if (!response.isSuccess()) return;
             for (SyncService.PunishmentTypesRefreshListener listener : punishmentTypesListeners) {
                 try {

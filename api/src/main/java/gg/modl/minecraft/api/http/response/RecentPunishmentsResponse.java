@@ -51,4 +51,9 @@ public class RecentPunishmentsResponse extends StatusResponse {
             return typeOrdinal != null ? typeOrdinal : 0;
         }
     }
+
+    @SuppressWarnings("all")
+    public int getStatus() {
+        return status;
+    }
 }

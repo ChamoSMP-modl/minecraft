@@ -8,6 +8,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -84,8 +86,8 @@ public class UpdateCheckerService {
         }
     }
 
-    private ReleaseInfo fetchLatestRelease() throws IOException {
-        URL url = new URL(RELEASES_API_URL);
+    private ReleaseInfo fetchLatestRelease() throws IOException, URISyntaxException {
+        URL url = new URI(RELEASES_API_URL).toURL();
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         try {
             connection.setRequestMethod("GET");
@@ -130,12 +132,10 @@ public class UpdateCheckerService {
         return DEFAULT_INTERVAL_MINUTES;
     }
 
-    private static final class ReleaseInfo {
-        private final String tagName, releaseUrl;
-
-        private ReleaseInfo(String tagName, String releaseUrl) {
-            this.tagName = tagName;
-            this.releaseUrl = releaseUrl == null || releaseUrl.trim().isEmpty() ? RELEASES_PAGE_URL : releaseUrl;
+    private record ReleaseInfo(String tagName, String releaseUrl) {
+            private ReleaseInfo(String tagName, String releaseUrl) {
+                this.tagName = tagName;
+                this.releaseUrl = releaseUrl == null || releaseUrl.trim().isEmpty() ? RELEASES_PAGE_URL : releaseUrl;
+            }
         }
-    }
 }

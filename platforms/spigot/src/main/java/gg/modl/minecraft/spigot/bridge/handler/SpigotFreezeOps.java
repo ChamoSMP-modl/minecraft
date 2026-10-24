@@ -65,7 +65,7 @@ class SpigotFreezeOps implements FreezeOps {
         FreezeAnchor anchor = anchors.get(uuid);
         if (anchor == null) return;
 
-        World world = Bukkit.getWorld(anchor.getWorldId());
+        World world = Bukkit.getWorld(anchor.worldId());
         if (world == null) return;
 
         scheduler.runForPlayer(uuid, () -> {

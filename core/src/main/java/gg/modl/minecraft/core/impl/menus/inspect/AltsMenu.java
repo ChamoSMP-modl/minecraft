@@ -107,8 +107,8 @@ public class AltsMenu extends PaginatedInspectListMenu<Account> {
             if (alt.getMinecraftUuid() != null && PluginServices.cache().getSkinTexture(alt.getMinecraftUuid()) == null) {
                 final UUID altUuid = alt.getMinecraftUuid();
                 MojangProfiles.client().get(altUuid).thenAccept(wp -> {
-                    if (wp != null && wp.isValid() && wp.getTextureValue() != null) {
-                        PluginServices.cache().cacheSkinTexture(altUuid, wp.getTextureValue());
+                    if (wp != null && wp.valid() && wp.textureValue() != null) {
+                        PluginServices.cache().cacheSkinTexture(altUuid, wp.textureValue());
                     }
                 });
             }

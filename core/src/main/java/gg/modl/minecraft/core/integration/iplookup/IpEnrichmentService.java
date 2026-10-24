@@ -10,10 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.Inet6Address;
-import java.net.InetAddress;
-import java.net.URL;
+import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -78,9 +75,12 @@ public final class IpEnrichmentService {
         String requestUrl = urlTemplate.replace(IP_PLACEHOLDER, ipAddress);
         URL url;
         try {
-            url = new URL(requestUrl);
+            url = new URI(requestUrl).toURL();
         } catch (IOException e) {
             logger.warning("Invalid IP lookup URL for " + ipAddress + ": " + e.getMessage());
+            return null;
+        } catch (URISyntaxException e) {
+            logger.warning("Invalid URL syntax! " + e.getMessage());
             return null;
         }
         if (!"https".equalsIgnoreCase(url.getProtocol())) {

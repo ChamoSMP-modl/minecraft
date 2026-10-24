@@ -102,8 +102,7 @@ public class StaffModeConfig {
     }
 
     private List<String> parseStringList(Object value) {
-        if (value instanceof List<?>) {
-            List<?> list = (List<?>) value;
+        if (value instanceof List<?> list) {
             return list.stream()
                     .map(o -> o != null ? String.valueOf(o) : "")
                     .collect(Collectors.toList());

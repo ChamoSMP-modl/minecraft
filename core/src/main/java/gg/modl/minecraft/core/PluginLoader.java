@@ -154,7 +154,7 @@ public class PluginLoader {
     private final PlayerLookupService playerLookupService;
 
     public ModlHttpClient getHttpClient() {
-        return httpClientHolder.getClient();
+        return httpClientHolder.client();
     }
 
     public PluginLoader(Platform platform, Path dataDirectory, ChatMessageCache chatMessageCache, HttpManager httpManager, int syncPollingRateSeconds) {
@@ -265,8 +265,7 @@ public class PluginLoader {
             builder.commandCondition(context ->
                 accessPolicy.enforce(context.command().annotations(), context.actor()));
             builder.suggestionProviders(suggestionProviders -> suggestionProviders.addProviderFactoryLast((type, annotations, lamp) -> {
-                if (type instanceof Class) {
-                    Class<?> clazz = (Class<?>) type;
+                if (type instanceof Class<?> clazz) {
                     if (clazz == AbstractPlayer.class || clazz == Account.class) {
                         return PlayerQuerySuggestions.onlinePlayerNames(platform);
                     }

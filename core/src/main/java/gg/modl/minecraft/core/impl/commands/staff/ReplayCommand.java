@@ -123,12 +123,12 @@ public class ReplayCommand {
             actor.reply(localeManager.getMessage("general.player_not_found"));
             return null;
         }
-        return target.getUuid();
+        return target.uuid();
     }
 
     private String resolveTargetName(UUID uuid, String fallback) {
         AbstractPlayer player = platform.getAbstractPlayer(uuid, false);
-        if (player != null) return player.getUsername();
+        if (player != null) return player.username();
         return fallback != null && !fallback.isEmpty() ? fallback : uuid.toString();
     }
 }

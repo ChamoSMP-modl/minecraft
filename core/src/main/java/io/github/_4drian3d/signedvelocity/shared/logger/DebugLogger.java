@@ -12,31 +12,22 @@ public interface DebugLogger {
 
     void debug(Supplier<String> supplier);
 
-    class Slf4j implements DebugLogger {
-        private final Logger logger;
-
-        public Slf4j(Logger logger) {
-            this.logger = logger;
-        }
-
-        public Logger logger() {
-            return logger;
-        }
+    record Slf4j(Logger logger) implements DebugLogger {
 
         @Override
-        public void debugMultiple(final Supplier<String[]> supplier) {
-            if (DEBUG) {
-                for (final String line : supplier.get()) {
-                    logger.info("[DEBUG] {}", line);
+            public void debugMultiple(final Supplier<String[]> supplier) {
+                if (DEBUG) {
+                    for (final String line : supplier.get()) {
+                        logger.info("[DEBUG] {}", line);
+                    }
+                }
+            }
+
+            @Override
+            public void debug(Supplier<String> supplier) {
+                if (DEBUG) {
+                    logger.info("[DEBUG] {}", supplier.get());
                 }
             }
         }
-
-        @Override
-        public void debug(Supplier<String> supplier) {
-            if (DEBUG) {
-                logger.info("[DEBUG] {}", supplier.get());
-            }
-        }
-    }
 }

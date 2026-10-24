@@ -1,9 +1,8 @@
 package io.github._4drian3d.signedvelocity.paper.listener;
 
-import io.github._4drian3d.signedvelocity.shared.logger.DebugLogger;
 import io.github._4drian3d.signedvelocity.common.queue.QueuedData;
 import io.github._4drian3d.signedvelocity.common.queue.SignedQueue;
-import io.github._4drian3d.signedvelocity.common.queue.SignedResult;
+import io.github._4drian3d.signedvelocity.shared.logger.DebugLogger;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;

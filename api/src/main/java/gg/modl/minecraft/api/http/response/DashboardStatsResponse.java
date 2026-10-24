@@ -14,4 +14,9 @@ public class DashboardStatsResponse extends StatusResponse {
         private long unresolvedReports, unresolvedTickets, onlineStaff, onlinePlayers,
                 activeBans, activeMutes, totalActivePunishments, totalPlayers;
     }
+
+    @SuppressWarnings("all")
+    public int getStatus() {
+        return status;
+    }
 }

@@ -213,7 +213,7 @@ public final class ConfigUpdater {
             Object currentValue = current.get(key);
             if (currentValue == null) {
                 collectMissing(asStringKeyed((Map<Object, Object>) defaultValue),
-                        Collections.<String, Object>emptyMap(), path, schema, missing);
+                        Collections.emptyMap(), path, schema, missing);
             } else if (currentValue instanceof Map) {
                 collectMissing(asStringKeyed((Map<Object, Object>) defaultValue),
                         asStringKeyed((Map<Object, Object>) currentValue), path, schema, missing);

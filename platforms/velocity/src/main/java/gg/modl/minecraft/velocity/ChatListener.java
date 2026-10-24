@@ -1,6 +1,5 @@
 package gg.modl.minecraft.velocity;
 
-import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.command.CommandExecuteEvent;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
@@ -17,20 +16,22 @@ public class ChatListener {
     private final ChatService chatService;
     private final CommandInterceptService commandInterceptService;
 
-    @Subscribe(order = PostOrder.LATE)
+    @Subscribe
     public void onPlayerChat(PlayerChatEvent event) {
         String serverName = getPlayerServerName(event.getPlayer());
 
         ChatService.Result result = chatService.handleChat(
                 event.getPlayer().getUniqueId(), event.getPlayer().getUsername(), event.getMessage(), serverName,
                 msg -> event.getPlayer().sendMessage(Colors.get(StringUtil.unescapeNewlines(msg))));
-        if (result == ChatService.Result.CANCELLED) event.setResult(PlayerChatEvent.ChatResult.denied());
+        if (result == ChatService.Result.CANCELLED) {
+            //noinspection deprecation
+            event.setResult(PlayerChatEvent.ChatResult.denied());
+        }
     }
 
-    @Subscribe(order = PostOrder.LATE)
+    @Subscribe
     public void onCommandExecute(CommandExecuteEvent event) {
-        if (!(event.getCommandSource() instanceof Player)) return;
-        Player player = (Player) event.getCommandSource();
+        if (!(event.getCommandSource() instanceof Player player)) return;
 
         CommandInterceptService.CommandResult result = commandInterceptService.handleCommand(
                 player.getUniqueId(), player.getUsername(),

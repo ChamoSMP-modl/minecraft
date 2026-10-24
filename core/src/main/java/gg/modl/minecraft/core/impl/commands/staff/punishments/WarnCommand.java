@@ -18,7 +18,6 @@ import gg.modl.minecraft.core.punishment.PunishmentFlagParser;
 import gg.modl.minecraft.core.util.CommandUtil;
 import lombok.RequiredArgsConstructor;
 
-import java.util.Map;
 import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 
 @RequiredArgsConstructor
@@ -51,7 +50,7 @@ public class WarnCommand {
             target.getMinecraftUuid().toString(), issuerName, issuerId, WARNING_NOTE_PREFIX + warnArgs.getReason()
         );
 
-        httpClientHolder.getClient().createPlayerNote(noteRequest).thenAccept(response -> {
+        httpClientHolder.client().createPlayerNote(noteRequest).thenAccept(response -> {
             final String targetName = target.getUsernames().isEmpty()
                     ? target.getMinecraftUuid().toString()
                     : target.getUsernames().get(0).getUsername();
@@ -81,7 +80,7 @@ public class WarnCommand {
 
     private void notifyTargetIfOnline(Account target, String issuerName, String reason) {
         AbstractPlayer targetPlayer = platform.getAbstractPlayer(target.getMinecraftUuid(), false);
-        if (targetPlayer != null && targetPlayer.isOnline()) {
+        if (targetPlayer != null && targetPlayer.online()) {
             platform.sendMessage(target.getMinecraftUuid(), localeManager.getMessage("warn.player_message", mapOf(
                 "issuer", issuerName, "reason", reason
             )));

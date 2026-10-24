@@ -7,7 +7,6 @@ import gg.modl.minecraft.core.Platform;
 import gg.modl.minecraft.core.cache.Cache;
 import gg.modl.minecraft.core.locale.LocaleManager;
 
-import java.util.Map;
 import java.util.UUID;
 import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 
@@ -36,7 +35,7 @@ public final class CommandUtil {
         if (panelName != null)
             return panelName;
         AbstractPlayer player = platform.getAbstractPlayer(actor.uniqueId(), false);
-        return player != null ? player.getUsername() : actor.name();
+        return player != null ? player.username() : actor.name();
     }
 
     public static String resolveActorId(CommandActor actor, Cache cache) {
@@ -51,7 +50,7 @@ public final class CommandUtil {
             return name;
         AbstractPlayer player = platform.getPlayer(uuid);
         if (player != null)
-            return player.getUsername();
+            return player.username();
         return "Staff";
     }
 

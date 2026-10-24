@@ -9,6 +9,7 @@ import gg.modl.minecraft.core.util.HttpConnectionOpener;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -78,7 +79,7 @@ public final class MojangProfileClient {
             return lookupExecutor.supplyAsync(() -> {
                 HttpURLConnection connection = null;
                 try {
-                    URL url = new URL(rawUrl);
+                    URL url = new URI(rawUrl).toURL();
                     connection = connectionOpener.open(url);
                     connection.setRequestMethod("GET");
                     connection.setConnectTimeout((int) CONNECT_TIMEOUT.toMillis());
@@ -109,7 +110,7 @@ public final class MojangProfileClient {
                         return WebPlayer.invalid();
                     }
 
-                    JsonObject json = new JsonParser().parse(jsonString).getAsJsonObject();
+                    JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
                     if (json == null) {
                         logger.warning("Invalid JSON response from Mojang API for URL: " + rawUrl);
                         return WebPlayer.invalid();
@@ -127,7 +128,7 @@ public final class MojangProfileClient {
 
                     String textureValue = null;
                     JsonArray propsArray = json.has("properties") ? json.getAsJsonArray("properties") : null;
-                    if (propsArray != null && propsArray.size() > 0) {
+                    if (propsArray != null && !propsArray.isEmpty()) {
                         JsonObject properties = propsArray.get(0).getAsJsonObject();
                         if (properties.has("value")) textureValue = properties.get("value").getAsString();
                     }
@@ -155,7 +156,7 @@ public final class MojangProfileClient {
     private static String extractSkinId(JsonObject json) {
         try {
             JsonArray propsArr = json.has("properties") ? json.getAsJsonArray("properties") : null;
-            if (propsArr == null || propsArr.size() == 0) return null;
+            if (propsArr == null || propsArr.isEmpty()) return null;
 
             JsonObject properties = propsArr.get(0).getAsJsonObject();
             if (!properties.has("value")) return null;
@@ -172,7 +173,7 @@ public final class MojangProfileClient {
             if (base64 == null || base64.trim().isEmpty()) return null;
 
             String decodedJson = new String(Base64.getDecoder().decode(base64));
-            JsonObject decodedObject = new JsonParser().parse(decodedJson).getAsJsonObject();
+            JsonObject decodedObject = JsonParser.parseString(decodedJson).getAsJsonObject();
             if (!decodedObject.has("textures")) return null;
 
             JsonObject textures = decodedObject.getAsJsonObject("textures");

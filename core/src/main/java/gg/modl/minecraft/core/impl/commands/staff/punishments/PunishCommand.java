@@ -89,7 +89,7 @@ public class PunishCommand {
         ParsedCommand parsed = parsePunishmentTypeAndArgs(args, punishmentTypes);
         if (parsed == null) {
             String availableTypes = punishmentTypes.stream()
-                    .map(PunishmentTypesResponse.PunishmentTypeData::getName)
+                    .map(PunishmentTypesResponse.PunishmentTypeData::name)
                     .collect(Collectors.joining(", "));
             actor.reply(localeManager.getPunishmentMessage("general.invalid_punishment_type",
                 mapOf("types", availableTypes)));
@@ -97,10 +97,10 @@ public class PunishCommand {
         }
 
         final PunishmentTypesResponse.PunishmentTypeData punishmentType = parsed.punishmentType;
-        String punishmentPermission = PermissionUtil.formatPunishmentPermission(punishmentType.getName());
+        String punishmentPermission = PermissionUtil.formatPunishmentPermission(punishmentType.name());
         if (!PermissionUtil.hasPermission(actor, cache, punishmentPermission)) {
             actor.reply(localeManager.getPunishmentMessage("general.no_permission_punishment",
-                mapOf("type", punishmentType.getName())));
+                mapOf("type", punishmentType.name())));
             return;
         }
 
@@ -137,17 +137,17 @@ public class PunishCommand {
             punishmentArgs.getReason().isEmpty() ? localeManager.getMessage("config.default_reason") : punishmentArgs.getReason(),
             severity,
             null,
-            punishmentType.getOrdinal(),
+            punishmentType.ordinal(),
             punishmentArgs.getDuration() > 0 ? punishmentArgs.getDuration() : null,
             data,
             notes,
             new ArrayList<>()
         );
 
-        final String punishmentTypeName = punishmentType.getName();
+        final String punishmentTypeName = punishmentType.name();
         final String targetName = target.getUsernames().get(0).getUsername();
 
-        CompletableFuture<PunishmentCreateResponse> future = httpClientHolder.getClient().createPunishmentWithResponse(request);
+        CompletableFuture<PunishmentCreateResponse> future = httpClientHolder.client().createPunishmentWithResponse(request);
         new PunishmentIssuer(platform, localeManager).issue(actor, future, punishmentTypeName, targetName, null);
     }
 
@@ -156,18 +156,18 @@ public class PunishCommand {
         String senderName = CommandUtil.resolveSenderName(senderUuid, cache, platform);
 
         PunishMenu menu = new PunishMenu(
-            platform, httpClientHolder.getClient(), senderUuid, senderName, target, null
+            platform, httpClientHolder.client(), senderUuid, senderName, target, null
         );
         CirrusPlayerWrapper player = platform.getPlayerWrapper(senderUuid);
         MenuAsync.displayWhenLoaded(platform, menu.getDataFuture(), player, menu::display);
     }
 
     public void initializePunishmentTypes() {
-        httpClientHolder.getClient().getPunishmentTypes().thenAccept(response -> {
+        httpClientHolder.client().getPunishmentTypes().thenAccept(response -> {
             if (response.isSuccess()) {
                 PunishmentTypeParser.populate(punishmentTypeClassifier, response.getData());
                 cachedPunishmentTypes = response.getData().stream()
-                        .filter(pt -> pt.getOrdinal() > MANUAL_PUNISHMENT_MAX_ORDINAL)
+                        .filter(pt -> pt.ordinal() > MANUAL_PUNISHMENT_MAX_ORDINAL)
                         .collect(Collectors.toList());
                 cacheInitialized = true;
                 platform.runOnMainThread(() ->
@@ -187,14 +187,14 @@ public class PunishCommand {
 
     public List<String> getPunishmentTypeNames() {
         return cachedPunishmentTypes.stream()
-                .map(PunishmentTypesResponse.PunishmentTypeData::getName)
+                .map(PunishmentTypesResponse.PunishmentTypeData::name)
                 .collect(Collectors.toList());
     }
 
     public void updatePunishmentTypesCache(List<PunishmentTypesResponse.PunishmentTypeData> allTypes) {
         PunishmentTypeParser.populate(punishmentTypeClassifier, allTypes);
         cachedPunishmentTypes = allTypes.stream()
-                .filter(pt -> pt.getOrdinal() > MANUAL_PUNISHMENT_MAX_ORDINAL)
+                .filter(pt -> pt.ordinal() > MANUAL_PUNISHMENT_MAX_ORDINAL)
                 .collect(Collectors.toList());
         cacheInitialized = true;
     }
@@ -207,8 +207,8 @@ public class PunishCommand {
         data.put("linkedBanId", null);
         data.put("linkedBanExpiry", null);
         data.put("chatLog", null);
-        data.put("altBlocking", Boolean.TRUE.equals(punishmentType.getCanBeAltBlocking()) && args.isAltBlocking());
-        data.put("wipeAfterExpiry", Boolean.TRUE.equals(punishmentType.getCanBeStatWiping()) && args.isStatWipe());
+        data.put("altBlocking", Boolean.TRUE.equals(punishmentType.canBeAltBlocking()) && args.isAltBlocking());
+        data.put("wipeAfterExpiry", Boolean.TRUE.equals(punishmentType.canBeStatWiping()) && args.isStatWipe());
         data.put("silent", args.isSilent());
 
         if (args.getDuration() > 0) data.put("duration", args.getDuration());
@@ -217,17 +217,17 @@ public class PunishCommand {
     }
 
     private String resolveBlockedName(PunishmentTypesResponse.PunishmentTypeData punishmentType, Account target) {
-        if (!Boolean.TRUE.equals(punishmentType.getPermanentUntilUsernameChange())) return null;
+        if (!Boolean.TRUE.equals(punishmentType.permanentUntilUsernameChange())) return null;
         return !target.getUsernames().isEmpty()
             ? target.getUsernames().get(target.getUsernames().size() - 1).getUsername()
             : Constants.UNKNOWN;
     }
 
     private String resolveBlockedSkin(PunishmentTypesResponse.PunishmentTypeData punishmentType, Account target) {
-        if (!Boolean.TRUE.equals(punishmentType.getPermanentUntilSkinChange())) return null;
+        if (!Boolean.TRUE.equals(punishmentType.permanentUntilSkinChange())) return null;
         try {
             WebPlayer webPlayer = MojangProfiles.client().getSync(target.getMinecraftUuid());
-            return (webPlayer != null && webPlayer.isValid()) ? webPlayer.getSkin() : null;
+            return (webPlayer != null && webPlayer.valid()) ? webPlayer.skin() : null;
         } catch (Exception e) {
             Logger.getLogger("modl").warning(
                 "Failed to get skin hash for " + target.getUsernames().get(0).getUsername() + ": " + e.getMessage());
@@ -236,21 +236,21 @@ public class PunishCommand {
     }
 
     private String validatePunishmentCompatibility(PunishmentFlagParser.Flags args, PunishmentTypesResponse.PunishmentTypeData punishmentType) {
-        if (Boolean.TRUE.equals(punishmentType.getSingleSeverityPunishment()) && args.getSeverity() != null)
+        if (Boolean.TRUE.equals(punishmentType.singleSeverityPunishment()) && args.getSeverity() != null)
             return localeManager.getPunishmentMessage("validation.single_severity_error",
-                mapOf("type", punishmentType.getName()));
-        if (Boolean.TRUE.equals(punishmentType.getPermanentUntilSkinChange()) && args.getSeverity() != null)
+                mapOf("type", punishmentType.name()));
+        if (Boolean.TRUE.equals(punishmentType.permanentUntilSkinChange()) && args.getSeverity() != null)
             return localeManager.getPunishmentMessage("validation.permanent_skin_change_error",
-                mapOf("type", punishmentType.getName()));
-        if (Boolean.TRUE.equals(punishmentType.getPermanentUntilUsernameChange()) && args.getSeverity() != null)
+                mapOf("type", punishmentType.name()));
+        if (Boolean.TRUE.equals(punishmentType.permanentUntilUsernameChange()) && args.getSeverity() != null)
             return localeManager.getPunishmentMessage("validation.permanent_username_change_error",
-                mapOf("type", punishmentType.getName()));
-        if (args.isAltBlocking() && !Boolean.TRUE.equals(punishmentType.getCanBeAltBlocking()))
+                mapOf("type", punishmentType.name()));
+        if (args.isAltBlocking() && !Boolean.TRUE.equals(punishmentType.canBeAltBlocking()))
             return localeManager.getPunishmentMessage("validation.alt_blocking_not_supported",
-                mapOf("type", punishmentType.getName()));
-        if (args.isStatWipe() && !Boolean.TRUE.equals(punishmentType.getCanBeStatWiping()))
+                mapOf("type", punishmentType.name()));
+        if (args.isStatWipe() && !Boolean.TRUE.equals(punishmentType.canBeStatWiping()))
             return localeManager.getPunishmentMessage("validation.stat_wiping_not_supported",
-                mapOf("type", punishmentType.getName()));
+                mapOf("type", punishmentType.name()));
         return null;
     }
 
@@ -259,7 +259,7 @@ public class PunishCommand {
             String potentialType = String.join(" ", Arrays.copyOfRange(args, 0, i));
 
             Optional<PunishmentTypesResponse.PunishmentTypeData> matchedType = punishmentTypes.stream()
-                    .filter(pt -> pt.getName().equalsIgnoreCase(potentialType))
+                    .filter(pt -> pt.name().equalsIgnoreCase(potentialType))
                     .findFirst();
 
             if (matchedType.isPresent()) {
@@ -270,13 +270,6 @@ public class PunishCommand {
         return null;
     }
 
-    private static class ParsedCommand {
-        final PunishmentTypesResponse.PunishmentTypeData punishmentType;
-        final String remainingArgs;
-
-        ParsedCommand(PunishmentTypesResponse.PunishmentTypeData punishmentType, String remainingArgs) {
-            this.punishmentType = punishmentType;
-            this.remainingArgs = remainingArgs;
-        }
+    private record ParsedCommand(PunishmentTypesResponse.PunishmentTypeData punishmentType, String remainingArgs) {
     }
 }

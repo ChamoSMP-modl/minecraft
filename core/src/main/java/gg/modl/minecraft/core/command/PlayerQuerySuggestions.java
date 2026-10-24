@@ -25,11 +25,11 @@ public final class PlayerQuerySuggestions {
 
         List<String> names = new ArrayList<String>();
         for (AbstractPlayer player : onlinePlayers) {
-            if (player == null || !player.isOnline()) {
+            if (player == null || !player.online()) {
                 continue;
             }
 
-            String username = player.getUsername();
+            String username = player.username();
             if (username != null && !username.isEmpty()) {
                 names.add(username);
             }

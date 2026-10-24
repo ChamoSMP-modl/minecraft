@@ -1,19 +1,23 @@
 package io.github._4drian3d.signedvelocity.paper;
 
-import io.github._4drian3d.signedvelocity.shared.logger.DebugLogger;
 import io.github._4drian3d.signedvelocity.common.queue.SignedQueue;
-import io.github._4drian3d.signedvelocity.shared.SignedConstants;
 import io.github._4drian3d.signedvelocity.paper.listener.EventListener;
 import io.github._4drian3d.signedvelocity.paper.listener.PluginMessagingListener;
+import io.github._4drian3d.signedvelocity.shared.SignedConstants;
+import io.github._4drian3d.signedvelocity.shared.logger.DebugLogger;
+import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
 
 public final class SignedVelocity {
+    @Getter
     private static SignedQueue chatQueue;
+    @Getter
     private static SignedQueue commandQueue;
     private static DebugLogger debugLogger;
 
-    private SignedVelocity() {}
+    private SignedVelocity() {
+    }
 
     public static synchronized void init(JavaPlugin plugin, Logger logger) {
         shutdown();
@@ -22,12 +26,12 @@ public final class SignedVelocity {
         debugLogger = new DebugLogger.Slf4j(logger);
 
         plugin.getServer()
-            .getMessenger()
-            .registerIncomingPluginChannel(
-                plugin,
-                SignedConstants.SIGNED_PLUGIN_CHANNEL,
-                new PluginMessagingListener(chatQueue, commandQueue, debugLogger)
-            );
+                .getMessenger()
+                .registerIncomingPluginChannel(
+                        plugin,
+                        SignedConstants.SIGNED_PLUGIN_CHANNEL,
+                        new PluginMessagingListener(chatQueue, commandQueue, debugLogger)
+                );
 
         EventListener.registerAll(plugin, chatQueue, commandQueue, debugLogger);
     }
@@ -42,14 +46,6 @@ public final class SignedVelocity {
             commandQueue = null;
         }
         debugLogger = null;
-    }
-
-    public static SignedQueue getChatQueue() {
-        return chatQueue;
-    }
-
-    public static SignedQueue getCommandQueue() {
-        return commandQueue;
     }
 
     public static DebugLogger debugLogger() {

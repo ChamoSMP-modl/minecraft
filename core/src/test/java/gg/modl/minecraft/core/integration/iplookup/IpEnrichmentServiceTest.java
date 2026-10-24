@@ -12,12 +12,7 @@ import java.util.Map;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class IpEnrichmentServiceTest {
     private static final String SUCCESS_BODY = "{\"ip\":\"8.8.8.8\",\"success\":true,\"country_code\":\"US\",\"region\":\"California\",\"city\":\"Mountain View\",\"connection\":{\"isp\":\"Google LLC\"},\"security\":{\"proxy\":false,\"hosting\":true}}";
@@ -41,7 +36,7 @@ class IpEnrichmentServiceTest {
         assertTrue(thread.isDaemon());
         assertTrue(thread.getName().startsWith("modl-ip-api-"));
         assertTrue(executor.getMaximumPoolSize() <= 2);
-        assertFalse(executor.getQueue().remainingCapacity() == Integer.MAX_VALUE);
+        assertNotEquals(Integer.MAX_VALUE, executor.getQueue().remainingCapacity());
         assertInstanceOf(ThreadPoolExecutor.AbortPolicy.class, executor.getRejectedExecutionHandler());
     }
 

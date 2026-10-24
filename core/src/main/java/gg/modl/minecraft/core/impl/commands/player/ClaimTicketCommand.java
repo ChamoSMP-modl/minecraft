@@ -37,8 +37,8 @@ public class ClaimTicketCommand {
 
         ClaimTicketRequest request = new ClaimTicketRequest(
             ticketId,
-            player.getUuid().toString(),
-            player.getUsername()
+            player.uuid().toString(),
+            player.username()
         );
 
         httpClient.claimTicket(request).thenAccept(response -> {

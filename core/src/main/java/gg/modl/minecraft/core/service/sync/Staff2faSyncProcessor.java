@@ -48,7 +48,7 @@ class Staff2faSyncProcessor {
         AbstractPlayer player = platform.getPlayer(uuid);
         if (player == null) return;
         platform.sendMessage(uuid, localeManager.getMessage("staff_2fa.verify_success"));
-        String inGameName = player.getUsername();
+        String inGameName = player.username();
         String panelName = cache.getStaffDisplayName(uuid);
         if (panelName == null) panelName = inGameName;
         platform.staffBroadcast(localeManager.getMessage("staff_notifications.verified",

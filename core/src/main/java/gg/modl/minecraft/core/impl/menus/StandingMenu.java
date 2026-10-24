@@ -197,8 +197,8 @@ public class StandingMenu extends BaseListMenu<Punishment> {
     private String getTypeName(Punishment punishment) {
         int ordinal = punishment.getTypeOrdinal();
         PunishmentTypesResponse.PunishmentTypeData typeData = typesByOrdinal.get(ordinal);
-        if (typeData != null && typeData.getName() != null) {
-            return typeData.getName();
+        if (typeData != null && typeData.name() != null) {
+            return typeData.name();
         }
         Object typeName = punishment.getDataMap().get("typeName");
         if (typeName instanceof String && !((String) typeName).isEmpty()) {
@@ -210,8 +210,8 @@ public class StandingMenu extends BaseListMenu<Punishment> {
     private String getPlayerDescription(Punishment punishment) {
         int ordinal = punishment.getTypeOrdinal();
         PunishmentTypesResponse.PunishmentTypeData typeData = typesByOrdinal.get(ordinal);
-        if (typeData != null && typeData.getPlayerDescription() != null && !typeData.getPlayerDescription().isEmpty()) {
-            return typeData.getPlayerDescription();
+        if (typeData != null && typeData.playerDescription() != null && !typeData.playerDescription().isEmpty()) {
+            return typeData.playerDescription();
         }
         return punishment.getReason();
     }

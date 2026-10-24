@@ -66,7 +66,7 @@ public class PardonCommand {
 
         String displayType = type != null ? type : "punishment";
 
-        httpClientHolder.getClient().pardonPlayer(new PardonPlayerRequest(
+        httpClientHolder.client().pardonPlayer(new PardonPlayerRequest(
             playerName, issuerName, issuerId, type, reason.isEmpty() ? null : reason
         )).thenAccept(response -> {
             if (response.hasPardoned()) {
@@ -86,7 +86,7 @@ public class PardonCommand {
             target, issuerName, issuerId, reason.isEmpty() ? null : reason, expectedType
         );
 
-        httpClientHolder.getClient().pardonPunishment(request).thenAccept(response -> {
+        httpClientHolder.client().pardonPunishment(request).thenAccept(response -> {
             if (response.hasPardoned()) {
                 actor.reply(localeManager.getMessage("pardon.success_id",
                     mapOf("id", target)));
@@ -136,7 +136,7 @@ public class PardonCommand {
             AbstractPlayer player = platform.getAbstractPlayer(playerName, false);
             if (player == null) return;
 
-            CachedProfile profile = cache.getPlayerProfile(player.getUuid());
+            CachedProfile profile = cache.getPlayerProfile(player.uuid());
             if (profile == null) return;
 
             if ("ban".equals(type)) profile.setActiveBan(null);

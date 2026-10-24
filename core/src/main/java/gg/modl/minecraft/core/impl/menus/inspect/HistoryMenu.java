@@ -74,7 +74,7 @@ public class HistoryMenu extends PaginatedInspectListMenu<Punishment> {
         return httpClient.getPunishmentTypes().thenAccept(response -> {
             if (response.isSuccess() && response.getData() != null) {
                 for (PunishmentTypesResponse.PunishmentTypeData type : response.getData()) {
-                    typesByOrdinal.put(type.getOrdinal(), type);
+                    typesByOrdinal.put(type.ordinal(), type);
                 }
             }
         }).exceptionally(e -> null);
@@ -114,8 +114,8 @@ public class HistoryMenu extends PaginatedInspectListMenu<Punishment> {
     private String getTypeName(Punishment punishment) {
         int ordinal = punishment.getTypeOrdinal();
         PunishmentTypesResponse.PunishmentTypeData typeData = typesByOrdinal.get(ordinal);
-        if (typeData != null && typeData.getName() != null) {
-            return typeData.getName();
+        if (typeData != null && typeData.name() != null) {
+            return typeData.name();
         }
 
         Object typeName = punishment.getDataMap().get("typeName");

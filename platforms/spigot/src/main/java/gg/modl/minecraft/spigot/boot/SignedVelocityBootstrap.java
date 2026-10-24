@@ -9,7 +9,6 @@ import java.util.logging.Level;
 
 public class SignedVelocityBootstrap {
     private static final String SIGNED_VELOCITY_CLASS = "io.github._4drian3d.signedvelocity.paper.SignedVelocity";
-    private static final String PAPER_ASYNC_CHAT_EVENT = "io.papermc.paper.event.player.AsyncChatEvent";
 
     private final JavaPlugin plugin;
 
@@ -23,13 +22,6 @@ public class SignedVelocityBootstrap {
         if (proxyType != null && !"velocity".equalsIgnoreCase(proxyType)) return;
         if (plugin.getServer().getPluginManager().getPlugin("SignedVelocity") != null) {
             plugin.getLogger().info("[SignedVelocity] Using standalone SignedVelocity plugin");
-            return;
-        }
-
-        try {
-            Class.forName(PAPER_ASYNC_CHAT_EVENT);
-        } catch (ClassNotFoundException e) {
-            plugin.getLogger().warning("[SignedVelocity] Paper API not available - signed chat enforcement disabled");
             return;
         }
 

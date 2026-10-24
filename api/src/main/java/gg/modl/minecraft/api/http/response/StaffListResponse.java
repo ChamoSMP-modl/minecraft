@@ -20,4 +20,9 @@ public class StaffListResponse extends StatusResponse {
         private Long totalPlaytimeMs;
         private int punishmentsIssuedCount;
     }
+
+    @SuppressWarnings("all")
+    public int getStatus() {
+        return status;
+    }
 }

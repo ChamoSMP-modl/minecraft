@@ -13,4 +13,9 @@ public class EvidenceUploadTokenResponse extends StatusResponse {
     public boolean isSuccess() {
         return super.isSuccess() && token != null;
     }
+
+    @SuppressWarnings("all")
+    public int getStatus() {
+        return status;
+    }
 }

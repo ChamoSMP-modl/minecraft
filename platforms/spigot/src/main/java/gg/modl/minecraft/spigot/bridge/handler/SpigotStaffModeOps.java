@@ -5,21 +5,19 @@ import gg.modl.minecraft.bridge.staffmode.ScoreboardContent;
 import gg.modl.minecraft.bridge.staffmode.StaffGameMode;
 import gg.modl.minecraft.bridge.staffmode.StaffModeOps;
 import gg.modl.minecraft.spigot.bridge.folia.AsyncTeleporter;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,12 +33,15 @@ class SpigotStaffModeOps implements StaffModeOps {
     private final Map<UUID, PlayerSnapshot> snapshots = new ConcurrentHashMap<>();
     private final Set<String> warnedMaterials = ConcurrentHashMap.newKeySet();
 
+    private final Plugin plugin;
+
     private volatile boolean pingMethodResolved;
     private volatile Method getPingMethod;
 
-    SpigotStaffModeOps(Logger logger, AsyncTeleporter teleporter) {
+    SpigotStaffModeOps(Logger logger, AsyncTeleporter teleporter, Plugin plugin) {
         this.logger = logger;
         this.teleporter = teleporter;
+        this.plugin = plugin;
     }
 
     @Override
@@ -125,9 +126,13 @@ class SpigotStaffModeOps implements StaffModeOps {
         ItemStack item = new ItemStack(parseMaterial(materialId));
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(displayName);
+            meta.displayName(MiniMessage.miniMessage().deserialize(displayName));
             if (lore != null && !lore.isEmpty()) {
-                meta.setLore(lore);
+                meta.lore(
+                        lore.stream()
+                                .map(stringLore -> MiniMessage.miniMessage().deserialize(stringLore))
+                                .toList()
+                );
             }
             item.setItemMeta(meta);
         }
@@ -162,15 +167,15 @@ class SpigotStaffModeOps implements StaffModeOps {
         PlayerSnapshot snapshot = snapshots.get(uuid);
         if (snapshot == null) return false;
 
-        player.getInventory().setContents(snapshot.getInventoryContents());
-        player.getInventory().setArmorContents(snapshot.getArmorContents());
-        player.setGameMode(snapshot.getGameMode());
-        player.setHealth(Math.min(snapshot.getHealth(), player.getMaxHealth()));
-        player.setFoodLevel(snapshot.getFoodLevel());
-        player.setExp(snapshot.getExp());
-        player.setLevel(snapshot.getLevel());
+        player.getInventory().setContents(snapshot.inventoryContents());
+        player.getInventory().setArmorContents(snapshot.armorContents());
+        player.setGameMode(snapshot.gameMode());
+        player.setHealth(Math.min(snapshot.health(), Attribute.MAX_HEALTH.getDefaultValue()));
+        player.setFoodLevel(snapshot.foodLevel());
+        player.setExp(snapshot.exp());
+        player.setLevel(snapshot.level());
         snapshots.remove(uuid);
-        teleporter.teleport(player, snapshot.getLocation());
+        teleporter.teleport(player, snapshot.location());
         return true;
     }
 
@@ -185,22 +190,20 @@ class SpigotStaffModeOps implements StaffModeOps {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void hidePlayer(UUID viewerUuid, UUID hiddenUuid) {
         Player viewer = Bukkit.getPlayer(viewerUuid);
         Player hidden = Bukkit.getPlayer(hiddenUuid);
         if (viewer != null && viewer.isOnline() && hidden != null && hidden.isOnline()) {
-            viewer.hidePlayer(hidden);
+            viewer.hidePlayer(plugin, hidden);
         }
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void showPlayer(UUID viewerUuid, UUID shownUuid) {
         Player viewer = Bukkit.getPlayer(viewerUuid);
         Player shown = Bukkit.getPlayer(shownUuid);
         if (viewer != null && viewer.isOnline() && shown != null && shown.isOnline()) {
-            viewer.showPlayer(shown);
+            viewer.showPlayer(plugin, shown);
         }
     }
 
@@ -243,8 +246,11 @@ class SpigotStaffModeOps implements StaffModeOps {
         Player viewer = Bukkit.getPlayer(viewerUuid);
         Player target = Bukkit.getPlayer(targetUuid);
         if (viewer == null || target == null) return;
-        Inventory copy = Bukkit.createInventory(null, TARGET_INVENTORY_SIZE,
-                StaffModeHandler.SILENT_CONTAINER_PREFIX + target.getName() + "'s Inventory");
+        Inventory copy = Bukkit.createInventory(
+                null,
+                TARGET_INVENTORY_SIZE,
+                MiniMessage.miniMessage().deserialize(StaffModeHandler.SILENT_CONTAINER_PREFIX + target.getName() + "'s Inventory")
+        );
         ItemStack[] contents = target.getInventory().getContents();
         for (int i = 0; i < contents.length && i < TARGET_INVENTORY_SIZE; i++) {
             copy.setItem(i, contents[i] == null ? null : contents[i].clone());

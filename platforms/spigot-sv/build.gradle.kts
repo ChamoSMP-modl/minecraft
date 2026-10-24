@@ -1,8 +1,8 @@
-repositories {
-    maven("https://repo.papermc.io/repository/maven-public/")
+plugins {
+    id("sub")
 }
 
 dependencies {
     compileOnly(libs.paper.api)
-    implementation(project(":core"))
+    compileOnly(project(":core"))
 }

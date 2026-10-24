@@ -4,9 +4,10 @@ import gg.modl.minecraft.bridge.BridgeScheduler;
 import gg.modl.minecraft.bridge.BridgeTask;
 import gg.modl.minecraft.bridge.locale.BridgeLocaleManager;
 import gg.modl.minecraft.core.service.InMemoryFrozenPlayerStore;
+import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.jupiter.api.Test;
@@ -21,10 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class BridgeOnlyFreezeHandlerTest {
 
@@ -52,9 +50,9 @@ class BridgeOnlyFreezeHandlerTest {
         handler.setStaffModeHandler(staffModeHandler);
         frozenPlayers.freeze(frozenUuid, staffUuid);
 
-        AsyncPlayerChatEvent event = mock(AsyncPlayerChatEvent.class);
+        AsyncChatEvent event = mock(AsyncChatEvent.class);
         when(event.getPlayer()).thenReturn(frozenPlayer);
-        when(event.getMessage()).thenReturn("hello");
+        when(event.message()).thenReturn(Component.text("hello"));
 
         try (MockedStatic<Bukkit> bukkit = org.mockito.Mockito.mockStatic(Bukkit.class)) {
             bukkit.when(Bukkit::getOnlinePlayers).thenAnswer(invocation -> {
@@ -128,7 +126,8 @@ class BridgeOnlyFreezeHandlerTest {
 
         @Override
         public BridgeTask runTimerAsync(Runnable task, long delay, long period, TimeUnit unit) {
-            return () -> {};
+            return () -> {
+            };
         }
 
         @Override

@@ -60,7 +60,7 @@ public abstract class AbstractBridgeComponent {
 
     private void startBridge(TicketCreator ticketCreator, boolean bridgeOnly) {
         this.bridgeOnly = bridgeOnly;
-        Path dataFolder = context.getDataFolder();
+        Path dataFolder = context.dataFolder();
 
         prepareBridgeConfig(dataFolder);
         prepareBridgeLocale();
@@ -171,7 +171,7 @@ public abstract class AbstractBridgeComponent {
     }
 
     public final BridgeReloadResult reload() {
-        Path dataFolder = context.getDataFolder();
+        Path dataFolder = context.dataFolder();
         List<String> failures = new ArrayList<>();
         List<String> restartRequired = new ArrayList<>();
 

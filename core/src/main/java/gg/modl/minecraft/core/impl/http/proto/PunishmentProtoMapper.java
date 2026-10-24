@@ -38,101 +38,101 @@ public final class PunishmentProtoMapper {
     public static gg.modl.proto.modl.v1.CreatePunishmentRequest toProto(CreatePunishmentRequest request) {
         gg.modl.proto.modl.v1.CreatePunishmentRequest.Builder builder =
             gg.modl.proto.modl.v1.CreatePunishmentRequest.newBuilder()
-                .setTargetUuid(request.getTargetUuid())
-                .setTypeOrdinal(request.getTypeOrdinal())
-                .setDuration(request.getDuration());
+                .setTargetUuid(request.targetUuid())
+                .setTypeOrdinal(request.typeOrdinal())
+                .setDuration(request.duration());
 
-        if (request.getIssuerName() != null) builder.setIssuerName(request.getIssuerName());
-        if (request.getIssuerId() != null) builder.setIssuerId(request.getIssuerId());
-        if (request.getReason() != null) builder.setReason(request.getReason());
-        if (request.getNotes() != null) builder.addAllNotes(request.getNotes());
-        if (request.getAttachedTicketIds() != null) builder.addAllAttachedTicketIds(request.getAttachedTicketIds());
-        if (request.getData() != null) builder.setData(ProtoConversions.mapToStruct(jsonObjectToMap(request.getData())));
+        if (request.issuerName() != null) builder.setIssuerName(request.issuerName());
+        if (request.issuerId() != null) builder.setIssuerId(request.issuerId());
+        if (request.reason() != null) builder.setReason(request.reason());
+        if (request.notes() != null) builder.addAllNotes(request.notes());
+        if (request.attachedTicketIds() != null) builder.addAllAttachedTicketIds(request.attachedTicketIds());
+        if (request.data() != null) builder.setData(ProtoConversions.mapToStruct(jsonObjectToMap(request.data())));
         return builder.build();
     }
 
     public static gg.modl.proto.modl.v1.CreatePunishmentRequest toProto(PunishmentCreateRequest request) {
         gg.modl.proto.modl.v1.CreatePunishmentRequest.Builder builder =
             gg.modl.proto.modl.v1.CreatePunishmentRequest.newBuilder()
-                .setTargetUuid(request.getTargetUuid())
-                .setTypeOrdinal(request.getTypeOrdinal());
+                .setTargetUuid(request.targetUuid())
+                .setTypeOrdinal(request.typeOrdinal());
 
-        if (request.getIssuerName() != null) builder.setIssuerName(request.getIssuerName());
-        if (request.getIssuerId() != null) builder.setIssuerId(request.getIssuerId());
-        if (request.getReason() != null) builder.setReason(request.getReason());
-        if (request.getSeverity() != null) builder.setSeverity(request.getSeverity());
-        if (request.getStatus() != null) builder.setStatus(request.getStatus());
-        if (request.getDuration() != null) builder.setDuration(request.getDuration());
-        if (request.getNotes() != null) builder.addAllNotes(request.getNotes());
-        if (request.getAttachedTicketIds() != null) builder.addAllAttachedTicketIds(request.getAttachedTicketIds());
-        if (request.getData() != null) builder.setData(ProtoConversions.mapToStruct(request.getData()));
+        if (request.issuerName() != null) builder.setIssuerName(request.issuerName());
+        if (request.issuerId() != null) builder.setIssuerId(request.issuerId());
+        if (request.reason() != null) builder.setReason(request.reason());
+        if (request.severity() != null) builder.setSeverity(request.severity());
+        if (request.status() != null) builder.setStatus(request.status());
+        if (request.duration() != null) builder.setDuration(request.duration());
+        if (request.notes() != null) builder.addAllNotes(request.notes());
+        if (request.attachedTicketIds() != null) builder.addAllAttachedTicketIds(request.attachedTicketIds());
+        if (request.data() != null) builder.setData(ProtoConversions.mapToStruct(request.data()));
         return builder.build();
     }
 
     public static gg.modl.proto.modl.v1.AddPunishmentNoteRequest toProto(AddPunishmentNoteRequest request) {
         gg.modl.proto.modl.v1.AddPunishmentNoteRequest.Builder builder =
             gg.modl.proto.modl.v1.AddPunishmentNoteRequest.newBuilder()
-                .setNote(request.getNote());
-        if (request.getIssuerName() != null) builder.setIssuerName(request.getIssuerName());
-        if (request.getIssuerId() != null) builder.setIssuerId(request.getIssuerId());
+                .setNote(request.note());
+        if (request.issuerName() != null) builder.setIssuerName(request.issuerName());
+        if (request.issuerId() != null) builder.setIssuerId(request.issuerId());
         return builder.build();
     }
 
     public static gg.modl.proto.modl.v1.AddPunishmentEvidenceRequest toProto(AddPunishmentEvidenceRequest request) {
         gg.modl.proto.modl.v1.AddPunishmentEvidenceRequest.Builder builder =
             gg.modl.proto.modl.v1.AddPunishmentEvidenceRequest.newBuilder()
-                .setEvidenceUrl(request.getEvidenceUrl());
-        if (request.getIssuerName() != null) builder.setIssuerName(request.getIssuerName());
-        if (request.getIssuerId() != null) builder.setIssuerId(request.getIssuerId());
+                .setEvidenceUrl(request.evidenceUrl());
+        if (request.issuerName() != null) builder.setIssuerName(request.issuerName());
+        if (request.issuerId() != null) builder.setIssuerId(request.issuerId());
         return builder.build();
     }
 
     public static gg.modl.proto.modl.v1.ChangePunishmentDurationRequest toProto(ChangePunishmentDurationRequest request) {
         gg.modl.proto.modl.v1.ChangePunishmentDurationRequest.Builder builder =
             gg.modl.proto.modl.v1.ChangePunishmentDurationRequest.newBuilder();
-        if (request.getIssuerName() != null) builder.setIssuerName(request.getIssuerName());
-        if (request.getIssuerId() != null) builder.setIssuerId(request.getIssuerId());
-        if (request.getNewDuration() != null) builder.setNewDuration(request.getNewDuration());
+        if (request.issuerName() != null) builder.setIssuerName(request.issuerName());
+        if (request.issuerId() != null) builder.setIssuerId(request.issuerId());
+        if (request.newDuration() != null) builder.setNewDuration(request.newDuration());
         return builder.build();
     }
 
     public static gg.modl.proto.modl.v1.TogglePunishmentOptionRequest toProto(TogglePunishmentOptionRequest request) {
         gg.modl.proto.modl.v1.TogglePunishmentOptionRequest.Builder builder =
             gg.modl.proto.modl.v1.TogglePunishmentOptionRequest.newBuilder()
-                .setOption(request.getOption())
-                .setEnabled(request.isEnabled());
-        if (request.getIssuerName() != null) builder.setIssuerName(request.getIssuerName());
-        if (request.getIssuerId() != null) builder.setIssuerId(request.getIssuerId());
+                .setOption(request.option())
+                .setEnabled(request.enabled());
+        if (request.issuerName() != null) builder.setIssuerName(request.issuerName());
+        if (request.issuerId() != null) builder.setIssuerId(request.issuerId());
         return builder.build();
     }
 
     public static gg.modl.proto.modl.v1.ModifyPunishmentTicketsRequest toProto(ModifyPunishmentTicketsRequest request) {
         gg.modl.proto.modl.v1.ModifyPunishmentTicketsRequest.Builder builder =
             gg.modl.proto.modl.v1.ModifyPunishmentTicketsRequest.newBuilder()
-                .setModifyAssociatedTickets(request.isModifyAssociatedTickets());
-        if (request.getIssuerName() != null) builder.setIssuerName(request.getIssuerName());
-        if (request.getIssuerId() != null) builder.setIssuerId(request.getIssuerId());
-        if (request.getAddTicketIds() != null) builder.addAllAddTicketIds(request.getAddTicketIds());
-        if (request.getRemoveTicketIds() != null) builder.addAllRemoveTicketIds(request.getRemoveTicketIds());
+                .setModifyAssociatedTickets(request.modifyAssociatedTickets());
+        if (request.issuerName() != null) builder.setIssuerName(request.issuerName());
+        if (request.issuerId() != null) builder.setIssuerId(request.issuerId());
+        if (request.addTicketIds() != null) builder.addAllAddTicketIds(request.addTicketIds());
+        if (request.removeTicketIds() != null) builder.addAllRemoveTicketIds(request.removeTicketIds());
         return builder.build();
     }
 
     public static gg.modl.proto.modl.v1.PardonPunishmentRequest toProto(PardonPunishmentRequest request) {
         gg.modl.proto.modl.v1.PardonPunishmentRequest.Builder builder =
             gg.modl.proto.modl.v1.PardonPunishmentRequest.newBuilder();
-        if (request.getIssuerName() != null) builder.setIssuerName(request.getIssuerName());
-        if (request.getIssuerId() != null) builder.setIssuerId(request.getIssuerId());
-        if (request.getReason() != null) builder.setReason(request.getReason());
-        if (request.getExpectedType() != null) builder.setExpectedType(request.getExpectedType());
+        if (request.issuerName() != null) builder.setIssuerName(request.issuerName());
+        if (request.issuerId() != null) builder.setIssuerId(request.issuerId());
+        if (request.reason() != null) builder.setReason(request.reason());
+        if (request.expectedType() != null) builder.setExpectedType(request.expectedType());
         return builder.build();
     }
 
     public static gg.modl.proto.modl.v1.StatWipeAcknowledgeRequest toProto(StatWipeAcknowledgeRequest request) {
         gg.modl.proto.modl.v1.StatWipeAcknowledgeRequest.Builder builder =
             gg.modl.proto.modl.v1.StatWipeAcknowledgeRequest.newBuilder()
-                .setPunishmentId(request.getPunishmentId())
-                .setSuccess(request.isSuccess());
-        if (request.getServerName() != null) builder.setServerName(request.getServerName());
+                .setPunishmentId(request.punishmentId())
+                .setSuccess(request.success());
+        if (request.serverName() != null) builder.setServerName(request.serverName());
         return builder.build();
     }
 

@@ -10,7 +10,6 @@ import gg.modl.minecraft.api.http.response.ReportsResponse;
 import gg.modl.minecraft.core.Platform;
 import gg.modl.minecraft.core.locale.LocaleManager;
 import gg.modl.minecraft.core.util.StringUtil;
-import lombok.Value;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,13 +29,7 @@ public final class ReportRenderUtil {
 
     private ReportRenderUtil() {}
 
-    @Value
-    public static class LinkableReport {
-        String id;
-        String type;
-        String reporterName;
-        String content;
-        Date date;
+    public record LinkableReport(String id, String type, String reporterName, String content, Date date) {
     }
 
     public static boolean matchesStatusFilter(String statusFilter, String status) {
@@ -77,32 +70,32 @@ public final class ReportRenderUtil {
 
         List<LinkableReport> filtered = new ArrayList<>();
         for (LinkableReport report : reports)
-            if (report.getType() != null && report.getType().equalsIgnoreCase(currentFilter))
+            if (report.type() != null && report.type().equalsIgnoreCase(currentFilter))
                 filtered.add(report);
         return filtered;
     }
 
     public static CirrusItem mapLinkableReport(LinkableReport report, Set<String> selectedReportIds,
                                                LocaleManager locale) {
-        boolean selected = selectedReportIds.contains(report.getId());
+        boolean selected = selectedReportIds.contains(report.id());
 
         Map<String, String> vars = new HashMap<>();
-        vars.put("id", report.getId());
-        vars.put("type", report.getType() != null ? report.getType() : "Unknown");
-        vars.put("date", report.getDate() != null ? MenuItems.formatDate(report.getDate()) : "Unknown");
-        vars.put("reporter", report.getReporterName() != null ? report.getReporterName() : "Unknown");
-        vars.put("content", String.join("\n", processContent(report.getContent())));
+        vars.put("id", report.id());
+        vars.put("type", report.type() != null ? report.type() : "Unknown");
+        vars.put("date", report.date() != null ? MenuItems.formatDate(report.date()) : "Unknown");
+        vars.put("reporter", report.reporterName() != null ? report.reporterName() : "Unknown");
+        vars.put("content", String.join("\n", processContent(report.content())));
 
         String localeKey = selected ? "menus.link_report_item_selected" : "menus.link_report_item_unselected";
         List<String> lore = buildLore(locale, localeKey + ".lore", vars);
         String title = locale.getMessage(localeKey + ".title", vars);
-        CirrusItemType itemType = selected ? CirrusItemType.LIME_DYE : getReportItemType(report.getType());
+        CirrusItemType itemType = selected ? CirrusItemType.LIME_DYE : getReportItemType(report.type());
 
         return CirrusItem.of(
                 itemType,
                 CirrusChatElement.ofLegacyText(title),
                 MenuItems.lore(lore)
-        ).actionHandler("toggleReport_" + report.getId());
+        ).actionHandler("toggleReport_" + report.id());
     }
 
     public static void toggleReportSelection(Set<String> selectedReportIds, String reportId) {
@@ -115,19 +108,19 @@ public final class ReportRenderUtil {
     public static void toggleFilteredReportSelection(Set<String> selectedReportIds, List<LinkableReport> filtered) {
         boolean allSelected = true;
         for (LinkableReport report : filtered) {
-            if (report.getId() != null && !selectedReportIds.contains(report.getId())) {
+            if (report.id() != null && !selectedReportIds.contains(report.id())) {
                 allSelected = false;
                 break;
             }
         }
 
         for (LinkableReport report : filtered) {
-            if (report.getId() == null) continue;
+            if (report.id() == null) continue;
 
             if (allSelected)
-                selectedReportIds.remove(report.getId());
+                selectedReportIds.remove(report.id());
             else
-                selectedReportIds.add(report.getId());
+                selectedReportIds.add(report.id());
         }
     }
 
@@ -189,12 +182,12 @@ public final class ReportRenderUtil {
     }
 
     public static CirrusItem buildTargetHead(LocaleManager locale, Platform platform, AbstractPlayer target, String localeKey) {
-        List<String> skullLines = locale.getMessageList(localeKey, mapOf("player", target.getUsername()));
+        List<String> skullLines = locale.getMessageList(localeKey, mapOf("player", target.username()));
         CirrusItem head = MenuItems.playerHead(
                 skullLines.get(0),
                 skullLines.subList(1, skullLines.size())
         );
-        return SkinTextureCache.applyCached(head, target.getUuid());
+        return SkinTextureCache.applyCached(head, target.uuid());
     }
 
     public static String getPlayerName(Account account) {

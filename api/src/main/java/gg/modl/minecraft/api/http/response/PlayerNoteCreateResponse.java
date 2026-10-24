@@ -8,4 +8,9 @@ import lombok.NoArgsConstructor;
 public class PlayerNoteCreateResponse extends StatusResponse {
     private String message;
     private int status;
+
+    @SuppressWarnings("all")
+    public int getStatus() {
+        return status;
+    }
 }

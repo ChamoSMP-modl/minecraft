@@ -1,74 +1,47 @@
-import java.io.File
-import java.security.MessageDigest
-
-repositories {
-    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-    maven("https://libraries.minecraft.net/")
-    maven("https://repo.grim.ac/snapshots")
-    maven("https://repo.polar.top/repository/polar/")
-    maven("https://repo.janmm14.de/repository/intave/")
+plugins {
+    id("sub")
+    alias(libs.plugins.shadow)
 }
 
-val vulcanApiJar = layout.projectDirectory.file("libs/VulcanAPI.jar")
-val vulcanApiSha256 = "fecd55639488c55b5a997604161dfb59f6845852ebe73971881cf6f39b65ed97"
-
-fun sha256Hex(file: File): String {
-    val digest = MessageDigest.getInstance("SHA-256")
-    file.inputStream().use { input ->
-        val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
-        while (true) {
-            val bytesRead = input.read(buffer)
-            if (bytesRead == -1) break
-            digest.update(buffer, 0, bytesRead)
-        }
-    }
-    return digest.digest().joinToString("") { "%02x".format(it) }
+repositories {
+    maven("https://repo.polar.top/repository/polar/")
+    maven("https://repo.janmm14.de/repository/intave/")
+    maven("https://eldonexus.de/repository/maven-public/")
 }
 
 dependencies {
-    compileOnly(libs.spigot.api)
+    compileOnly(libs.paper.api)
+
+    annotationProcessor(libs.lombok)
 
     // Anticheat APIs
-    compileOnly(libs.grim.api)
     compileOnly(libs.polar.api)
-    compileOnly("de.jpx3.intave.access:intave-access:14.4.2")
-
-    // Netty (provided by Minecraft server)
-    compileOnly(libs.netty.all)
-
-    // Adventure (loaded via Libby at runtime)
-    compileOnly(libs.adventure.minimessage)
-    compileOnly(libs.adventure.serializer.legacy)
-    compileOnly(libs.adventure.api)
-    compileOnly(libs.adventure.serializer.gson)
+    compileOnly(libs.intave.access)
 
     // Internal modules
-    implementation(project(":core"))
-    implementation(project(":api"))
-    implementation(project(":bridge-core"))
+    compileOnly(project(":bridge-core"))
 
     // Command framework
     compileOnly(libs.lamp.common)
     compileOnly(libs.lamp.bukkit)
     compileOnly(libs.lamp.brigadier)
-    compileOnly(libs.brigadier)
+
+    // I'm too lazy to learn lamp
+    compileOnly(libs.strokk.paper)
+    annotationProcessor(libs.strokk.paper.processor)
 
     // Cirrus menu system
     compileOnly(libs.cirrus.api)
     compileOnly(libs.cirrus.spigot)
 
-    // Libby runtime library loading
-    implementation(libs.libby.core)
-    implementation(libs.libby.bukkit)
-
     // PacketEvents
-    compileOnly(libs.packetevents.api)
     compileOnly(libs.packetevents.spigot)
 
     // Replay recording
-    implementation(libs.replay.format)
     implementation(libs.replay.recording)
 
+    testImplementation(project(":bridge-core"))
+    testImplementation(project(":core"))
     testImplementation(platform(libs.junit.bom))
     testImplementation(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.platform.launcher)
@@ -78,24 +51,17 @@ dependencies {
     testImplementation(libs.lamp.bukkit)
     testImplementation(libs.cirrus.api)
     testImplementation(libs.cirrus.spigot)
-    testImplementation(libs.spigot.api)
+    testImplementation(libs.paper.api)
     testImplementation(libs.packetevents.spigot)
 }
 
 tasks.processResources {
-    filesMatching("plugin.yml") {
-        expand(
-            "plugin" to mapOf(
-                "name" to project.findProperty("plugin.name"),
-                "version" to project.version,
-                "author" to project.findProperty("plugin.author"),
-                "description" to project.findProperty("plugin.description"),
-                "url" to project.findProperty("plugin.url"),
-            ),
-            "project" to mapOf(
-                "groupId" to project.group,
-            ),
-        )
+    val props = mapOf("version" to version, "description" to description)
+    inputs.properties(props)
+    filteringCharset = "UTF-8"
+
+    filesMatching("paper-plugin.yml") {
+        expand(props)
     }
 }
 

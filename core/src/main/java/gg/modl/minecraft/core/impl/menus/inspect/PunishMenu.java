@@ -84,7 +84,7 @@ public class PunishMenu extends BaseInspectMenu {
     private void applyPunishmentTypes(List<PunishmentTypesResponse.PunishmentTypeData> data) {
         punishmentTypes = new ArrayList<>(data);
         for (PunishmentTypesResponse.PunishmentTypeData type : punishmentTypes) {
-            typesByOrdinal.put(type.getOrdinal(), type);
+            typesByOrdinal.put(type.ordinal(), type);
         }
     }
 
@@ -126,7 +126,7 @@ public class PunishMenu extends BaseInspectMenu {
             PunishmentTypesResponse.PunishmentTypeData type = typesByOrdinal.get(slotConfig.getOrdinal());
 
             if (type != null) {
-                String permission = PermissionUtil.formatPunishmentPermission(type.getName());
+                String permission = PermissionUtil.formatPunishmentPermission(type.name());
                 boolean hasPermission = cache != null && cache.hasPermission(viewerUuid, permission);
 
                 if (hasPermission)
@@ -159,9 +159,9 @@ public class PunishMenu extends BaseInspectMenu {
             lore.add(processed);
         }
 
-        Boolean singleSeverity = type.getSingleSeverityPunishment();
-        Boolean permUsername = type.getPermanentUntilUsernameChange();
-        Boolean permSkin = type.getPermanentUntilSkinChange();
+        Boolean singleSeverity = type.singleSeverityPunishment();
+        Boolean permUsername = type.permanentUntilUsernameChange();
+        Boolean permSkin = type.permanentUntilSkinChange();
 
         boolean isSingleType = (singleSeverity != null && singleSeverity) ||
                                (permUsername != null && permUsername) ||
@@ -182,7 +182,7 @@ public class PunishMenu extends BaseInspectMenu {
                 itemType,
                 CirrusChatElement.ofLegacyText(MenuItems.COLOR_RED + slotConfig.getTitle()),
                 MenuItems.lore(lore)
-        ).actionHandler("punishType_" + type.getOrdinal());
+        ).actionHandler("punishType_" + type.ordinal());
     }
 
     private CirrusItem createDisabledPunishmentTypeItem(PunishGuiConfig.PunishSlotConfig slotConfig) {
@@ -223,12 +223,12 @@ public class PunishMenu extends BaseInspectMenu {
         result = result.replace("&6", MenuItems.COLOR_GOLD);
         result = result.replace("&b", MenuItems.COLOR_AQUA);
 
-        if (type.getStaffDescription() != null)
-            result = result.replace("{staff-description}", type.getStaffDescription());
+        if (type.staffDescription() != null)
+            result = result.replace("{staff-description}", type.staffDescription());
         else
             result = result.replace("{staff-description}", "");
 
-        PunishmentPreviewResponse preview = previewByOrdinal.get(type.getOrdinal());
+        PunishmentPreviewResponse preview = previewByOrdinal.get(type.ordinal());
         if (preview != null) {
             result = result.replace("{social-status}", preview.getSocialStatus() != null ?
                     preview.getSocialStatus() : "Unknown");
@@ -257,7 +257,7 @@ public class PunishMenu extends BaseInspectMenu {
         super.registerActionHandlers();
 
         for (PunishmentTypesResponse.PunishmentTypeData type : punishmentTypes) {
-            registerActionHandler("punishType_" + type.getOrdinal(), click -> {
+            registerActionHandler("punishType_" + type.ordinal(), click -> {
                 handlePunishmentType(click, type);
                 return CallResult.DENY_GRABBING;
             });

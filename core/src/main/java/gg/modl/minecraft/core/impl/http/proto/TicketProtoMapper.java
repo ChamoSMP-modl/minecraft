@@ -37,8 +37,8 @@ public final class TicketProtoMapper {
     public static gg.modl.proto.modl.v1.MinecraftClaimTicketRequest toProto(ClaimTicketRequest request) {
         gg.modl.proto.modl.v1.MinecraftClaimTicketRequest.Builder builder =
             gg.modl.proto.modl.v1.MinecraftClaimTicketRequest.newBuilder();
-        if (request.getPlayerUuid() != null) builder.setPlayerUuid(request.getPlayerUuid());
-        if (request.getPlayerName() != null) builder.setPlayerName(request.getPlayerName());
+        if (request.playerUuid() != null) builder.setPlayerUuid(request.playerUuid());
+        if (request.playerName() != null) builder.setPlayerName(request.playerName());
         return builder.build();
     }
 

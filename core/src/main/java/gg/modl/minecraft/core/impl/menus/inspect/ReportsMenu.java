@@ -32,19 +32,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class ReportsMenu extends BaseInspectListMenu<ReportsMenu.Report> {
-    @Getter
-    public static class Report {
-        private final String id, type, reporterName, content, status;
-        private final Date date;
-
-        public Report(String id, String type, String reporterName, String content, String status, Date date) {
-            this.id = id;
-            this.type = type;
-            this.reporterName = reporterName;
-            this.content = content;
-            this.status = status;
-            this.date = date;
-        }
+    public record Report(String id, String type, String reporterName, String content, String status, Date date) {
 
     }
 
@@ -106,8 +94,8 @@ public class ReportsMenu extends BaseInspectListMenu<ReportsMenu.Report> {
 
         List<Report> filtered = new ArrayList<>();
         for (Report report : reports) {
-            boolean typeMatch = currentFilter.equals("all") || (report.getType() != null && report.getType().equalsIgnoreCase(currentFilter));
-            boolean statusMatch = ReportRenderUtil.matchesStatusFilter(currentStatusFilter, report.getStatus());
+            boolean typeMatch = currentFilter.equals("all") || (report.type() != null && report.type().equalsIgnoreCase(currentFilter));
+            boolean statusMatch = ReportRenderUtil.matchesStatusFilter(currentStatusFilter, report.status());
             if (typeMatch && statusMatch)
                 filtered.add(report);
         }
@@ -116,10 +104,10 @@ public class ReportsMenu extends BaseInspectListMenu<ReportsMenu.Report> {
             return Collections.singletonList(new Report(null, null, null, null, null, null));
 
         filtered.sort((r1, r2) -> {
-            if (r1.getDate() == null && r2.getDate() == null) return 0;
-            if (r1.getDate() == null) return 1;
-            if (r2.getDate() == null) return -1;
-            return r2.getDate().compareTo(r1.getDate());
+            if (r1.date() == null && r2.date() == null) return 0;
+            if (r1.date() == null) return 1;
+            if (r2.date() == null) return -1;
+            return r2.date().compareTo(r1.date());
         });
 
         return filtered;
@@ -129,21 +117,21 @@ public class ReportsMenu extends BaseInspectListMenu<ReportsMenu.Report> {
     protected CirrusItem map(Report report) {
         LocaleManager locale = PluginServices.locale();
 
-        if (report.getId() == null) return createEmptyPlaceholder(locale.getMessage("menus.empty.reports"));
+        if (report.id() == null) return createEmptyPlaceholder(locale.getMessage("menus.empty.reports"));
 
         Map<String, String> vars = new HashMap<>();
-        vars.put("id", report.getId());
-        vars.put("type", report.getType() != null ? report.getType() : "Unknown");
-        vars.put("date", report.getDate() != null ? MenuItems.formatDate(report.getDate()) : "Unknown");
-        vars.put("reporter", report.getReporterName() != null ? report.getReporterName() : "Unknown");
-        vars.put("content", String.join("\n", ReportRenderUtil.processContent(report.getContent())));
+        vars.put("id", report.id());
+        vars.put("type", report.type() != null ? report.type() : "Unknown");
+        vars.put("date", report.date() != null ? MenuItems.formatDate(report.date()) : "Unknown");
+        vars.put("reporter", report.reporterName() != null ? report.reporterName() : "Unknown");
+        vars.put("content", String.join("\n", ReportRenderUtil.processContent(report.content())));
         vars.put("reported", targetName);
-        vars.put("status", report.getStatus() != null && report.getStatus().equalsIgnoreCase("closed")
+        vars.put("status", report.status() != null && report.status().equalsIgnoreCase("closed")
                 ? "&cCLOSED" : "&aOPEN");
 
         List<String> lore = ReportRenderUtil.buildLore(locale, "menus.report_item.lore", vars);
         String title = locale.getMessage("menus.report_item.title", vars);
-        CirrusItemType itemType = ReportRenderUtil.getReportItemType(report.getType());
+        CirrusItemType itemType = ReportRenderUtil.getReportItemType(report.type());
 
         return CirrusItem.of(
                 itemType,
@@ -154,7 +142,7 @@ public class ReportsMenu extends BaseInspectListMenu<ReportsMenu.Report> {
 
     @Override
     protected void handleClick(Click click, Report report) {
-        if (report.getId() == null) return;
+        if (report.id() == null) return;
 
         if (click.clickType().equals(CirrusClickType.RIGHT_CLICK))
             dismissReport(click, report);
@@ -163,7 +151,7 @@ public class ReportsMenu extends BaseInspectListMenu<ReportsMenu.Report> {
     private void dismissReport(Click click, Report report) {
         sendMessage(MenuItems.COLOR_YELLOW + "Dismissing report...");
 
-        httpClient.dismissReport(report.getId(), viewerName, "Insufficient evidence").thenAccept(v -> {
+        httpClient.dismissReport(report.id(), viewerName, "Insufficient evidence").thenAccept(v -> {
             sendMessage(MenuItems.COLOR_GREEN + "Report dismissed.");
 
             ReportsMenu refreshed = new ReportsMenu(platform, httpClient, viewerUuid, viewerName, targetAccount, backAction)

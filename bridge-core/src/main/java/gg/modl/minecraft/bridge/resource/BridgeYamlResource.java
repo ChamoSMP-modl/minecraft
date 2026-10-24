@@ -21,12 +21,12 @@ public final class BridgeYamlResource {
     }
 
     public static void ensureDefaultFile(BridgePluginContext context, ManagedConfig config, PluginLogger logger) {
-        Path externalFile = context.getDataFolder().resolve(config.getFileName());
+        Path externalFile = context.dataFolder().resolve(config.getFileName());
         if (!Files.exists(externalFile)) {
             context.saveDefaultResource(config.getFileName());
         }
 
-        ConfigUpdate update = ConfigUpdater.update(config, context.getDataFolder(), logger);
+        ConfigUpdate update = ConfigUpdater.update(config, context.dataFolder(), logger);
         if (!update.getAddedPaths().isEmpty()) {
             logger.info("[config] Added " + update.getAddedPaths().size() + " new option(s) to "
                     + config.getFileName() + ": " + String.join(", ", update.getAddedPaths()));

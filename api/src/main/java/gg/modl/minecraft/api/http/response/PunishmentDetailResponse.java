@@ -25,4 +25,9 @@ public class PunishmentDetailResponse extends StatusResponse {
         private List<Object> modifications, notes, evidence;
         private int typeOrdinal;
     }
+
+    @SuppressWarnings("all")
+    public int getStatus() {
+        return status;
+    }
 }

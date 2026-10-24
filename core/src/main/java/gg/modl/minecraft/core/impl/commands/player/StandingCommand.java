@@ -19,7 +19,6 @@ import gg.modl.minecraft.core.command.PlayerOnly;
 import gg.modl.minecraft.core.impl.menus.StandingMenu;
 import gg.modl.minecraft.core.locale.LocaleManager;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,7 +53,7 @@ public class StandingCommand {
 
         replyOnMainThread(actor, "standing.loading");
 
-        ModlHttpClient httpClient = httpClientHolder.getClient();
+        ModlHttpClient httpClient = httpClientHolder.client();
         httpClient.getPlayerProfile(uuid).thenCompose(profileResponse -> {
             if (profileResponse == null) {
                 replyOnMainThread(actor, "standing.error");
@@ -107,8 +106,8 @@ public class StandingCommand {
             return false;
         }
 
-        StandingMenu menu = createMenu(httpClient, uuid, abstractPlayer.getUsername(),
-                data.getAccount(), data.getPreviewData(), data.getTypesByOrdinal());
+        StandingMenu menu = createMenu(httpClient, uuid, abstractPlayer.username(),
+                data.account(), data.previewData(), data.typesByOrdinal());
         displayMenu(menu, player);
         return true;
     }
@@ -142,15 +141,12 @@ public class StandingCommand {
             if (throwable != null) return typesByOrdinal;
             if (typesResponse != null && typesResponse.isSuccess() && typesResponse.getData() != null)
                 for (PunishmentTypesResponse.PunishmentTypeData type : typesResponse.getData())
-                    typesByOrdinal.put(type.getOrdinal(), type);
+                    typesByOrdinal.put(type.ordinal(), type);
             return typesByOrdinal;
         });
     }
 
-    @Value
-    private static class StandingData {
-        Account account;
-        PunishmentPreviewResponse previewData;
-        Map<Integer, PunishmentTypesResponse.PunishmentTypeData> typesByOrdinal;
+    private record StandingData(Account account, PunishmentPreviewResponse previewData,
+                                Map<Integer, PunishmentTypesResponse.PunishmentTypeData> typesByOrdinal) {
     }
 }

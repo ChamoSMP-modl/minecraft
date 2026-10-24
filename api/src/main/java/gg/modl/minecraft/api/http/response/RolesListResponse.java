@@ -18,4 +18,9 @@ public class RolesListResponse extends StatusResponse {
         private boolean isDefault;
         private int order;
     }
+
+    @SuppressWarnings("all")
+    public int getStatus() {
+        return status;
+    }
 }

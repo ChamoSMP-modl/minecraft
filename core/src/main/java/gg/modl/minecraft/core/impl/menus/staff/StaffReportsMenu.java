@@ -33,30 +33,15 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class StaffReportsMenu extends BaseStaffListMenu<StaffReportsMenu.Report> {
-    @Getter
-    public static class Report {
-        private final String id, type, reporterName, reportedPlayerName, content, status;
-        private final UUID reportedPlayerUuid;
-        private final Date date;
-
-        public Report(String id, String type, String reporterName, String reportedPlayerName,
-                      String content, String status, UUID reportedPlayerUuid, Date date) {
-            this.id = id;
-            this.type = type;
-            this.reporterName = reporterName;
-            this.reportedPlayerName = reportedPlayerName;
-            this.content = content;
-            this.status = status;
-            this.reportedPlayerUuid = reportedPlayerUuid;
-            this.date = date;
-        }
+    public record Report(String id, String type, String reporterName, String reportedPlayerName, String content,
+                         String status, UUID reportedPlayerUuid, Date date) {
 
     }
 
     private final List<Report> reports = new ArrayList<>();
     private String currentFilter = "all", currentStatusFilter = "open";
     private final List<String> filterOptions = Arrays.asList("all", "gameplay", "chat");
-    @Getter private CompletableFuture<Void> dataFuture;
+    @Getter private final CompletableFuture<Void> dataFuture;
 
     public StaffReportsMenu(Platform platform, ModlHttpClient httpClient, UUID viewerUuid, String viewerName,
                             boolean isAdmin, String panelUrl, Consumer<CirrusPlayerWrapper> backAction) {
@@ -113,8 +98,8 @@ public class StaffReportsMenu extends BaseStaffListMenu<StaffReportsMenu.Report>
         List<Report> filtered = new ArrayList<>();
 
         for (Report report : reports) {
-            boolean typeMatch = currentFilter.equals("all") || (report.getType() != null && report.getType().equalsIgnoreCase(currentFilter));
-            boolean statusMatch = ReportRenderUtil.matchesStatusFilter(currentStatusFilter, report.getStatus());
+            boolean typeMatch = currentFilter.equals("all") || (report.type() != null && report.type().equalsIgnoreCase(currentFilter));
+            boolean statusMatch = ReportRenderUtil.matchesStatusFilter(currentStatusFilter, report.status());
             if (typeMatch && statusMatch)
                 filtered.add(report);
         }
@@ -123,10 +108,10 @@ public class StaffReportsMenu extends BaseStaffListMenu<StaffReportsMenu.Report>
             return Collections.singletonList(new Report(null, null, null, null, null, null, null, null));
 
         filtered.sort((r1, r2) -> {
-            if (r1.getDate() == null && r2.getDate() == null) return 0;
-            if (r1.getDate() == null) return 1;
-            if (r2.getDate() == null) return -1;
-            return r2.getDate().compareTo(r1.getDate());
+            if (r1.date() == null && r2.date() == null) return 0;
+            if (r1.date() == null) return 1;
+            if (r2.date() == null) return -1;
+            return r2.date().compareTo(r1.date());
         });
         return filtered;
     }
@@ -135,21 +120,21 @@ public class StaffReportsMenu extends BaseStaffListMenu<StaffReportsMenu.Report>
     protected CirrusItem map(Report report) {
         LocaleManager locale = PluginServices.locale();
 
-        if (report.getId() == null) return createEmptyPlaceholder(locale.getMessage("menus.empty.staff_reports"));
+        if (report.id() == null) return createEmptyPlaceholder(locale.getMessage("menus.empty.staff_reports"));
 
         Map<String, String> vars = new HashMap<>();
-        vars.put("id", report.getId());
-        vars.put("type", report.getType() != null ? report.getType() : "Unknown");
-        vars.put("reporter", report.getReporterName() != null ? report.getReporterName() : "Unknown");
-        vars.put("reported", report.getReportedPlayerName() != null ? report.getReportedPlayerName() : "Unknown");
-        vars.put("date", MenuItems.formatDate(report.getDate()));
-        vars.put("status", report.getStatus() != null && report.getStatus().equalsIgnoreCase("closed")
+        vars.put("id", report.id());
+        vars.put("type", report.type() != null ? report.type() : "Unknown");
+        vars.put("reporter", report.reporterName() != null ? report.reporterName() : "Unknown");
+        vars.put("reported", report.reportedPlayerName() != null ? report.reportedPlayerName() : "Unknown");
+        vars.put("date", MenuItems.formatDate(report.date()));
+        vars.put("status", report.status() != null && report.status().equalsIgnoreCase("closed")
                 ? "&cCLOSED" : "&aOPEN");
-        vars.put("content", String.join("\n", ReportRenderUtil.processContent(report.getContent())));
+        vars.put("content", String.join("\n", ReportRenderUtil.processContent(report.content())));
 
         List<String> lore = ReportRenderUtil.buildLore(locale, "menus.staff_report_item.lore", vars);
         String title = locale.getMessage("menus.staff_report_item.title", vars);
-        CirrusItemType itemType = ReportRenderUtil.getReportItemType(report.getType());
+        CirrusItemType itemType = ReportRenderUtil.getReportItemType(report.type());
 
         return CirrusItem.of(
                 itemType,
@@ -160,7 +145,7 @@ public class StaffReportsMenu extends BaseStaffListMenu<StaffReportsMenu.Report>
 
     @Override
     protected void handleClick(Click click, Report report) {
-        if (report.getId() == null) return;
+        if (report.id() == null) return;
 
         if (click.clickType().equals(CirrusClickType.RIGHT_CLICK))
             dismissReport(click, report);
@@ -171,7 +156,7 @@ public class StaffReportsMenu extends BaseStaffListMenu<StaffReportsMenu.Report>
     private void dismissReport(Click click, Report report) {
         sendMessage(MenuItems.COLOR_YELLOW + "Dismissing report...");
 
-        httpClient.dismissReport(report.getId(), viewerName, "Insufficient evidence").thenAccept(v -> {
+        httpClient.dismissReport(report.id(), viewerName, "Insufficient evidence").thenAccept(v -> {
             sendMessage(MenuItems.COLOR_GREEN + "Report dismissed.");
 
             StaffReportsMenu refreshed = new StaffReportsMenu(platform, httpClient, viewerUuid, viewerName, isAdmin, panelUrl, backAction)
@@ -184,14 +169,14 @@ public class StaffReportsMenu extends BaseStaffListMenu<StaffReportsMenu.Report>
     }
 
     private void inspectPlayer(Click click, Report report) {
-        if (report.getReportedPlayerUuid() == null) {
+        if (report.reportedPlayerUuid() == null) {
             sendMessage(MenuItems.COLOR_RED + "Cannot inspect: no player UUID for this report.");
             return;
         }
 
         click.clickedMenu().close();
 
-        httpClient.getPlayerProfile(report.getReportedPlayerUuid()).thenAccept(response -> {
+        httpClient.getPlayerProfile(report.reportedPlayerUuid()).thenAccept(response -> {
             if (response.getStatus() == 200) {
                 new InspectMenu(platform, httpClient, viewerUuid, viewerName, response.getProfile(),
                     p -> {

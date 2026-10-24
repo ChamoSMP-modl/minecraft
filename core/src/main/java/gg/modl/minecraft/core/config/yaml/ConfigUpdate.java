@@ -13,11 +13,11 @@ public final class ConfigUpdate {
     }
 
     static ConfigUpdate created() {
-        return new ConfigUpdate(true, Collections.<String>emptyList());
+        return new ConfigUpdate(true, Collections.emptyList());
     }
 
     static ConfigUpdate unchanged() {
-        return new ConfigUpdate(false, Collections.<String>emptyList());
+        return new ConfigUpdate(false, Collections.emptyList());
     }
 
     static ConfigUpdate added(List<String> addedPaths) {

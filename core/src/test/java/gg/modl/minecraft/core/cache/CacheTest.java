@@ -48,6 +48,6 @@ class CacheTest {
         cacheField.setAccessible(true);
         Map<UUID, Cache.StaffPermissions> staffPermissionsCache =
                 (Map<UUID, Cache.StaffPermissions>) cacheField.get(cache);
-        return staffPermissionsCache.get(playerUuid).getPermissions();
+        return staffPermissionsCache.get(playerUuid).permissions();
     }
 }

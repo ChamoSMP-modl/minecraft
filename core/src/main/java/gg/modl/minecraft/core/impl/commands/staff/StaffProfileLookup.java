@@ -40,14 +40,14 @@ final class StaffProfileLookup {
                     }
 
                     AbstractPlayer onlinePlayer = onlinePlayerLookup.apply(playerQuery);
-                    if (onlinePlayer == null || onlinePlayer.getUuid() == null) {
+                    if (onlinePlayer == null || onlinePlayer.uuid() == null) {
                         if (attempt.throwable != null) {
                             return failedFuture(attempt.throwable);
                         }
                         return CompletableFuture.completedFuture(attempt.response);
                     }
 
-                    return uuidLookup.apply(onlinePlayer.getUuid()).handle((fallbackResponse, fallbackThrowable) -> {
+                    return uuidLookup.apply(onlinePlayer.uuid()).handle((fallbackResponse, fallbackThrowable) -> {
                         Throwable unwrappedFallback = unwrap(fallbackThrowable);
                         if (unwrappedFallback != null) {
                             if (attempt.throwable != null) {
@@ -71,13 +71,6 @@ final class StaffProfileLookup {
         return current;
     }
 
-    private static final class LookupAttempt {
-        private final PlayerProfileResponse response;
-        private final Throwable throwable;
-
-        private LookupAttempt(PlayerProfileResponse response, Throwable throwable) {
-            this.response = response;
-            this.throwable = throwable;
-        }
+    private record LookupAttempt(PlayerProfileResponse response, Throwable throwable) {
     }
 }

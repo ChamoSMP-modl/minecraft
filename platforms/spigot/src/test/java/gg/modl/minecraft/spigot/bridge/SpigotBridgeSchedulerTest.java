@@ -1,6 +1,7 @@
 package gg.modl.minecraft.spigot.bridge;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -16,7 +17,7 @@ class SpigotBridgeSchedulerTest {
     @Test
     void shutdownStopsFoliaDelayExecutor() {
         RecordingScheduledExecutor executor = new RecordingScheduledExecutor();
-        SpigotBridgeScheduler scheduler = new SpigotBridgeScheduler(mock(JavaPlugin.class), true, executor);
+        SpigotBridgeScheduler scheduler = new SpigotBridgeScheduler(mock(JavaPlugin.class), executor);
 
         scheduler.shutdown();
 
@@ -32,7 +33,7 @@ class SpigotBridgeSchedulerTest {
         }
 
         @Override
-        public List<Runnable> shutdownNow() {
+        public @NonNull List<Runnable> shutdownNow() {
             shutdownCalled = true;
             return java.util.Collections.emptyList();
         }
@@ -76,7 +77,7 @@ class SpigotBridgeSchedulerTest {
 
         @Override
         public java.util.concurrent.ScheduledFuture<?> scheduleWithFixedDelay(
-                Runnable command, long initialDelay, long delay, TimeUnit unit) {
+                @NonNull Runnable command, long initialDelay, long delay, @NonNull TimeUnit unit) {
             return null;
         }
     }

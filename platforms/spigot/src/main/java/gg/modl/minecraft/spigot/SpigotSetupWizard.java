@@ -7,6 +7,7 @@ import gg.modl.minecraft.core.boot.PlatformType;
 import gg.modl.minecraft.core.boot.SetupWizard;
 import gg.modl.minecraft.core.util.PluginLogger;
 import gg.modl.minecraft.spigot.bridge.folia.FoliaScheduler;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,15 +18,10 @@ import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 public class SpigotSetupWizard implements Listener {
-    private static final long WIZARD_START_DELAY_TICKS = 60L;
     private static final long WIZARD_START_DELAY_SECONDS = 3L;
 
     private final JavaPlugin plugin;
@@ -46,17 +42,7 @@ public class SpigotSetupWizard implements Listener {
         active = true;
         Bukkit.getPluginManager().registerEvents(this, plugin);
 
-        if (FoliaScheduler.isFolia()) {
-            startFolia();
-        } else {
-            startBukkit();
-        }
-    }
-
-    private void startBukkit() {
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, this::runWizard);
-        }, WIZARD_START_DELAY_TICKS);
+        startFolia();
     }
 
     private void startFolia() {
@@ -94,11 +80,7 @@ public class SpigotSetupWizard implements Listener {
     }
 
     private void runOnMain(Runnable task) {
-        if (FoliaScheduler.isFolia()) {
-            foliaScheduler.runGlobal(task);
-        } else {
-            Bukkit.getScheduler().runTask(plugin, task);
-        }
+        foliaScheduler.runGlobal(task);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -112,13 +94,14 @@ public class SpigotSetupWizard implements Listener {
     public void onPreLogin(AsyncPlayerPreLoginEvent event) {
         if (!active) return;
         event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
-                "Server is running first-time setup. Please try again shortly.");
+                Component.text("Server is running first-time setup. Please try again shortly."));
     }
 
     private void fallbackToTemplate() {
         try {
             BootConfig.saveTemplate(plugin.getDataFolder().toPath());
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+        }
         logger.warning("Setup cancelled. A boot.yml template has been created.");
         logger.info("Edit plugins/" + plugin.getName() + "/boot.yml and restart.");
     }

@@ -1,19 +1,12 @@
 package gg.modl.minecraft.spigot.bridge.handler;
 
 import gg.modl.minecraft.bridge.freeze.FreezeDrift;
-import lombok.Value;
 import org.bukkit.Location;
 import org.bukkit.World;
 
 import java.util.UUID;
 
-@Value
-class FreezeAnchor {
-    UUID worldId;
-    double x;
-    double y;
-    double z;
-
+record FreezeAnchor(UUID worldId, double x, double y, double z) {
     static FreezeAnchor of(Location location) {
         return new FreezeAnchor(location.getWorld().getUID(),
                 location.getX(), location.getY(), location.getZ());

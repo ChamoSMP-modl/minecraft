@@ -20,4 +20,9 @@ public class ReportsResponse extends StatusResponse {
         private List<String> assignedTo;
         private List<Object> chatMessages;
     }
+
+    @SuppressWarnings("all")
+    public int getStatus() {
+        return status;
+    }
 }

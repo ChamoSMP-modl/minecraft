@@ -1,22 +1,20 @@
 package gg.modl.minecraft.core.boot;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Map;
 
 final class JsonPostSupport {
-    private JsonPostSupport() {}
+    private JsonPostSupport() {
+    }
 
     static String postJson(String urlString, Duration timeout, String jsonBody, Map<String, String> extraHeaders)
-            throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) new URL(urlString).openConnection();
+            throws IOException, URISyntaxException {
+        HttpURLConnection connection = (HttpURLConnection) new URI(urlString).toURL().openConnection();
         try {
             connection.setRequestMethod("POST");
             connection.setConnectTimeout((int) timeout.toMillis());

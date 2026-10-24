@@ -27,23 +27,13 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class RoleListMenu extends BaseStaffListMenu<RoleListMenu.Role> {
-    @Getter
-    public static class Role {
-        private final String id, name, description;
-        private final List<String> permissions;
-
-        public Role(String id, String name, String description, List<String> permissions) {
-            this.id = id;
-            this.name = name;
-            this.description = description;
-            this.permissions = permissions;
-        }
+    public record Role(String id, String name, String description, List<String> permissions) {
 
     }
 
     private final List<Role> roles = new ArrayList<>();
     private final boolean hasPermission;
-    @Getter private CompletableFuture<Void> dataFuture;
+    @Getter private final CompletableFuture<Void> dataFuture;
 
     public RoleListMenu(Platform platform, ModlHttpClient httpClient, UUID viewerUuid, String viewerName,
                         boolean isAdmin, String panelUrl, Consumer<CirrusPlayerWrapper> backAction) {
@@ -89,7 +79,7 @@ public class RoleListMenu extends BaseStaffListMenu<RoleListMenu.Role> {
 
     @Override
     protected CirrusItem map(Role role) {
-        if ("no_permission".equals(role.getId())) {
+        if ("no_permission".equals(role.id())) {
             return CirrusItem.of(
                     CirrusItemType.BARRIER,
                     CirrusChatElement.ofLegacyText(MenuItems.COLOR_RED + "No Permission"),
@@ -99,41 +89,41 @@ public class RoleListMenu extends BaseStaffListMenu<RoleListMenu.Role> {
                     )
             );
         }
-        if (role.getId() == null) return createEmptyPlaceholder("No roles");
+        if (role.id() == null) return createEmptyPlaceholder("No roles");
 
         List<String> lore = new ArrayList<>();
 
-        if (role.getDescription() != null && !role.getDescription().isEmpty()) {
-            lore.add(MenuItems.COLOR_WHITE + role.getDescription());
+        if (role.description() != null && !role.description().isEmpty()) {
+            lore.add(MenuItems.COLOR_WHITE + role.description());
             lore.add("");
         }
 
         lore.add(MenuItems.COLOR_GRAY + "Permissions:");
-        if (role.getPermissions().isEmpty())
+        if (role.permissions().isEmpty())
             lore.add(MenuItems.COLOR_DARK_GRAY + "  (No permissions)");
         else
-            for (String perm : role.getPermissions())
+            for (String perm : role.permissions())
                 lore.add(MenuItems.COLOR_WHITE + "  - " + perm);
         lore.add("");
         lore.add(MenuItems.COLOR_YELLOW + "Click to edit permissions");
 
         return CirrusItem.of(
             CirrusItemType.PAPER,
-            CirrusChatElement.ofLegacyText(MenuItems.COLOR_GOLD + role.getName()),
+            CirrusChatElement.ofLegacyText(MenuItems.COLOR_GOLD + role.name()),
                 MenuItems.lore(lore)
         );
     }
 
     @Override
     protected void handleClick(Click click, Role role) {
-        if (role.getId() == null || "no_permission".equals(role.getId()) || !hasPermission) {
+        if (role.id() == null || "no_permission".equals(role.id()) || !hasPermission) {
             return;
         }
 
         Cache cache = PluginServices.cache();
         if (cache != null) {
             String viewerRole = cache.getStaffRole(viewerUuid);
-            if (viewerRole != null && viewerRole.equals(role.getName())) {
+            if (viewerRole != null && viewerRole.equals(role.name())) {
                 sendMessage(MenuItems.COLOR_RED + "You cannot edit your own role.");
                 return;
             }

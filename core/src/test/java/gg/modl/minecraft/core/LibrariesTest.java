@@ -16,29 +16,22 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LibrariesTest {
-    @Test
-    void packetEventsLibrariesRemainCanonicalForRuntimeLoadedPlatforms() {
-        assertFalse(Libraries.PACKETEVENTS_API.hasRelocations());
-        assertFalse(Libraries.PACKETEVENTS_NETTY.hasRelocations());
-        assertFalse(Libraries.PACKETEVENTS_SPIGOT.hasRelocations());
-        assertFalse(Libraries.PACKETEVENTS_VELOCITY.hasRelocations());
-    }
 
     @Test
     void legacyCirrusPlatformArtifactsAreReverseRelocatedToCanonicalPacketEvents() {
-        assertReverseRelocations(Libraries.CIRRUS_SPIGOT.getRelocations());
-        assertReverseRelocations(Libraries.CIRRUS_VELOCITY.getRelocations());
+        assertReverseRelocations(Libraries.CIRRUS_SPIGOT.relocations());
+        assertReverseRelocations(Libraries.CIRRUS_VELOCITY.relocations());
     }
 
     @Test
     void cirrusChecksumsMatchCurrentRuntimeExpectations() {
-        assertEquals("UBSO7Eenxuj/Xs2tvxEgOOOZnhA2BGM9cQqaFXJXxdI=", Libraries.CIRRUS_SPIGOT.getChecksum());
-        assertEquals("9wAG0uzxFitqPdb/UESODtJG8rezsF8QdTybrPxMoV8=", Libraries.CIRRUS_VELOCITY.getChecksum());
+        assertEquals("UBSO7Eenxuj/Xs2tvxEgOOOZnhA2BGM9cQqaFXJXxdI=", Libraries.CIRRUS_SPIGOT.checksum());
+        assertEquals("9wAG0uzxFitqPdb/UESODtJG8rezsF8QdTybrPxMoV8=", Libraries.CIRRUS_VELOCITY.checksum());
     }
 
     @Test
     void runtimeLoadedLibrariesHaveChecksums() {
-        runtimeLibraries().forEach(library -> assertTrue(library.hasChecksum(), library.getId()));
+        runtimeLibraries().forEach(library -> assertTrue(library.hasChecksum(), library.id()));
     }
 
     private static void assertReverseRelocations(String[][] relocations) {

@@ -13,7 +13,7 @@ public class MaintenanceService {
     public void enable(Platform platform, Cache cache, String kickMessage) {
         this.maintenanceEnabled = true;
         for (AbstractPlayer player : platform.getOnlinePlayers()) {
-            UUID uuid = player.getUuid();
+            UUID uuid = player.uuid();
             if (!PermissionUtil.isStaff(uuid, cache)) {
                 platform.runOnMainThread(() -> platform.kickPlayer(player, kickMessage));
             }

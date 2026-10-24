@@ -2,41 +2,25 @@ package gg.modl.minecraft.spigot.bridge.command;
 
 import gg.modl.minecraft.bridge.BridgeReloadPresenter;
 import lombok.RequiredArgsConstructor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
+import net.strokkur.commands.Command;
+import net.strokkur.commands.DefaultExecutes;
+import net.strokkur.commands.Executes;
+import net.strokkur.commands.permission.Permission;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 
-import java.util.Collections;
-import java.util.List;
-
+@Permission("modl.bridge.reload")
+@Command("modlbridge")
 @RequiredArgsConstructor
-public class ModlBridgeCommand implements CommandExecutor, TabCompleter {
-    private static final String RELOAD_ARGUMENT = "reload";
-    private static final String RELOAD_PERMISSION = "modl.bridge.reload";
-
+public class ModlBridgeCommand {
     private final BridgeReloadPresenter presenter;
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!sender.hasPermission(RELOAD_PERMISSION)) {
-            sender.sendMessage(presenter.noPermission());
-            return true;
-        }
-        if (args.length != 1 || !RELOAD_ARGUMENT.equalsIgnoreCase(args[0])) {
-            sender.sendMessage(presenter.usage());
-            return true;
-        }
+    @Executes("reload")
+    public void onReload(CommandSender sender) {
         presenter.reload(sender::sendMessage);
-        return true;
     }
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (args.length == 1 && sender.hasPermission(RELOAD_PERMISSION)
-                && RELOAD_ARGUMENT.startsWith(args[0].toLowerCase())) {
-            return Collections.singletonList(RELOAD_ARGUMENT);
-        }
-        return Collections.emptyList();
+    @DefaultExecutes
+    public void onDefault(CommandSender sender) {
+        sender.sendMessage(presenter.usage());
     }
 }

@@ -35,8 +35,8 @@ public final class SkinTextureCache {
 
     private static void fetchAndCache(Cache cache, UUID uuid) {
         MojangProfiles.client().get(uuid).thenAccept(wp -> {
-            if (wp != null && wp.isValid() && wp.getTextureValue() != null) {
-                cache.cacheSkinTexture(uuid, wp.getTextureValue());
+            if (wp != null && wp.valid() && wp.textureValue() != null) {
+                cache.cacheSkinTexture(uuid, wp.textureValue());
             }
         });
     }

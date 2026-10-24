@@ -6,7 +6,6 @@ import gg.modl.minecraft.api.http.PanelUnavailableException;
 import gg.modl.minecraft.api.http.request.PlayerLookupRequest;
 import gg.modl.minecraft.api.http.response.LinkedAccountsResponse;
 import gg.modl.minecraft.api.http.response.PlayerLookupResponse;
-import gg.modl.minecraft.api.http.response.PlayerProfileResponse;
 import gg.modl.minecraft.api.http.response.PunishmentDetailResponse;
 import gg.modl.minecraft.core.HttpClientHolder;
 import gg.modl.minecraft.core.Platform;
@@ -73,7 +72,7 @@ public class InspectCommand {
         }
 
         UUID senderUuid = actor.uniqueId();
-        ProfileMenuOpener.openProfileMenu(actor, httpClientHolder.getClient(), platform, cache, localeManager, playerQuery,
+        ProfileMenuOpener.openProfileMenu(actor, httpClientHolder.client(), platform, cache, localeManager, playerQuery,
                 (profileResponse, senderName, viewer) -> {
                     InspectContext context = new InspectContext(
                         profileResponse.getProfile(),
@@ -81,7 +80,7 @@ public class InspectCommand {
                         profileResponse.getNoteCount()
                     );
                     new InspectMenu(
-                        platform, httpClientHolder.getClient(), senderUuid, senderName,
+                        platform, httpClientHolder.client(), senderUuid, senderName,
                         profileResponse.getProfile(), null, context
                     ).display(viewer);
                 },
@@ -91,7 +90,7 @@ public class InspectCommand {
     private void printPunishmentDetail(CommandActor actor, String punishmentId) {
         actor.reply(localeManager.getMessage("player_lookup.looking_up", mapOf("player", "#" + punishmentId)));
 
-        httpClientHolder.getClient().getPunishmentDetail(punishmentId).thenAccept(response -> {
+        httpClientHolder.client().getPunishmentDetail(punishmentId).thenAccept(response -> {
             if (!response.isSuccess() || response.getPunishment() == null) {
                 actor.reply(localeManager.getMessage("print.punishment_detail.not_found", mapOf("id", punishmentId)));
                 return;
@@ -184,7 +183,7 @@ public class InspectCommand {
 
         PlayerLookupRequest request = PlayerLookupRequest.builder().query(playerQuery).build();
 
-        httpClientHolder.getClient().lookupPlayer(request).thenAccept(response -> {
+        httpClientHolder.client().lookupPlayer(request).thenAccept(response -> {
             if (response.isSuccess() && response.getData() != null) {
                 UUID playerUuid = UUID.fromString(response.getData().getMinecraftUuid());
                 resolveOwnNotesThenDisplay(actor, response.getData(), playerUuid, playerQuery);
@@ -196,7 +195,7 @@ public class InspectCommand {
     }
 
     private void resolveOwnNotesThenDisplay(CommandActor actor, PlayerLookupResponse.PlayerData data, UUID playerUuid, String playerQuery) {
-        StaffProfileLookup.lookupPlayerProfile(httpClientHolder.getClient(), platform, playerQuery).thenAccept(profileResponse -> {
+        StaffProfileLookup.lookupPlayerProfile(httpClientHolder.client(), platform, playerQuery).thenAccept(profileResponse -> {
             List<Note> ownNotes = (profileResponse != null && profileResponse.getStatus() == 200)
                     ? profileResponse.getProfile().getNotes() : Collections.emptyList();
             fetchLinkedAndDisplay(actor, data, playerUuid, ownNotes);
@@ -207,7 +206,7 @@ public class InspectCommand {
     }
 
     private void fetchLinkedAndDisplay(CommandActor actor, PlayerLookupResponse.PlayerData data, UUID playerUuid, List<Note> targetNotes) {
-        httpClientHolder.getClient().getLinkedAccounts(playerUuid)
+        httpClientHolder.client().getLinkedAccounts(playerUuid)
                 .thenAccept(linkedResponse -> displayPlayerInfo(actor, data, linkedResponse, targetNotes))
                 .exceptionally(linkedThrowable -> {
                     if (linkedThrowable.getCause() instanceof PanelUnavailableException) actor.reply(localeManager.getMessage("api_errors.panel_restarting"));

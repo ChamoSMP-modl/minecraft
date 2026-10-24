@@ -16,7 +16,7 @@ import gg.modl.minecraft.core.impl.menus.util.MenuItems;
 import gg.modl.minecraft.core.impl.menus.util.ReportRenderUtil;
 import gg.modl.minecraft.core.locale.LocaleManager;
 import gg.modl.minecraft.core.service.ChatMessageCache;
-import java.util.Map;
+
 import static gg.modl.minecraft.core.util.Java8Collections.listOf;
 import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 
@@ -57,7 +57,7 @@ public class ReportChatLogMenu extends SimpleMenu {
         this.chatToggled = reportData.getChatLog() != null;
         this.replayToggled = reportData.isAttachReplay();
 
-        title(locale.getMessage("messages.report_gui_title", mapOf("player", target.getUsername())));
+        title(locale.getMessage("messages.report_gui_title", mapOf("player", target.username())));
         type(CirrusInventoryType.GENERIC_9X3);
         buildMenu();
     }
@@ -165,11 +165,11 @@ public class ReportChatLogMenu extends SimpleMenu {
     @Override
     protected void registerActionHandlers() {
         registerActionHandler("attachChat", click -> {
-            String chatLog = chatMessageCache.getChatLogForReport(target.getUuid().toString());
+            String chatLog = chatMessageCache.getChatLogForReport(target.uuid().toString());
 
             if (chatLog.isEmpty()) {
-                platform.sendMessage(reporter.getUuid(),
-                        locale.getMessage("messages.no_chat_logs_available", mapOf("player", target.getUsername())));
+                platform.sendMessage(reporter.uuid(),
+                        locale.getMessage("messages.no_chat_logs_available", mapOf("player", target.username())));
             } else {
                 reportData.setChatLog(chatLog);
             }
@@ -197,10 +197,10 @@ public class ReportChatLogMenu extends SimpleMenu {
         registerActionHandler("toggleChat", click -> {
             chatToggled = !chatToggled;
             if (chatToggled) {
-                String chatLog = chatMessageCache.getChatLogForReport(target.getUuid().toString());
+                String chatLog = chatMessageCache.getChatLogForReport(target.uuid().toString());
                 if (chatLog.isEmpty()) {
-                    platform.sendMessage(reporter.getUuid(),
-                            locale.getMessage("messages.no_chat_logs_available", mapOf("player", target.getUsername())));
+                    platform.sendMessage(reporter.uuid(),
+                            locale.getMessage("messages.no_chat_logs_available", mapOf("player", target.username())));
                     chatToggled = false;
                 } else {
                     reportData.setChatLog(chatLog);

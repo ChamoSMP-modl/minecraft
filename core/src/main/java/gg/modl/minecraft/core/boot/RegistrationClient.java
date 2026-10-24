@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.time.Duration;
 import java.util.Collections;
 
@@ -23,7 +24,7 @@ public class RegistrationClient {
     }
 
     public AvailabilityResponse checkAvailability(String email, String serverName, String subdomain)
-            throws IOException {
+            throws IOException, URISyntaxException {
         JsonObject body = new JsonObject();
         if (email != null && !email.isEmpty()) body.addProperty("email", email);
         if (serverName != null && !serverName.isEmpty()) body.addProperty("serverName", serverName);
@@ -35,7 +36,7 @@ public class RegistrationClient {
     }
 
     public RegisterResponse register(String email, String serverName, String subdomain, String plan)
-            throws IOException {
+            throws IOException, URISyntaxException {
         JsonObject body = new JsonObject();
         body.addProperty("email", email);
         body.addProperty("serverName", serverName);
@@ -47,7 +48,7 @@ public class RegistrationClient {
         return gson.fromJson(responseBody, RegisterResponse.class);
     }
 
-    public CliStatusResponse pollCliStatus(String setupToken) throws IOException {
+    public CliStatusResponse pollCliStatus(String setupToken) throws IOException, URISyntaxException {
         JsonObject body = new JsonObject();
         body.addProperty("token", setupToken);
 

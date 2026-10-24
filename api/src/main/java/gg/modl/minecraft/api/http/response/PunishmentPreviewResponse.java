@@ -25,4 +25,9 @@ public class PunishmentPreviewResponse extends StatusResponse {
         private int points, newSocialPoints, newGameplayPoints;
         private long durationMs;
     }
+
+    @SuppressWarnings("all")
+    public int getStatus() {
+        return status;
+    }
 }

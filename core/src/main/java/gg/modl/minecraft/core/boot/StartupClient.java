@@ -6,6 +6,7 @@ import gg.modl.minecraft.api.http.response.StartupResponse;
 import gg.modl.minecraft.core.util.PluginLogger;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.time.Duration;
 import java.util.Collections;
 
@@ -16,10 +17,11 @@ public class StartupClient {
     private static final long[] RETRY_DELAYS_MS = {2000, 4000, 8000};
     private static volatile StartupResponse lastStartupResponse;
 
-    private StartupClient() {}
+    private StartupClient() {
+    }
 
     public static String callStartupWithRetry(String apiKey, boolean testingApi,
-                                               StartupRequest request, PluginLogger logger) {
+                                              StartupRequest request, PluginLogger logger) {
         StartupResponse response = callStartupForResponseWithRetry(apiKey, testingApi, request, logger);
         return response != null ? response.getPanelUrl() : null;
     }
@@ -43,6 +45,8 @@ public class StartupClient {
                 logger.warning("Startup response missing panelUrl (attempt " + (attempt + 1) + "/" + MAX_RETRIES + ")");
             } catch (IOException e) {
                 logger.warning("Startup request failed (attempt " + (attempt + 1) + "/" + MAX_RETRIES + "): " + e.getMessage());
+            } catch (URISyntaxException e) {
+                logger.warning("Invalid URL syntax! " + e.getMessage());
             }
 
             if (attempt < MAX_RETRIES - 1) {

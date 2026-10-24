@@ -36,11 +36,11 @@ public class LogUploadService {
         this.debugMode = debugMode;
         this.chatChannel = new BufferedLogChannel<>("chat", chatCommandLogService::drainChatBuffer,
                 ChatLogEntry::getUsername, ChatLogEntry::getMessage,
-                entries -> httpClientHolder.getClient().submitChatLogs(new ChatLogBatchRequest(entries)),
+                entries -> httpClientHolder.client().submitChatLogs(new ChatLogBatchRequest(entries)),
                 logger, MAX_REBUFFERED_ENTRIES, MAX_BATCH_SIZE);
         this.commandChannel = new BufferedLogChannel<>("command", chatCommandLogService::drainCommandBuffer,
                 CommandLogEntry::getUsername, CommandLogEntry::getCommand,
-                entries -> httpClientHolder.getClient().submitCommandLogs(new CommandLogBatchRequest(entries)),
+                entries -> httpClientHolder.client().submitCommandLogs(new CommandLogBatchRequest(entries)),
                 logger, MAX_REBUFFERED_ENTRIES, MAX_BATCH_SIZE);
     }
 

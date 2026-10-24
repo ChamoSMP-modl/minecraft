@@ -32,17 +32,17 @@ public final class PacketInterceptionPolicy {
     private static List<PipelineConflict> detectConflicts(ProxyPluginRegistry registry) {
         List<PipelineConflict> conflicts = new ArrayList<>();
         for (PipelineConflict conflict : PipelineConflict.known()) {
-            if (registry.isPresent(conflict.getPluginId())) conflicts.add(conflict);
+            if (registry.isPresent(conflict.pluginId())) conflicts.add(conflict);
         }
         return Collections.unmodifiableList(conflicts);
     }
 
     private static String names(List<PipelineConflict> conflicts) {
-        return join(conflicts, PipelineConflict::getDisplayName);
+        return join(conflicts, PipelineConflict::displayName);
     }
 
     private static String remediations(List<PipelineConflict> conflicts) {
-        return join(conflicts, PipelineConflict::getRemediation);
+        return join(conflicts, PipelineConflict::remediation);
     }
 
     private static String join(List<PipelineConflict> conflicts, Function<PipelineConflict, String> part) {

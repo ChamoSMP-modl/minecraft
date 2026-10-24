@@ -10,4 +10,9 @@ public class PlayerNameResponse extends StatusResponse {
     private String message;
     private Account player;
     private int status;
+
+    @SuppressWarnings("all")
+    public int getStatus() {
+        return status;
+    }
 }

@@ -12,7 +12,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-@Getter @Builder @NoArgsConstructor @AllArgsConstructor
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Punishment {
     private static final String UNKNOWN = "Unknown", DEFAULT_REASON = "No reason provided",
             STATUS_UNSTARTED = "Unstarted", DATA_KEY_ACTIVE = "active", DATA_KEY_STATUS = "status",
@@ -102,12 +105,12 @@ public class Punishment {
         if (noteText == null) return true;
         String lower = noteText.toLowerCase();
         return lower.equals("issued punishment") ||
-               lower.startsWith("issued ") ||
-               lower.equals("pardoned punishment") ||
-               lower.equals("added evidence") ||
-               lower.startsWith("changed duration to ") ||
-               lower.startsWith("enabled ") ||
-               lower.startsWith("disabled ");
+                lower.startsWith("issued ") ||
+                lower.equals("pardoned punishment") ||
+                lower.equals("added evidence") ||
+                lower.startsWith("changed duration to ") ||
+                lower.startsWith("enabled ") ||
+                lower.startsWith("disabled ");
     }
 
     public Date getExpires() {
@@ -137,7 +140,7 @@ public class Punishment {
 
         if (expiry == null) {
             Date effectiveExpiry = getEffectiveExpiry();
-            if (effectiveExpiry != null && effectiveExpiry.getTime() < now) return false;
+            return effectiveExpiry == null || effectiveExpiry.getTime() >= now;
         }
 
         return true;
@@ -205,7 +208,8 @@ public class Punishment {
 
     public Long getEffectiveDuration() {
         Long duration = null;
-        for (Modification mod : getModifications()) if (mod.getEffectiveDuration() != null) duration = mod.getEffectiveDuration();
+        for (Modification mod : getModifications())
+            if (mod.getEffectiveDuration() != null) duration = mod.getEffectiveDuration();
         if (duration == null) duration = getDuration();
         return duration;
     }

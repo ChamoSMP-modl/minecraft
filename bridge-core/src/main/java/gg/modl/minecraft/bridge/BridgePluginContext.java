@@ -8,7 +8,7 @@ public interface BridgePluginContext {
 
     BridgePlayerProvider getPlayerProvider();
 
-    Path getDataFolder();
+    Path dataFolder();
 
     void saveDefaultResource(String resourcePath);
 

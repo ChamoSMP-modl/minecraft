@@ -28,34 +28,34 @@ public final class SyncProtoMapper {
 
     public static gg.modl.proto.modl.v1.SyncRequest toProto(SyncRequest request) {
         gg.modl.proto.modl.v1.SyncRequest.Builder builder = gg.modl.proto.modl.v1.SyncRequest.newBuilder()
-            .setLastSyncTimestamp(request.getLastSyncTimestamp());
+            .setLastSyncTimestamp(request.lastSyncTimestamp());
 
-        if (request.getServerName() != null) builder.setServerName(request.getServerName());
-        if (request.getServerInstanceId() != null) builder.setServerInstanceId(request.getServerInstanceId());
+        if (request.serverName() != null) builder.setServerName(request.serverName());
+        if (request.serverInstanceId() != null) builder.setServerInstanceId(request.serverInstanceId());
 
-        if (request.getServerStatus() != null) {
-            SyncRequest.ServerStatus s = request.getServerStatus();
+        if (request.serverStatus() != null) {
+            SyncRequest.ServerStatus s = request.serverStatus();
             SyncServerStatus.Builder status = SyncServerStatus.newBuilder()
-                .setOnlinePlayerCount(s.getOnlinePlayerCount())
-                .setMaxPlayers(s.getMaxPlayers())
-                .setTimestamp(String.valueOf(s.getTimestamp()));
-            if (s.getServerVersion() != null) status.setServerVersion(s.getServerVersion());
-            if (s.getPlatformType() != null) status.setPlatformType(s.getPlatformType());
-            if (s.getPluginVersion() != null) status.setPluginVersion(s.getPluginVersion());
+                .setOnlinePlayerCount(s.onlinePlayerCount())
+                .setMaxPlayers(s.maxPlayers())
+                .setTimestamp(String.valueOf(s.timestamp()));
+            if (s.serverVersion() != null) status.setServerVersion(s.serverVersion());
+            if (s.platformType() != null) status.setPlatformType(s.platformType());
+            if (s.pluginVersion() != null) status.setPluginVersion(s.pluginVersion());
             builder.setServerStatus(status.build());
         }
 
-        if (request.getOnlinePlayers() != null) {
-            request.getOnlinePlayers().forEach(player -> builder.addOnlinePlayers(SyncOnlinePlayer.newBuilder()
-                .setUuid(player.getUuid())
-                .setUsername(player.getUsername())
-                .setIpAddress(player.getIpAddress())
-                .setSessionDurationMs(player.getSessionDurationMs())
+        if (request.onlinePlayers() != null) {
+            request.onlinePlayers().forEach(player -> builder.addOnlinePlayers(SyncOnlinePlayer.newBuilder()
+                .setUuid(player.uuid())
+                .setUsername(player.username())
+                .setIpAddress(player.ipAddress())
+                .setSessionDurationMs(player.sessionDurationMs())
                 .build()));
         }
 
-        if (request.getChatLogs() != null) {
-            request.getChatLogs().forEach(log -> builder.addChatLogs(SyncChatLogEntry.newBuilder()
+        if (request.chatLogs() != null) {
+            request.chatLogs().forEach(log -> builder.addChatLogs(SyncChatLogEntry.newBuilder()
                 .setUuid(ProtoConversions.nullToEmpty(log.getUuid()))
                 .setUsername(ProtoConversions.nullToEmpty(log.getUsername()))
                 .setMessage(ProtoConversions.nullToEmpty(log.getMessage()))
@@ -64,8 +64,8 @@ public final class SyncProtoMapper {
                 .build()));
         }
 
-        if (request.getCommandLogs() != null) {
-            request.getCommandLogs().forEach(log -> builder.addCommandLogs(SyncCommandLogEntry.newBuilder()
+        if (request.commandLogs() != null) {
+            request.commandLogs().forEach(log -> builder.addCommandLogs(SyncCommandLogEntry.newBuilder()
                 .setUuid(ProtoConversions.nullToEmpty(log.getUuid()))
                 .setUsername(ProtoConversions.nullToEmpty(log.getUsername()))
                 .setCommand(ProtoConversions.nullToEmpty(log.getCommand()))
