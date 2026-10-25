@@ -214,3 +214,4 @@ bin/
 
 # Allow local anticheat API JARs
 !**/libs/*.jar
+/distribution/run/

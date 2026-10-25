@@ -158,10 +158,15 @@ public abstract class AbstractBridgeComponent {
     private void registerRuntimeHooks() {
         applyAntiCheatHookSetting();
         registerPlatformEvents();
-        registerBridgeCommand();
 
-        if (bridgeClient != null) {
-            registerProxyCommand(bridgeClient);
+        try {
+            registerBridgeCommand();
+
+            if (bridgeClient != null) {
+                registerProxyCommand(bridgeClient);
+            }
+        } catch (IllegalStateException e) {
+            pluginLogger.warning("Could not register commands because the bridge start up was delayed. If this happened after the setup restart your server.");
         }
     }
 

@@ -9,11 +9,6 @@ import java.util.List;
 
 public final class Libraries {
 
-    private static final String[][] CIRRUS_PACKETEVENTS_REVERSE_RELOCATIONS = {
-            {"gg{}modl{}libs{}packetevents{}api", "com{}github{}retrooper{}packetevents"},
-            {"gg{}modl{}libs{}packetevents{}impl", "io{}github{}retrooper{}packetevents"}
-    };
-
     private static final String[][] PROTOBUF_RELOCATIONS = {
             {"com{}google{}protobuf", "gg{}modl{}libs{}protobuf"}
     };
@@ -79,16 +74,14 @@ public final class Libraries {
                     "cirrus-spigot",
                     LibraryVersions.CIRRUS_SPIGOT,
                     "cirrus-spigot",
-                    LibraryVersions.CIRRUS_SPIGOT_CHECKSUM,
-                    CIRRUS_PACKETEVENTS_REVERSE_RELOCATIONS
+                    LibraryVersions.CIRRUS_SPIGOT_CHECKSUM
             ),
             CIRRUS_VELOCITY = LibraryRecord.of(
                     "gg{}modl{}minecraft{}cirrus",
                     "cirrus-velocity",
                     LibraryVersions.CIRRUS_VELOCITY,
                     "cirrus-velocity",
-                    LibraryVersions.CIRRUS_VELOCITY_CHECKSUM,
-                    CIRRUS_PACKETEVENTS_REVERSE_RELOCATIONS
+                    LibraryVersions.CIRRUS_VELOCITY_CHECKSUM
             ),
             PROTOBUF_JAVA = LibraryRecord.of(
                     "com{}google{}protobuf",
@@ -188,7 +181,6 @@ public final class Libraries {
     public static final List<LibraryRecord> PROTO_DEPS = Arrays.asList(
             PROTOBUF_JAVA,
             PROTOBUF_JAVA_UTIL,
-
             FAILUREACCESS,
             PROTOVALIDATE,
             CEL_CORE,
@@ -202,20 +194,20 @@ public final class Libraries {
     );
 
 
-    public static final List<LibraryRecord> PROTO_DEPS_RELOCATED = relocateProtobuf(PROTO_DEPS);
+    public static final List<LibraryRecord> PROTO_DEPS_RELOCATED = relocateProtobuf();
 
-    private static List<LibraryRecord> relocateProtobuf(List<LibraryRecord> deps) {
-        List<LibraryRecord> relocated = new ArrayList<>(deps.size());
-        for (LibraryRecord dep : deps) {
-            relocated.add(dep.withRelocations(mergeRelocations(dep.relocations(), PROTOBUF_RELOCATIONS)));
+    private static List<LibraryRecord> relocateProtobuf() {
+        List<LibraryRecord> relocated = new ArrayList<>(Libraries.PROTO_DEPS.size());
+        for (LibraryRecord dep : Libraries.PROTO_DEPS) {
+            relocated.add(dep.withRelocations(mergeRelocations(dep.relocations())));
         }
         return Collections.unmodifiableList(relocated);
     }
 
-    private static String[][] mergeRelocations(String[][] existing, String[][] added) {
-        if (existing == null || existing.length == 0) return added;
-        String[][] merged = Arrays.copyOf(existing, existing.length + added.length);
-        System.arraycopy(added, 0, merged, existing.length, added.length);
+    private static String[][] mergeRelocations(String[][] existing) {
+        if (existing == null || existing.length == 0) return Libraries.PROTOBUF_RELOCATIONS;
+        String[][] merged = Arrays.copyOf(existing, existing.length + Libraries.PROTOBUF_RELOCATIONS.length);
+        System.arraycopy(Libraries.PROTOBUF_RELOCATIONS, 0, merged, existing.length, Libraries.PROTOBUF_RELOCATIONS.length);
         return merged;
     }
 }

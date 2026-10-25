@@ -56,7 +56,7 @@ dependencies {
 }
 
 tasks.processResources {
-    val props = mapOf("version" to version, "description" to description)
+    val props = mapOf("version" to project.version, "description" to project.description)
     inputs.properties(props)
     filteringCharset = "UTF-8"
 

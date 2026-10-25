@@ -21,9 +21,12 @@ public class HttpManager {
     private static final String PROTO_V3_PROPERTY = "modl.http.protoV3.enabled";
     private static final String PROTO_V3_ENV = "MODL_HTTP_PROTO_V3_ENABLED";
 
-    private @NotNull final ModlHttpClient httpClient;
-    private @NotNull final HttpClientHolder httpClientHolder;
-    private @NotNull final String apiKey, apiUrl, serverDomain, panelUrl;
+    private @NotNull
+    final ModlHttpClient httpClient;
+    private @NotNull
+    final HttpClientHolder httpClientHolder;
+    private @NotNull
+    final String apiKey, apiUrl, serverDomain, panelUrl;
     private final boolean debugHttp, useTestingApi, queryMojang;
 
     public HttpManager(@NotNull String key, @NotNull String url, boolean debugHttp, boolean useTestingApi, boolean queryMojang) {
@@ -74,7 +77,7 @@ public class HttpManager {
             ApiError.getDefaultInstance();
             return true;
         } catch (Throwable t) {
-            logger.warning("Proto V3 runtime is incompatible with this server's bundled protobuf; using the V2 JSON HTTP client instead: " + t);
+            logger.warning("Proto V3 runtime is incompatible with this server's bundled protobuf; using the V2 JSON HTTP client instead: " + t.getMessage());
             return false;
         }
     }

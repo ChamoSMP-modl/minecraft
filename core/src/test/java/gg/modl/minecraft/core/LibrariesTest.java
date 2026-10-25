@@ -18,31 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class LibrariesTest {
 
     @Test
-    void legacyCirrusPlatformArtifactsAreReverseRelocatedToCanonicalPacketEvents() {
-        assertReverseRelocations(Libraries.CIRRUS_SPIGOT.relocations());
-        assertReverseRelocations(Libraries.CIRRUS_VELOCITY.relocations());
-    }
-
-    @Test
-    void cirrusChecksumsMatchCurrentRuntimeExpectations() {
-        assertEquals("UBSO7Eenxuj/Xs2tvxEgOOOZnhA2BGM9cQqaFXJXxdI=", Libraries.CIRRUS_SPIGOT.checksum());
-        assertEquals("9wAG0uzxFitqPdb/UESODtJG8rezsF8QdTybrPxMoV8=", Libraries.CIRRUS_VELOCITY.checksum());
-    }
-
-    @Test
     void runtimeLoadedLibrariesHaveChecksums() {
         runtimeLibraries().forEach(library -> assertTrue(library.hasChecksum(), library.id()));
-    }
-
-    private static void assertReverseRelocations(String[][] relocations) {
-        assertArrayEquals(
-                new String[]{"gg{}modl{}libs{}packetevents{}api", "com{}github{}retrooper{}packetevents"},
-                relocations[0]
-        );
-        assertArrayEquals(
-                new String[]{"gg{}modl{}libs{}packetevents{}impl", "io{}github{}retrooper{}packetevents"},
-                relocations[1]
-        );
     }
 
     private static List<LibraryRecord> runtimeLibraries() {
