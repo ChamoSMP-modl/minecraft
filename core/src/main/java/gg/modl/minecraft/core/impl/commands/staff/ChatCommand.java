@@ -69,7 +69,7 @@ public class ChatCommand {
 
     @Subcommand("toggle")
     @Description("Toggle public chat on or off")
-    @RequiresPermission(Permissions.STAFF_CHAT_TOGGLE)
+    @RequiresPermission(Permissions.CHAT_TOGGLE)
     public void toggle(CommandActor actor) {
         boolean newState = chatManagementService.toggleChat();
 
@@ -84,7 +84,7 @@ public class ChatCommand {
 
     @Subcommand("clear")
     @Description("Clear the chat")
-    @RequiresPermission(Permissions.STAFF_CHAT_CLEAR)
+    @RequiresPermission(Permissions.CHAT_CLEAR)
     public void clear(CommandActor actor, @Optional String countArg) {
         if (countArg == null) countArg = "";
         int lines = parseClearLineCount(countArg);
@@ -100,7 +100,7 @@ public class ChatCommand {
 
     @Subcommand("slow")
     @Description("Set or disable slow mode")
-    @RequiresPermission(Permissions.STAFF_CHAT_SLOW)
+    @RequiresPermission(Permissions.CHAT_SLOW)
     public void slow(CommandActor actor, @Optional String secondsArg) {
         if (secondsArg == null) secondsArg = "";
         StaffDisplay display = StaffCommandUtil.resolveActorDisplay(actor, platform, cache, "Console", "Staff", true);

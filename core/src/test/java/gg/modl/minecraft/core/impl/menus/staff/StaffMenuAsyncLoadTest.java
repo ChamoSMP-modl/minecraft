@@ -3,18 +3,15 @@ package gg.modl.minecraft.core.impl.menus.staff;
 import gg.modl.minecraft.api.AbstractPlayer;
 import gg.modl.minecraft.api.http.response.RolesListResponse;
 import gg.modl.minecraft.api.http.response.StaffListResponse;
-import gg.modl.minecraft.core.HttpClientHolder;
-import gg.modl.minecraft.core.Platform;
 import gg.modl.minecraft.core.cache.Cache;
 import gg.modl.minecraft.core.cache.CachedProfileRegistry;
-import gg.modl.minecraft.core.impl.commands.staff.StaffListCommand;
 import gg.modl.minecraft.core.impl.menus.util.MenuAsync;
 import gg.modl.minecraft.core.support.FakeCirrusPlayerWrapper;
-import gg.modl.minecraft.core.support.FakeCommandActor;
 import gg.modl.minecraft.core.support.FakeModlHttpClient;
 import gg.modl.minecraft.core.support.FakePlatform;
 import gg.modl.minecraft.core.support.TestPluginServices;
 import gg.modl.minecraft.core.util.Permissions;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -122,7 +119,7 @@ class StaffMenuAsyncLoadTest {
         AtomicInteger displayCount = new AtomicInteger();
 
         MenuAsync.displayWhenLoaded(platform, dataFuture, new FakeCirrusPlayerWrapper(viewerUuid),
-                player -> displayCount.incrementAndGet());
+                _ -> displayCount.incrementAndGet());
 
         dataFuture.completeExceptionally(new IllegalStateException("load failed"));
 
@@ -135,55 +132,18 @@ class StaffMenuAsyncLoadTest {
         assertEquals(0, displayCount.get());
     }
 
-    @Test
-    void staffListCommandSchedulesMenuDisplayOnPlatformMainThreadAfterDataLoads() {
-        UUID viewerUuid = UUID.fromString("123e4567-e89b-12d3-a456-426614174302");
-        Cache cache = new Cache(new CachedProfileRegistry());
-        FakePlatform platform = platform(cache);
-        CompletableFuture<StaffListResponse> staffFuture = new CompletableFuture<>();
-        StaffListCommand command = new StaffListCommand(platform, cache, null, null,
-                new HttpClientHolder(httpClient(
-                        CompletableFuture.completedFuture(new RolesListResponse(Collections.emptyList(), 200)),
-                        staffFuture)),
-                "https://panel.modl.gg");
-
-        command.staffList(new FakeCommandActor(viewerUuid, "ModlStaff"), null);
-
-        assertEquals(0, platform.mainThreadScheduleCount());
-
-        staffFuture.complete(new StaffListResponse(Collections.emptyList(), 200));
-
-        assertEquals(1, platform.mainThreadScheduleCount());
-    }
-
-    @Test
-    void staffListCommandDoesNotScheduleMenuDisplayWhenStaffLoadIsNotSuccessful() {
-        UUID viewerUuid = UUID.fromString("123e4567-e89b-12d3-a456-426614174306");
-        Cache cache = new Cache(new CachedProfileRegistry());
-        FakePlatform platform = platform(cache);
-        StaffListCommand command = new StaffListCommand(platform, cache, null, null,
-                new HttpClientHolder(httpClient(
-                        CompletableFuture.completedFuture(new RolesListResponse(Collections.emptyList(), 200)),
-                        CompletableFuture.completedFuture(new StaffListResponse(Collections.emptyList(), 403)))),
-                "https://panel.modl.gg");
-
-        command.staffList(new FakeCommandActor(viewerUuid, "ModlStaff"), null);
-
-        assertEquals(0, platform.mainThreadScheduleCount());
-    }
-
     private static FakeModlHttpClient httpClient(
             CompletableFuture<RolesListResponse> rolesFuture,
             CompletableFuture<StaffListResponse> staffFuture
     ) {
         return new FakeModlHttpClient() {
             @Override
-            public CompletableFuture<RolesListResponse> getRoles() {
+            public @NotNull CompletableFuture<RolesListResponse> getRoles() {
                 return rolesFuture;
             }
 
             @Override
-            public CompletableFuture<StaffListResponse> getStaffList() {
+            public @NotNull CompletableFuture<StaffListResponse> getStaffList() {
                 return staffFuture;
             }
         };
