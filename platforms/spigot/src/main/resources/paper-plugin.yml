@@ -12,17 +12,38 @@ website: "https://github.com/ChamoSMP-modl/minecraft"
 api-version: 1.21.11
 folia-supported: true
 
-softdepend:
-  - ProtocolLib
-  - ProtocolSupport
-  - ViaVersion
-  - ViaBackwards
-  - ViaRewind
-  - Geyser-Spigot
-  - GrimAC
-  - Polar
-  - Intave
-  - packetevents
+dependencies:
+  server:
+    ProtocolLib:
+      required: false
+      load: AFTER
+    ProtocolSupport:
+      required: false
+      load: AFTER
+    ViaVersion:
+      required: false
+      load: AFTER
+    ViaBackwards:
+      required: false
+      load: AFTER
+    ViaRewind:
+      required: false
+      load: AFTER
+    Geyser-Spigot:
+      required: false
+      load: AFTER
+    GrimAC:
+      required: false
+      load: AFTER
+    Polar:
+      required: false
+      load: AFTER
+    Intave:
+      required: false
+      load: AFTER
+    packetevents:
+      required: false
+      load: AFTER
 
 permissions:
   modl.bridge.reload:

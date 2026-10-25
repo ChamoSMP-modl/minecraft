@@ -210,7 +210,6 @@ public class SpigotPlugin extends JavaPlugin {
         signedVelocityBootstrap.shutdown();
         if (bridgeComponent != null) bridgeComponent.disable();
         if (loader != null) loader.shutdown();
-        if (PacketEvents.getAPI() != null) PacketEvents.getAPI().terminate();
     }
 
     private void registerPolarLoaderCallback() {

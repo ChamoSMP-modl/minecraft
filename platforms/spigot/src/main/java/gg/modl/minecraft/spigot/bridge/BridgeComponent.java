@@ -170,13 +170,6 @@ public class BridgeComponent extends AbstractBridgeComponent implements Listener
             return;
         }
 
-        try {
-            Class.forName("com.github.retrooper.packetevents.PacketEvents");
-        } catch (ClassNotFoundException e) {
-            pluginLogger.warning("[bridge] PacketEvents not found, replay recording disabled");
-            return;
-        }
-
         RecordingConfig recordingConfig = new RecordingConfig() {
             @Override
             public int bufferDurationSeconds() {

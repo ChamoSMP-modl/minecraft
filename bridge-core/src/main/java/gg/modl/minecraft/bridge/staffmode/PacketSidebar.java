@@ -30,7 +30,7 @@ public final class PacketSidebar {
 
     public void show(UUID uuid, Object player, ScoreboardContent content) {
         PacketEventsAPI<?> api = PacketEvents.getAPI();
-        if (api == null || player == null) return;
+        if (player == null) return;
         rendered.remove(uuid);
         send(api, player, objective(WrapperPlayServerScoreboardObjective.ObjectiveMode.CREATE, content.title()));
         send(api, player, new WrapperPlayServerDisplayScoreboard(SIDEBAR_DISPLAY_SLOT, objectiveName));
@@ -39,7 +39,7 @@ public final class PacketSidebar {
 
     public void update(UUID uuid, Object player, ScoreboardContent content) {
         PacketEventsAPI<?> api = PacketEvents.getAPI();
-        if (api == null || player == null) return;
+        if (player == null) return;
         RenderedSidebar previous = rendered.get(uuid);
         if (previous == null) {
             show(uuid, player, content);
