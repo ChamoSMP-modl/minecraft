@@ -1,4 +1,4 @@
-name: "ChamoSMP modl"
+name: "ChamoSMP-modl"
 provides: [ "modl" ]
 
 main: gg.modl.minecraft.spigot.SpigotPlugin
