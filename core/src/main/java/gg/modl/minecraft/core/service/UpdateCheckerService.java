@@ -20,8 +20,8 @@ import gg.modl.minecraft.core.util.PluginLogger;
 import gg.modl.minecraft.core.util.SemanticVersion;
 
 public class UpdateCheckerService {
-    private static final String RELEASES_API_URL = "https://api.github.com/repos/modl-gg/minecraft/releases/latest",
-            RELEASES_PAGE_URL = "https://github.com/modl-gg/minecraft/releases";
+    private static final String RELEASES_API_URL = "https://api.github.com/repos/ChamoSMP-modl/minecraft/releases/latest",
+            RELEASES_PAGE_URL = "https://github.com/ChamoSMP-modl/minecraft/releases";
     private static final Duration CONNECT_TIMEOUT = Duration.ofSeconds(8), REQUEST_TIMEOUT = Duration.ofSeconds(10);
     private static final int DEFAULT_INTERVAL_MINUTES = 60, MIN_INTERVAL_MINUTES = 1;
 
