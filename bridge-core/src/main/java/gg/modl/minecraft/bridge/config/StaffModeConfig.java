@@ -126,16 +126,16 @@ public class StaffModeConfig {
     }
 
     private void setStaffDefaults() {
-        staffHotbar.put(0, createHotbarItem("minecraft:lead", "&eTarget Player", ACTION_TARGET_SELECTOR));
+        staffHotbar.put(0, createHotbarItem("minecraft:lead", "<yellow>Target Player", ACTION_TARGET_SELECTOR));
         staffHotbar.put(3, createVanishToggleItem());
-        staffHotbar.put(8, createHotbarItem("minecraft:compass", "&6Staff Menu", ACTION_STAFF_MENU));
+        staffHotbar.put(8, createHotbarItem("minecraft:compass", "<gold>Staff Menu", ACTION_STAFF_MENU));
     }
 
     private void setTargetDefaults() {
-        targetHotbar.put(0, createHotbarItem("minecraft:ice", "&bFreeze Target", "freeze_target"));
-        targetHotbar.put(3, createHotbarItem("minecraft:nether_star", "&cStop Targeting", "stop_target"));
-        targetHotbar.put(4, createHotbarItem("minecraft:book", "&eInspect Target", "inspect_target"));
-        targetHotbar.put(5, createHotbarItem("minecraft:chest", "&eOpen Inventory", "open_inventory"));
+        targetHotbar.put(0, createHotbarItem("minecraft:ice", "<aqua>Freeze Target", "freeze_target"));
+        targetHotbar.put(3, createHotbarItem("minecraft:nether_star", "<red>Stop Targeting", "stop_target"));
+        targetHotbar.put(4, createHotbarItem("minecraft:book", "<yellow>Inspect Target", "inspect_target"));
+        targetHotbar.put(5, createHotbarItem("minecraft:chest", "<yellow>Open Inventory", "open_inventory"));
         targetHotbar.put(7, createVanishToggleItem());
     }
 
@@ -148,9 +148,9 @@ public class StaffModeConfig {
     }
 
     private static HotbarItem createVanishToggleItem() {
-        HotbarItem item = createHotbarItem("minecraft:lime_dye", "&aVanish: ON", ACTION_VANISH_TOGGLE);
+        HotbarItem item = createHotbarItem("minecraft:lime_dye", "<green>Vanish: ON", ACTION_VANISH_TOGGLE);
         item.toggleItem = "minecraft:gray_dye";
-        item.toggleName = "&7Vanish: OFF";
+        item.toggleName = "<gray>Vanish: OFF";
         return item;
     }
 

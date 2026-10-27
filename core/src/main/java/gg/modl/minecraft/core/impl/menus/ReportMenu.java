@@ -69,14 +69,14 @@ public class ReportMenu extends SimpleMenu {
         if (infoConfig != null) {
             set(CirrusItem.of(
                     CirrusItemType.of(infoConfig.getItem()),
-                    CirrusChatElement.ofLegacyText(MenuItems.translateColorCodes(infoConfig.getTitle())),
+                    CirrusChatElement.ofMiniMessage(MenuItems.translateColorCodes(infoConfig.getTitle())),
                     MenuItems.lore(infoConfig.getDescription())
             ).slot(48));
         }
 
         set(CirrusItem.of(
                 CirrusItemType.BARRIER,
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_RED + "Close"),
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_RED + "Close"),
                 MenuItems.lore(MenuItems.COLOR_GRAY + "Close this menu")
         ).slot(49).actionHandler("close"));
     }
@@ -84,7 +84,7 @@ public class ReportMenu extends SimpleMenu {
     private CirrusItem createCategoryItem(ReportGuiConfig.ReportSlotConfig slotConfig) {
         return CirrusItem.of(
                 CirrusItemType.of(slotConfig.getItem()),
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_RED + slotConfig.getTitle()),
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_RED + slotConfig.getTitle()),
                 MenuItems.lore(slotConfig.getDescription())
         ).actionHandler("category_" + slotConfig.getSlotNumber());
     }

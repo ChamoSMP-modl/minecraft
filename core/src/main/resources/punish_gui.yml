@@ -11,11 +11,11 @@
   title: "Chat Abuse"
   ordinal: 6
   description:
-    - "&7{staff-description}"
+    - "<gray>{staff-description}"
     - ""
-    - "&fSocial Offender Level: {social-status}"
+    - "<white>Social Offender Level: {social-status}"
     - ""
-    - "&eClick to issue new punishment."
+    - "<yellow>Click to issue new punishment."
 
 # Slot 2 - Anti Social
 2:
@@ -24,11 +24,11 @@
   title: "Anti Social"
   ordinal: 7
   description:
-    - "&7{staff-description}"
+    - "<gray>{staff-description}"
     - ""
-    - "&fSocial Offender Level: {social-status}"
+    - "<white>Social Offender Level: {social-status}"
     - ""
-    - "&eClick to issue new punishment."
+    - "<yellow>Click to issue new punishment."
 
 # Slot 3 - Targeting
 3:
@@ -37,11 +37,11 @@
   title: "Targeting"
   ordinal: 8
   description:
-    - "&7{staff-description}"
+    - "<gray>{staff-description}"
     - ""
-    - "&fSocial Offender Level: {social-status}"
+    - "<white>Social Offender Level: {social-status}"
     - ""
-    - "&eClick to issue new punishment."
+    - "<yellow>Click to issue new punishment."
 
 # Slot 4 - Disabled
 4:
@@ -54,11 +54,11 @@
   title: "Team Abuse"
   ordinal: 12
   description:
-    - "&7{staff-description}"
+    - "<gray>{staff-description}"
     - ""
-    - "&fGameplay Offender Level: {gameplay-status}"
+    - "<white>Gameplay Offender Level: {gameplay-status}"
     - ""
-    - "&eClick to issue new punishment."
+    - "<yellow>Click to issue new punishment."
 
 # Slot 6 - Game Abuse
 6:
@@ -67,11 +67,11 @@
   title: "Game Abuse"
   ordinal: 13
   description:
-    - "&7{staff-description}"
+    - "<gray>{staff-description}"
     - ""
-    - "&fGameplay Offender Level: {gameplay-status}"
+    - "<white>Gameplay Offender Level: {gameplay-status}"
     - ""
-    - "&eClick to issue new punishment."
+    - "<yellow>Click to issue new punishment."
 
 # Slot 7 - Cheating
 7:
@@ -80,11 +80,11 @@
   title: "Cheating"
   ordinal: 14
   description:
-    - "&7{staff-description}"
+    - "<gray>{staff-description}"
     - ""
-    - "&fGameplay Offender Level: {gameplay-status}"
+    - "<white>Gameplay Offender Level: {gameplay-status}"
     - ""
-    - "&eClick to issue new punishment."
+    - "<yellow>Click to issue new punishment."
 
 # Slot 8 - Bad Content (Row 2)
 8:
@@ -93,11 +93,11 @@
   title: "Bad Content"
   ordinal: 9
   description:
-    - "&7{staff-description}"
+    - "<gray>{staff-description}"
     - ""
-    - "&fSocial Offender Level: {social-status}"
+    - "<white>Social Offender Level: {social-status}"
     - ""
-    - "&eClick to issue new punishment."
+    - "<yellow>Click to issue new punishment."
 
 # Slot 9 - Bad Username
 9:
@@ -106,9 +106,9 @@
   title: "Bad Username"
   ordinal: 10
   description:
-    - "&7{staff-description}"
+    - "<gray>{staff-description}"
     - ""
-    - "&eClick to restrict player until username is changed."
+    - "<yellow>Click to restrict player until username is changed."
 
 # Slot 10 - Bad Skin
 10:
@@ -117,9 +117,9 @@
   title: "Bad Skin"
   ordinal: 11
   description:
-    - "&7{staff-description}"
+    - "<gray>{staff-description}"
     - ""
-    - "&eClick to restrict player until skin is changed."
+    - "<yellow>Click to restrict player until skin is changed."
 
 # Slot 11 - Disabled
 11:
@@ -132,11 +132,11 @@
   title: "Game Trading"
   ordinal: 15
   description:
-    - "&7{staff-description}"
+    - "<gray>{staff-description}"
     - ""
-    - "&fGameplay Offender Level: {gameplay-status}"
+    - "<white>Gameplay Offender Level: {gameplay-status}"
     - ""
-    - "&eClick to issue new punishment."
+    - "<yellow>Click to issue new punishment."
 
 # Slot 13 - Account Abuse
 13:
@@ -145,11 +145,11 @@
   title: "Account Abuse"
   ordinal: 16
   description:
-    - "&7{staff-description}"
+    - "<gray>{staff-description}"
     - ""
-    - "&fGameplay Offender Level: {gameplay-status}"
+    - "<white>Gameplay Offender Level: {gameplay-status}"
     - ""
-    - "&eClick to issue new punishment."
+    - "<yellow>Click to issue new punishment."
 
 # Slot 14 - Systems Abuse
 14:
@@ -158,8 +158,8 @@
   title: "Systems Abuse"
   ordinal: 17
   description:
-    - "&7{staff-description}"
+    - "<gray>{staff-description}"
     - ""
-    - "&fGameplay Offender Level: {gameplay-status}"
+    - "<white>Gameplay Offender Level: {gameplay-status}"
     - ""
-    - "&eClick to issue new punishment."
+    - "<yellow>Click to issue new punishment."

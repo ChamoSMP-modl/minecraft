@@ -35,7 +35,7 @@ public class ConfigManager {
     public static class StaffChatConfig {
         private boolean enabled = true;
         private String prefix = "!";
-        private String format = "&b[Staff] &f{player}: &7{message}";
+        private String format = "<aqua>[Staff] <white>{player}: <gray>{message}";
 
         public String formatMessage(String inGameName, String panelName, String message) {
             return format
@@ -46,7 +46,7 @@ public class ConfigManager {
 
         private static String sanitize(String input) {
             if (input == null) return "";
-            return input.replace('\u00a7', '&').replaceAll("&([0-9a-fk-orA-FK-OR])", "&\u200b$1");
+            return input.replace('§', '&').replaceAll("&([0-9a-fk-orA-FK-OR])", "&\u200b$1");
         }
     }
 

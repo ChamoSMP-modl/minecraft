@@ -127,7 +127,7 @@ public class ReportsMenu extends BaseInspectListMenu<ReportsMenu.Report> {
         vars.put("content", String.join("\n", ReportRenderUtil.processContent(report.content())));
         vars.put("reported", targetName);
         vars.put("status", report.status() != null && report.status().equalsIgnoreCase("closed")
-                ? "&cCLOSED" : "&aOPEN");
+                ? "<red>CLOSED" : "<green>OPEN");
 
         List<String> lore = ReportRenderUtil.buildLore(locale, "menus.report_item.lore", vars);
         String title = locale.getMessage("menus.report_item.title", vars);
@@ -135,7 +135,7 @@ public class ReportsMenu extends BaseInspectListMenu<ReportsMenu.Report> {
 
         return CirrusItem.of(
                 itemType,
-                CirrusChatElement.ofLegacyText(title),
+                CirrusChatElement.ofMiniMessage(title),
                 MenuItems.lore(lore)
         );
     }

@@ -103,7 +103,7 @@ public final class PunishmentItemRenderer {
 
         return CirrusItem.of(
                 itemType,
-                CirrusChatElement.ofLegacyText(title),
+                CirrusChatElement.ofMiniMessage(title),
                 MenuItems.lore(lore)
         );
     }

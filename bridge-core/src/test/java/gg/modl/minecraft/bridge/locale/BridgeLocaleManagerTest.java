@@ -14,7 +14,7 @@ class BridgeLocaleManagerTest {
     void loadsPackagedMessagesAndAppliesPlaceholders() {
         BridgeLocaleManager manager = new BridgeLocaleManager(PluginLogger.fromJul(Logger.getLogger("test")));
 
-        assertEquals("§aYou are now targeting §fAlice§a.",
+        assertEquals("<green>You are now targeting <white>Alice<green>.",
                 manager.getMessage("staff_mode.target.now_targeting", Collections.singletonMap("player", "Alice")));
     }
 

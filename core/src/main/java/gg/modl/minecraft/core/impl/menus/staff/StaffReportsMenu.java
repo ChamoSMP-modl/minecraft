@@ -129,7 +129,7 @@ public class StaffReportsMenu extends BaseStaffListMenu<StaffReportsMenu.Report>
         vars.put("reported", report.reportedPlayerName() != null ? report.reportedPlayerName() : "Unknown");
         vars.put("date", MenuItems.formatDate(report.date()));
         vars.put("status", report.status() != null && report.status().equalsIgnoreCase("closed")
-                ? "&cCLOSED" : "&aOPEN");
+                ? "<red>CLOSED" : "<green>OPEN");
         vars.put("content", String.join("\n", ReportRenderUtil.processContent(report.content())));
 
         List<String> lore = ReportRenderUtil.buildLore(locale, "menus.staff_report_item.lore", vars);
@@ -138,7 +138,7 @@ public class StaffReportsMenu extends BaseStaffListMenu<StaffReportsMenu.Report>
 
         return CirrusItem.of(
                 itemType,
-                CirrusChatElement.ofLegacyText(title),
+                CirrusChatElement.ofMiniMessage(title),
                 MenuItems.lore(lore)
         );
     }

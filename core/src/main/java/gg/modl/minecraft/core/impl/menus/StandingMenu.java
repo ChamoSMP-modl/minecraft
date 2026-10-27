@@ -132,7 +132,7 @@ public class StandingMenu extends BaseListMenu<Punishment> {
         else
             itemType = CirrusItemType.PAPER;
 
-        return CirrusItem.of(itemType, CirrusChatElement.ofLegacyText(MenuItems.translateColorCodes(title)),
+        return CirrusItem.of(itemType, CirrusChatElement.ofMiniMessage(MenuItems.translateColorCodes(title)),
                 MenuItems.lore(lore));
     }
 
@@ -161,7 +161,7 @@ public class StandingMenu extends BaseListMenu<Punishment> {
         }
 
         CirrusItemType type = CirrusItemType.of(itemId);
-        return CirrusItem.of(type, CirrusChatElement.ofLegacyText(MenuItems.translateColorCodes(title)),
+        return CirrusItem.of(type, CirrusChatElement.ofMiniMessage(MenuItems.translateColorCodes(title)),
                 MenuItems.lore(desc));
     }
 

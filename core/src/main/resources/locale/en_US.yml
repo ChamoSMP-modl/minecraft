@@ -1,108 +1,108 @@
 # modl.gg Minecraft Plugin - English Locale
-# Color codes: Use & for color codes (e.g., &c for red, &a for green)
+# Color codes: Use & for color codes (e.g., <red> for red, <green> for green)
 # Placeholders: {player}, {reason}, {ticketId}, {url}, {title}
 
 # General Messages
 messages:
-  cannot_report_self: "&cYou cannot report yourself!"
-  player_not_online: "&cThat player is not online."
-  submitting: "&eSubmitting {type}..."
-  creating: "&eCreating {type}..."
-  success: "&a{type} submitted successfully!"
-  created: "&a{type} created successfully!"
-  ticket_id: "&7Ticket ID: &f{ticketId}"
-  view_ticket: "&7View your ticket: &b{url}"
-  complete_form: "&7Complete your {type}: &b{url}"
-  evidence_note: "&7You can add additional evidence to your ticket if needed."
-  form_title_note: "&7You can change the title '&f{title}&7' in the form before submitting."
-  failed_submit: "&cFailed to submit {type}: {error}"
-  failed_create: "&cFailed to create {type}: {error}"
-  try_again: "&cPlease try again later or contact staff directly."
+  cannot_report_self: "<red>You cannot report yourself!"
+  player_not_online: "<red>That player is not online."
+  submitting: "<yellow>Submitting {type}..."
+  creating: "<yellow>Creating {type}..."
+  success: "<green>{type} submitted successfully!"
+  created: "<green>{type} created successfully!"
+  ticket_id: "<gray>Ticket ID: <white>{ticketId}"
+  view_ticket: "<gray>View your ticket: <aqua>{url}"
+  complete_form: "<gray>Complete your {type}: <aqua>{url}"
+  evidence_note: "<gray>You can add additional evidence to your ticket if needed."
+  form_title_note: "<gray>You can change the title '<white>{title}<gray>' in the form before submitting."
+  failed_submit: "<red>Failed to submit {type}: {error}"
+  failed_create: "<red>Failed to create {type}: {error}"
+  try_again: "<red>Please try again later or contact staff directly."
   unknown_error: "Unknown error"
   no_details: "No additional details provided"
-  no_chat_logs_available: "&cNo recent chat messages found for {player}. Cannot create chat report without chat logs."
+  no_chat_logs_available: "<red>No recent chat messages found for {player}. Cannot create chat report without chat logs."
   view_ticket_label: "View your ticket"
   complete_form_label: "Complete your {type}"
   click_to_view: "[Click to view]"
   click_to_view_hover: "Click to view ticket {ticketId}"
-  console_ticket_url: "&6{message}: &b{url}"
-  claiming_ticket: "&eLinking ticket &f{ticketId}&e to your account..."
-  ticket_claimed_success: "&aTicket &f{ticketId}&a successfully linked to your account!"
-  ticket_claim_failed: "&cFailed to link ticket: {error}"
-  ticket_cooldown: "&cYou must wait {seconds}s before opening another ticket of this type."
-  report_gui_title: "&fReport {player}"
+  console_ticket_url: "<gold>{message}: <aqua>{url}"
+  claiming_ticket: "<yellow>Linking ticket <white>{ticketId}<yellow> to your account..."
+  ticket_claimed_success: "<green>Ticket <white>{ticketId}<green> successfully linked to your account!"
+  ticket_claim_failed: "<red>Failed to link ticket: {error}"
+  ticket_cooldown: "<red>You must wait {seconds}s before opening another ticket of this type."
+  report_gui_title: "<white>Report {player}"
   report_skull_chat_log:
-    - "&bReport {player}"
-    - "&7Attach chat logs?"
+    - "<aqua>Report {player}"
+    - "<gray>Attach chat logs?"
   report_skull_details:
-    - "&bReport {player}"
-    - "&7Add more details?"
+    - "<aqua>Report {player}"
+    - "<gray>Add more details?"
   report_skull_confirm:
-    - "&bReport {player}"
-    - "&7Confirm report?"
-  report_attach_chat: "&aAttach Chat Log"
+    - "<aqua>Report {player}"
+    - "<gray>Confirm report?"
+  report_attach_chat: "<green>Attach Chat Log"
   report_attach_chat_lore:
-    - "&7Include the target's recent"
-    - "&7chat messages as evidence"
-  report_skip_chat: "&cSkip Chat Log"
+    - "<gray>Include the target's recent"
+    - "<gray>chat messages as evidence"
+  report_skip_chat: "<red>Skip Chat Log"
   report_skip_chat_lore:
-    - "&7Do not include chat messages"
-  report_add_details: "&aAdd Details"
+    - "<gray>Do not include chat messages"
+  report_add_details: "<green>Add Details"
   report_add_details_lore:
-    - "&7Add additional details"
-    - "&7to explain your report"
-  report_skip_details: "&cSkip Details"
+    - "<gray>Add additional details"
+    - "<gray>to explain your report"
+  report_skip_details: "<red>Skip Details"
   report_skip_details_lore:
-    - "&7Skip additional details."
-  report_confirm: "&aConfirm Report"
+    - "<gray>Skip additional details."
+  report_confirm: "<green>Confirm Report"
   report_confirm_lore:
-    - "&7Submit this report"
-  report_cancel: "&cCancel Report"
+    - "<gray>Submit this report"
+  report_cancel: "<red>Cancel Report"
   report_cancel_lore:
-    - "&7Cancel without submitting"
+    - "<gray>Cancel without submitting"
   report_details_prompt: "Enter additional details for your report against {player}:"
-  report_submitted: "&aYour report has been submitted successfully!"
+  report_submitted: "<green>Your report has been submitted successfully!"
 
 # Punishment System Messages
 # Available variables: {player}, {target}, {reason}, {duration}, {type}, {id}, {issuer}, {punishment_type}, {expiration}, {server}
 # General punishment messages
 general:
   # Permission messages
-  players_only: "&cThis command can only be used by players."
-  no_permission: "&cYou don't have permission to use this command."
-  no_permission_punishment: "&cYou don't have permission to apply '{type}' punishments."
-  no_permission_reload: "&cYou don't have permission to reload punishment data."
-  invalid_syntax: "&cInvalid command syntax. Please check your usage."
-  gui_requires_player: "&cThis command opens a GUI and can only be executed by a player. Use &f-p &cfor text output."
-  gui_unavailable: "&cGUI menus are not available on this proxy."
+  players_only: "<red>This command can only be used by players."
+  no_permission: "<red>You don't have permission to use this command."
+  no_permission_punishment: "<red>You don't have permission to apply '{type}' punishments."
+  no_permission_reload: "<red>You don't have permission to reload punishment data."
+  invalid_syntax: "<red>Invalid command syntax. Please check your usage."
+  gui_requires_player: "<red>This command opens a GUI and can only be executed by a player. Use <white>-p <red>for text output."
+  gui_unavailable: "<red>GUI menus are not available on this proxy."
   
   # Error messages
   unknown: "Unknown"
   staff: "Staff"
-  player_not_found: "&cPlayer not found."
-  punishment_error: "&cError creating punishment: {error}"
-  punishment_types_not_loaded: "&cPunishment types not loaded. Try &f/modl reload&c or contact an administrator."
-  invalid_punishment_type: "&cInvalid punishment type. Available types: {types}"
-  invalid_duration: "&cInvalid duration format. Examples: 1d, 2h, 30m, 1w"
-  cannot_punish_self: "&cYou cannot punish yourself."
-  target_immune: "&cYou cannot punish {target} as they have immunity."
+  player_not_found: "<red>Player not found."
+  punishment_error: "<red>Error creating punishment: {error}"
+  punishment_types_not_loaded: "<red>Punishment types not loaded. Try <white>/modl reload<red> or contact an administrator."
+  invalid_punishment_type: "<red>Invalid punishment type. Available types: {types}"
+  invalid_duration: "<red>Invalid duration format. Examples: 1d, 2h, 30m, 1w"
+  cannot_punish_self: "<red>You cannot punish yourself."
+  target_immune: "<red>You cannot punish {target} as they have immunity."
   
   # Success messages
-  punishment_issued: "&aSuccessfully issued {type} for &f{target}&a."
-  punishment_issued_duration: "&aSuccessfully issued {type} for &f{target}&a ({duration})."
+  punishment_issued: "<green>Successfully issued {type} for <white>{target}<green>."
+  punishment_issued_duration: "<green>Successfully issued {type} for <white>{target}<green> ({duration})."
   
   # Reload messages
-  reloading: "&eReloading..."
-  reload_success: "&aReload complete."
-  reload_error: "&cError reloading: {error}"
+  reloading: "<yellow>Reloading..."
+  reload_success: "<green>Reload complete."
+  reload_error: "<red>Error reloading: {error}"
 
 # Punishment type validation messages
 validation:
-  single_severity_error: "&cCannot set severity on single-severity punishment type '{type}'. This punishment type has only one severity level."
-  permanent_skin_change_error: "&cCannot set severity on permanent until skin change punishment type '{type}'."
-  permanent_username_change_error: "&cCannot set severity on permanent until username change punishment type '{type}'."
-  alt_blocking_not_supported: "&cAlt-blocking flag is not supported for punishment type '{type}'."
-  stat_wiping_not_supported: "&cStat-wiping flag is not supported for punishment type '{type}'."
+  single_severity_error: "<red>Cannot set severity on single-severity punishment type '{type}'. This punishment type has only one severity level."
+  permanent_skin_change_error: "<red>Cannot set severity on permanent until skin change punishment type '{type}'."
+  permanent_username_change_error: "<red>Cannot set severity on permanent until username change punishment type '{type}'."
+  alt_blocking_not_supported: "<red>Alt-blocking flag is not supported for punishment type '{type}'."
+  stat_wiping_not_supported: "<red>Stat-wiping flag is not supported for punishment type '{type}'."
 
 # Punishment placeholder words
 # These are substituted into punishment messages as {tense}, {tense2}, and {temp}
@@ -117,8 +117,8 @@ punishment_words:
   temporarily: "temporarily"
   permanently: "permanently"
   # {will_expire} - appended to timed ban/mute notifications; {type} is ban/mute/punishment, {duration} is the remaining time
-  will_expire: "\n&7This {type} will expire in &f{duration}&7."
-  duration_formatted: "\n&7This {type} will expire in {duration}"
+  will_expire: "\n<gray>This {type} will expire in <white>{duration}<gray>."
+  duration_formatted: "\n<gray>This {type} will expire in {duration}"
   mute_duration_formatted: " for {duration}"
   # {for_duration} - appended to timed mute notifications; the value carries its own leading space
   for_duration: " for {duration}"
@@ -155,340 +155,340 @@ punishment_words:
 
 punishments:
   public_notification:
-    ban_default: "&c{target} has been banned."
-    mute_default: "&c{target} has been muted."
-    kick_default: "&c{target} has been kicked."
-    default: "&c{target} has been punished."
-  mute_fallback: "&cYou are muted!"
+    ban_default: "<red>{target} has been banned."
+    mute_default: "<red>{target} has been muted."
+    kick_default: "<red>{target} has been kicked."
+    default: "<red>{target} has been punished."
+  mute_fallback: "<red>You are muted!"
   player_notification:
-    ban_default: "&cYou {tense} banned (#{id})."
-    mute_default: "&cYou {tense} muted (#{id})."
-    kick_default: "&cYou have been kicked (#{id})."
-    default: "&cYou {tense} punished (#{id})."
+    ban_default: "<red>You {tense} banned (#{id})."
+    mute_default: "<red>You {tense} muted (#{id})."
+    kick_default: "<red>You have been kicked (#{id})."
+    default: "<red>You {tense} punished (#{id})."
 
 punishment_types:
   ordinal_0: # Kick
-    public_notification: "&c{target} has been kicked."
+    public_notification: "<red>{target} has been kicked."
     player_notification:
-      - "&c&lYou were kicked from the server."
-      - "&f{reason} &7(#{id})"
+      - "<red><b>You were kicked from the server."
+      - "<white>{reason} <gray>(#{id})"
 
   ordinal_1: # Manual Mute
-    public_notification: "&c{target} has been muted."
+    public_notification: "<red>{target} has been muted."
     player_notification:
       - ""
-      - "&cYou {tense} {temp} muted{for_duration}"
-      - "&7{issued} | #{id} | {appeal_url}"
-      - "&f{reason}"
+      - "<red>You {tense} {temp} muted{for_duration}"
+      - "<gray>{issued} | #{id} | {appeal_url}"
+      - "<white>{reason}"
       - ""
 
   ordinal_2: # Manual Ban
-    public_notification: "&c{target} has been banned."
+    public_notification: "<red>{target} has been banned."
     player_notification:
-      - "&c&lYou {tense} {temp} banned for:"
+      - "<red><b>You {tense} {temp} banned for:"
       - ""
-      - "&f{reason}"
-      - "&7{will_expire}"
-      - "&7Is this an error? Appeal at {appeal_url} using ID #{id}."
+      - "<white>{reason}"
+      - "<gray>{will_expire}"
+      - "<gray>Is this an error? Appeal at {appeal_url} using ID #{id}."
 
   # Manual punishment types
   ordinal_3:  # Security Ban
-    public_notification: "&c{target} has been banned."
+    public_notification: "<red>{target} has been banned."
     player_notification:
-      - "&c&lYour account {tense2} restricted due to security concerns."
-      - "&fSuspicious activity has been detected on your account. Please secure your account and open an appeal at {appeal_url} using ID #{id}."
+      - "<red><b>Your account {tense2} restricted due to security concerns."
+      - "<white>Suspicious activity has been detected on your account. Please secure your account and open an appeal at {appeal_url} using ID #{id}."
       
   ordinal_4:  # Linked Ban
-    public_notification: "&c{target} has been banned."
+    public_notification: "<red>{target} has been banned."
     player_notification:
-      - "&c&lYour account {tense2} linked to a banned account."
+      - "<red><b>Your account {tense2} linked to a banned account."
       - ""
-      - "&fEvading bans through the use of alternate accounts or sharing your account is strictly prohibited."
+      - "<white>Evading bans through the use of alternate accounts or sharing your account is strictly prohibited."
       - ""
-      - "&7This ban will be automatically lifted upon the linked ban lapsing."
-      - "&7Is this an error? Appeal at {appeal_url} using ID #{id}"
+      - "<gray>This ban will be automatically lifted upon the linked ban lapsing."
+      - "<gray>Is this an error? Appeal at {appeal_url} using ID #{id}"
       
   ordinal_5:  # Blacklist
-    public_notification: "&c{target} has been blacklisted."
+    public_notification: "<red>{target} has been blacklisted."
     player_notification:
-      - "&cYou {tense} blacklisted"
-      - "&7ID: #{id}"
+      - "<red>You {tense} blacklisted"
+      - "<gray>ID: #{id}"
 
   ordinal_6: # Chat abuse
-    public_notification: "&c{target} has been muted for chat abuse."
+    public_notification: "<red>{target} has been muted for chat abuse."
     player_notification:
       - ""
-      - "&cYou {tense} {temp} muted{for_duration}"
-      - "&7{issued} | #{id} | {appeal_url}"
-      - "&f{player_description}"
+      - "<red>You {tense} {temp} muted{for_duration}"
+      - "<gray>{issued} | #{id} | {appeal_url}"
+      - "<white>{player_description}"
       - ""
   ordinal_7: # anti social
-    public_notification: "&c{target} has been muted for anti social behavior."
+    public_notification: "<red>{target} has been muted for anti social behavior."
     player_notification:
       - ""
-      - "&cYou {tense} {temp} muted{for_duration}"
-      - "&7{issued} | #{id} | {appeal_url}"
-      - "&f{player_description}"
+      - "<red>You {tense} {temp} muted{for_duration}"
+      - "<gray>{issued} | #{id} | {appeal_url}"
+      - "<white>{player_description}"
       - ""
 
   ordinal_8: # targeting
-    public_notification: "&c{target} has been banned for targeting."
+    public_notification: "<red>{target} has been banned for targeting."
     player_notification:
-      - "&c&lYou {tense} {temp} banned for:"
+      - "<red><b>You {tense} {temp} banned for:"
       - ""
-      - "&f{player_description}"
-      - "&7{will_expire}"
-      - "&7Is this an error? Appeal at {appeal_url} using ID #{id}."
+      - "<white>{player_description}"
+      - "<gray>{will_expire}"
+      - "<gray>Is this an error? Appeal at {appeal_url} using ID #{id}."
 
   ordinal_9: # bad content
-    public_notification: "&c{target} has been banned for inappropriate content."
+    public_notification: "<red>{target} has been banned for inappropriate content."
     player_notification:
-      - "&c&lYou {tense} {temp} banned for:"
+      - "<red><b>You {tense} {temp} banned for:"
       - ""
-      - "&f{player_description}"
-      - "&7{will_expire}"
-      - "&7Is this an error? Appeal at {appeal_url} using ID #{id}."
+      - "<white>{player_description}"
+      - "<gray>{will_expire}"
+      - "<gray>Is this an error? Appeal at {appeal_url} using ID #{id}."
 
   ordinal_10: # Bad username
-    public_notification: "&c{target} has been banned."
+    public_notification: "<red>{target} has been banned."
     player_notification:
-      - "&c&lYou {tense} banned due to your Minecraft username."
+      - "<red><b>You {tense} banned due to your Minecraft username."
       - ""
-      - "&f{reason}"
+      - "<white>{reason}"
       - ""
-      - "&7This ban will be automatically lifted when you change your username."
-      - "&7Is this an error? Appeal at {appeal_url} using ID #{id}"
+      - "<gray>This ban will be automatically lifted when you change your username."
+      - "<gray>Is this an error? Appeal at {appeal_url} using ID #{id}"
 
   ordinal_11: # Bad skin
-    public_notification: "&c{target} has been banned."
+    public_notification: "<red>{target} has been banned."
     player_notification:
-      - "&c&lYou {tense} banned due to your Minecraft skin."
+      - "<red><b>You {tense} banned due to your Minecraft skin."
       - ""
-      - "&f{reason}"
+      - "<white>{reason}"
       - ""
-      - "&7This ban will be automatically lifted when you change your skin."
-      - "&7Is this an error? Appeal at {appeal_url} using ID #{id}"
+      - "<gray>This ban will be automatically lifted when you change your skin."
+      - "<gray>Is this an error? Appeal at {appeal_url} using ID #{id}"
 
   ordinal_12: # team abuse
-    public_notification: "&c{target} has been banned for team abuse."
+    public_notification: "<red>{target} has been banned for team abuse."
     player_notification:
-      - "&c&lYou {tense} {temp} banned for:"
+      - "<red><b>You {tense} {temp} banned for:"
       - ""
-      - "&f{player_description}"
-      - "&7{will_expire}"
-      - "&7Is this an error? Appeal at {appeal_url} using ID #{id}."
+      - "<white>{player_description}"
+      - "<gray>{will_expire}"
+      - "<gray>Is this an error? Appeal at {appeal_url} using ID #{id}."
 
   ordinal_13: # game abuse
-    public_notification: "&c{target} has been banned for game abuse."
+    public_notification: "<red>{target} has been banned for game abuse."
     player_notification:
-      - "&c&lYou {tense} {temp} banned for:"
+      - "<red><b>You {tense} {temp} banned for:"
       - ""
-      - "&f{player_description}"
-      - "&7{will_expire}"
-      - "&7Is this an error? Appeal at {appeal_url} using ID #{id}."
+      - "<white>{player_description}"
+      - "<gray>{will_expire}"
+      - "<gray>Is this an error? Appeal at {appeal_url} using ID #{id}."
 
   ordinal_14: # cheating
-    public_notification: "&c{target} has been banned for cheating."
+    public_notification: "<red>{target} has been banned for cheating."
     player_notification:
-      - "&c&lYou {tense} {temp} banned for:"
+      - "<red><b>You {tense} {temp} banned for:"
       - ""
-      - "&f{player_description}"
-      - "&7{will_expire}"
-      - "&7Is this an error? Appeal at {appeal_url} using ID #{id}."
+      - "<white>{player_description}"
+      - "<gray>{will_expire}"
+      - "<gray>Is this an error? Appeal at {appeal_url} using ID #{id}."
 
   ordinal_15: # game trading
-    public_notification: "&c{target} has been banned for game trading."
+    public_notification: "<red>{target} has been banned for game trading."
     player_notification:
-      - "&c&lYou {tense} {temp} banned for:"
+      - "<red><b>You {tense} {temp} banned for:"
       - ""
-      - "&f{player_description}"
-      - "&7{will_expire}"
-      - "&7Is this an error? Appeal at {appeal_url} using ID #{id}."
+      - "<white>{player_description}"
+      - "<gray>{will_expire}"
+      - "<gray>Is this an error? Appeal at {appeal_url} using ID #{id}."
 
   ordinal_16: # account abuse
-    public_notification: "&c{target} has been banned for account abuse."
+    public_notification: "<red>{target} has been banned for account abuse."
     player_notification:
-      - "&c&lYou {tense} {temp} banned for:"
+      - "<red><b>You {tense} {temp} banned for:"
       - ""
-      - "&f{player_description}"
-      - "&7{will_expire}"
-      - "&7Is this an error? Appeal at {appeal_url} using ID #{id}."
+      - "<white>{player_description}"
+      - "<gray>{will_expire}"
+      - "<gray>Is this an error? Appeal at {appeal_url} using ID #{id}."
 
   ordinal_17: # systems abuse
-    public_notification: "&c{target} has been banned for system abuse."
+    public_notification: "<red>{target} has been banned for system abuse."
     player_notification:
-      - "&c&lYou {tense} {temp} banned for:"
+      - "<red><b>You {tense} {temp} banned for:"
       - ""
-      - "&f{player_description}"
-      - "&7{will_expire}"
-      - "&7Is this an error? Appeal at {appeal_url} using ID #{id}."
+      - "<white>{player_description}"
+      - "<gray>{will_expire}"
+      - "<gray>Is this an error? Appeal at {appeal_url} using ID #{id}."
 
 # Notifications
 notification:
-  ticket_reply: "&6[Ticket] &f{message}"
-  ticket_reply_with_link: "&6[Ticket] &f{message} &b[Click to view]"
-  ticket_click_action: "&7Click to view ticket {ticketId}"
+  ticket_reply: "<gold>[Ticket] <white>{message}"
+  ticket_reply_with_link: "<gold>[Ticket] <white>{message} <aqua>[Click to view]"
+  ticket_click_action: "<gray>Click to view ticket {ticketId}"
 
 # IAmMuted Command Messages
 iammuted:
-  only_players: "&cThis command can only be used by players."
-  not_muted: "&cYou can only use this command while you are muted."
-  player_not_online: "&cThat player is not online."
-  cannot_message_self: "&cYou cannot send this message to yourself."
-  cooldown_message: "&cYou must wait {minutes} minutes and {seconds} seconds before using this command again."
-  notification_to_target: "&6[Muted Player] &f{sender} &7is currently muted and cannot respond to chat."
-  success_message: "&aYour muted status has been communicated to &f{target}&a."
+  only_players: "<red>This command can only be used by players."
+  not_muted: "<red>You can only use this command while you are muted."
+  player_not_online: "<red>That player is not online."
+  cannot_message_self: "<red>You cannot send this message to yourself."
+  cooldown_message: "<red>You must wait {minutes} minutes and {seconds} seconds before using this command again."
+  notification_to_target: "<gold>[Muted Player] <white>{sender} <gray>is currently muted and cannot respond to chat."
+  success_message: "<green>Your muted status has been communicated to <white>{target}<green>."
 
 # Standing Command Messages
 standing:
-  loading: "&7Loading your standing..."
-  error: "&cFailed to load your standing. Please try again later."
-  cooldown: "&cPlease wait {seconds}s before using this command again."
+  loading: "<gray>Loading your standing..."
+  error: "<red>Failed to load your standing. Please try again later."
+  cooldown: "<red>Please wait {seconds}s before using this command again."
 
 # Player Lookup Messages
 player_lookup:
-  looking_up: "&7Looking up player &e{player}&7..."
-  error: "&cError looking up player: {error}"
-  uuid: "&7UUID: &f{uuid}"
-  currently_banned: "&7Currently Banned: {status}"
-  currently_muted: "&7Currently Muted: {status}"
-  staff_notes_label: "&7Staff Notes:"
-  staff_note_format: "  &8• &f{text} &7- {issuer}"
-  no_staff_notes: "  &8No staff notes"
-  total_punishments: "&7Total Punishments: &f{count}"
-  linked_accounts_label: "&7Linked Accounts:"
-  linked_account_format: "  &8• &f{username}{status}"
-  linked_account_more: "  &8... and {count} more"
-  no_linked_accounts: "  &8No linked accounts"
-  total_tickets: "&7Total Tickets: &f{count}"
-  profile_fallback: "&6Profile: &b{url}"
+  looking_up: "<gray>Looking up player <yellow>{player}<gray>..."
+  error: "<red>Error looking up player: {error}"
+  uuid: "<gray>UUID: <white>{uuid}"
+  currently_banned: "<gray>Currently Banned: {status}"
+  currently_muted: "<gray>Currently Muted: {status}"
+  staff_notes_label: "<gray>Staff Notes:"
+  staff_note_format: "  <dark_gray>• <white>{text} <gray>- {issuer}"
+  no_staff_notes: "  <dark_gray>No staff notes"
+  total_punishments: "<gray>Total Punishments: <white>{count}"
+  linked_accounts_label: "<gray>Linked Accounts:"
+  linked_account_format: "  <dark_gray>• <white>{username}{status}"
+  linked_account_more: "  <dark_gray>... and {count} more"
+  no_linked_accounts: "  <dark_gray>No linked accounts"
+  total_tickets: "<gray>Total Tickets: <white>{count}"
+  profile_fallback: "<gold>Profile: <aqua>{url}"
 
   # Status messages for linked accounts
   status:
-    banned_and_muted: " &c(currently banned & muted)"
-    banned: " &c(currently banned)"
-    muted: " &e(currently muted)"
-    no_punishments: " &7(no active punishments)"
+    banned_and_muted: " <red>(currently banned & muted)"
+    banned: " <red>(currently banned)"
+    muted: " <yellow>(currently muted)"
+    no_punishments: " <gray>(no active punishments)"
 
 # Print Mode Messages (for -p flag on commands)
 print:
   # /inspect <player> -p
   inspect:
     header: ""
-    uuid: "&f{player}'s Info &7({uuid})"
-    currently_banned: "&eBanned: {status}"
-    currently_muted: "&eMuted: {status}"
-    notes_label: "&eStaff Notes:"
-    note_entry: "&6{ordinal}. &f{text} &eby {issuer}"
-    no_notes: "&7No staff notes"
-    total_punishments: "&eTotal Punishments: &f{count}"
-    linked_accounts_label: "&eLinked Accounts:"
-    linked_account_entry: "&6{ordinal}. &e{username} ({status}&e)"
-    linked_account_more: "&e... and {count} more"
-    no_linked_accounts: "&7No linked accounts"
-    total_tickets: "&eTotal Tickets: &f{count}"
-    profile_fallback: "&eProfile: &b{url}"
+    uuid: "<white>{player}'s Info <gray>({uuid})"
+    currently_banned: "<yellow>Banned: {status}"
+    currently_muted: "<yellow>Muted: {status}"
+    notes_label: "<yellow>Staff Notes:"
+    note_entry: "<gold>{ordinal}. <white>{text} <yellow>by {issuer}"
+    no_notes: "<gray>No staff notes"
+    total_punishments: "<yellow>Total Punishments: <white>{count}"
+    linked_accounts_label: "<yellow>Linked Accounts:"
+    linked_account_entry: "<gold>{ordinal}. <yellow>{username} ({status}<yellow>)"
+    linked_account_more: "<yellow>... and {count} more"
+    no_linked_accounts: "<gray>No linked accounts"
+    total_tickets: "<yellow>Total Tickets: <white>{count}"
+    profile_fallback: "<yellow>Profile: <aqua>{url}"
     footer: ""
 
   # /inspect #<punishmentId>
   punishment_detail:
-    not_found: "&cPunishment #{id} not found."
+    not_found: "<red>Punishment #{id} not found."
     header: " "
-    type: "&eType: &f{type}"
-    player: "&ePlayer: &f{player}"
-    issuer: "&eIssued by: &f{issuer}"
-    date: "&eDate: &f{date}"
-    status: "&eStatus: {status}"
-    duration: "&eDuration: &f{duration}"
-    reason: "&eReason: &f{reason}"
-    evidence: "&eEvidence: &f{count} file(s)"
-    notes: "&eNotes: &f{count}"
-    modifications: "&eModifications: &f{count}"
+    type: "<yellow>Type: <white>{type}"
+    player: "<yellow>Player: <white>{player}"
+    issuer: "<yellow>Issued by: <white>{issuer}"
+    date: "<yellow>Date: <white>{date}"
+    status: "<yellow>Status: {status}"
+    duration: "<yellow>Duration: <white>{duration}"
+    reason: "<yellow>Reason: <white>{reason}"
+    evidence: "<yellow>Evidence: <white>{count} file(s)"
+    notes: "<yellow>Notes: <white>{count}"
+    modifications: "<yellow>Modifications: <white>{count}"
     footer: " "
 
   # /history <player> -p
   history:
     header: ""
-    entry_kick: "&6{ordinal}. &7#{id} &e{date} &f{type} &eby {issuer} for &f{reason}"
-    entry_active: "&6{ordinal}. &c#{id} &e{date} &f{type} ({duration}) &eby {issuer} for &f{reason} &7(expires in {expiry})"
-    entry_permanent: "&6{ordinal}. &c#{id} &e{date} &f{type} (permanent) &eby {issuer} for &f{reason}"
-    entry_unstarted: "&6{ordinal}. &c#{id} &e{date} &f{type} ({duration}) &eby {issuer} for &f{reason} &7(not started yet)"
-    entry_expired: "&6{ordinal}. &7#{id} &e{date} &f{type} ({duration}) &eby {issuer} for &f{reason} &7(expired {expired_ago} ago)"
-    entry_pardoned: "&6{ordinal}. &b#{id} &e{date} &f{type} ({duration}) &eby {issuer} for &f{reason} &7(pardoned {pardoned_ago} ago)"
-    total: "&ePage {page}/{total_pages} ({count} total)"
-    empty: "&7Player has never been punished."
+    entry_kick: "<gold>{ordinal}. <gray>#{id} <yellow>{date} <white>{type} <yellow>by {issuer} for <white>{reason}"
+    entry_active: "<gold>{ordinal}. <red>#{id} <yellow>{date} <white>{type} ({duration}) <yellow>by {issuer} for <white>{reason} <gray>(expires in {expiry})"
+    entry_permanent: "<gold>{ordinal}. <red>#{id} <yellow>{date} <white>{type} (permanent) <yellow>by {issuer} for <white>{reason}"
+    entry_unstarted: "<gold>{ordinal}. <red>#{id} <yellow>{date} <white>{type} ({duration}) <yellow>by {issuer} for <white>{reason} <gray>(not started yet)"
+    entry_expired: "<gold>{ordinal}. <gray>#{id} <yellow>{date} <white>{type} ({duration}) <yellow>by {issuer} for <white>{reason} <gray>(expired {expired_ago} ago)"
+    entry_pardoned: "<gold>{ordinal}. <aqua>#{id} <yellow>{date} <white>{type} ({duration}) <yellow>by {issuer} for <white>{reason} <gray>(pardoned {pardoned_ago} ago)"
+    total: "<yellow>Page {page}/{total_pages} ({count} total)"
+    empty: "<gray>Player has never been punished."
     footer: ""
 
   # /notes <player> -p
   notes:
     header: ""
-    entry: "&6{ordinal}. &e{date} {author}: &f{content}"
-    total: "&ePage {page}/{total_pages} ({count} total)"
-    empty: "&7No staff notes found."
+    entry: "<gold>{ordinal}. <yellow>{date} {author}: <white>{content}"
+    total: "<yellow>Page {page}/{total_pages} ({count} total)"
+    empty: "<gray>No staff notes found."
     footer: ""
 
   # /alts <player> -p
   alts:
     header: ""
-    entry: "&6{ordinal}. {color}{username} &e({status}&e)"
-    status_banned: "&cBanned"
-    status_muted: "&eMuted"
-    status_banned_and_muted: "&cBanned & Muted"
-    status_clean: "&aClean"
-    total: "&ePage {page}/{total_pages} ({count} total)"
-    empty: "&7No linked accounts found."
+    entry: "<gold>{ordinal}. {color}{username} <yellow>({status}<yellow>)"
+    status_banned: "<red>Banned"
+    status_muted: "<yellow>Muted"
+    status_banned_and_muted: "<red>Banned & Muted"
+    status_clean: "<green>Clean"
+    total: "<yellow>Page {page}/{total_pages} ({count} total)"
+    empty: "<gray>No linked accounts found."
     footer: ""
 
   # /reports <player> -p
   reports:
     header: ""
-    entry: "&6{ordinal}. &e#{id} {date} ({status}&e) &f{type} report &eby {reporter}"
-    entry_content: " &f{content}"
-    total: "&ePage {page}/{total_pages} ({count} total)"
-    empty: "&7No reports found."
+    entry: "<gold>{ordinal}. <yellow>#{id} {date} ({status}<yellow>) <white>{type} report <yellow>by {reporter}"
+    entry_content: " <white>{content}"
+    total: "<yellow>Page {page}/{total_pages} ({count} total)"
+    empty: "<gray>No reports found."
     footer: ""
 
   # /stafflist -p
   staff_list:
     header: ""
-    entry: "&6 - &e{player} ({in-game-name}) &7[{role}] &eon &f{server}{v}"
-    vanish: " &7[V]"
-    empty: "&7No staff members online."
-    total: "&ePage {page}/{total_pages} ({count} total)"
+    entry: "<gold> - <yellow>{player} ({in-game-name}) <gray>[{role}] <yellow>on <white>{server}{v}"
+    vanish: " <gray>[V]"
+    empty: "<gray>No staff members online."
+    total: "<yellow>Page {page}/{total_pages} ({count} total)"
 
 # Punishment Command Messages
 punishment_commands:
-  invalid_severity: "&cInvalid severity. Valid severities: lenient, regular, severe"
-  warning_message: "&c{username} has been {punishment_type}."
+  invalid_severity: "<red>Invalid severity. Valid severities: lenient, regular, severe"
+  warning_message: "<red>{username} has been {punishment_type}."
 
 # API Error Handling
 api_errors:
-  panel_restarting: "&cThe panel is currently restarting. Please try that again in 10 seconds."
-  panel_unavailable: "&cThe panel is temporarily unavailable. Please try again shortly."
-  connection_failed: "&cConnection to panel failed. Please try again in a moment."
-  ban_check_failed: "&cUnable to verify ban status. Login temporarily restricted for safety."
+  panel_restarting: "<red>The panel is currently restarting. Please try that again in 10 seconds."
+  panel_unavailable: "<red>The panel is temporarily unavailable. Please try again shortly."
+  connection_failed: "<red>Connection to panel failed. Please try again in a moment."
+  ban_check_failed: "<red>Unable to verify ban status. Login temporarily restricted for safety."
 
 # Pardon Command Messages
 pardon:
-  processing_id: "&7Processing pardon for punishment ID: &e{id}&7..."
-  processing_player: "&7Processing pardon for player: &e{player}&7..."
-  success_id: "&aSuccessfully pardoned punishment &e#{id}&a."
-  success_player: "&aSuccessfully pardoned {player}'s {count} {type}(s)."
-  already_pardoned_id: "&7Punishment &e#{id}&7 is already inactive or has been pardoned."
-  no_active_punishment: "&7{player} does not have an active {type} to pardon."
-  error: "&cFailed to pardon: {error}"
-  error_player: "&cFailed to pardon {player}'s {type}: {error}"
-  error_wrong_type_ban: "&cPunishment &e#{id}&c is not a ban. Use &e/pardon {id}&c to pardon any punishment type."
-  error_wrong_type_mute: "&cPunishment &e#{id}&c is not a mute. Use &e/pardon {id}&c to pardon any punishment type."
-  staff_notification_id: "&7&o[{issuer}: pardoned punishment #{id}&7&o]"
-  staff_notification_player: "&7&o[{issuer}: pardoned {player}'s {type}&7&o]"
+  processing_id: "<gray>Processing pardon for punishment ID: <yellow>{id}<gray>..."
+  processing_player: "<gray>Processing pardon for player: <yellow>{player}<gray>..."
+  success_id: "<green>Successfully pardoned punishment <yellow>#{id}<green>."
+  success_player: "<green>Successfully pardoned {player}'s {count} {type}(s)."
+  already_pardoned_id: "<gray>Punishment <yellow>#{id}<gray> is already inactive or has been pardoned."
+  no_active_punishment: "<gray>{player} does not have an active {type} to pardon."
+  error: "<red>Failed to pardon: {error}"
+  error_player: "<red>Failed to pardon {player}'s {type}: {error}"
+  error_wrong_type_ban: "<red>Punishment <yellow>#{id}<red> is not a ban. Use <yellow>/pardon {id}<red> to pardon any punishment type."
+  error_wrong_type_mute: "<red>Punishment <yellow>#{id}<red> is not a mute. Use <yellow>/pardon {id}<red> to pardon any punishment type."
+  staff_notification_id: "<gray><i>[{issuer}: pardoned punishment #{id}<gray><i>]"
+  staff_notification_player: "<gray><i>[{issuer}: pardoned {player}'s {type}<gray><i>]"
 
 # Warning Command Messages
 warn:
-  player_message: "&c&lYou have received a warning from {issuer}.\n&fReason: &7{reason}\n&7Please review the server rules and adjust your behavior accordingly."
-  success: "&aSuccessfully warned &f{target}&a for: &7{reason}"
-  staff_notification: "&7&o[{issuer}: warned {target} for {reason}&7&o]"
-  error: "&cFailed to create warning: {error}"
+  player_message: "<red><b>You have received a warning from {issuer}.\n<white>Reason: <gray>{reason}\n<gray>Please review the server rules and adjust your behavior accordingly."
+  success: "<green>Successfully warned <white>{target}<green> for: <gray>{reason}"
+  staff_notification: "<gray><i>[{issuer}: warned {target} for {reason}<gray><i>]"
+  error: "<red>Failed to create warning: {error}"
 
 # Menu Item Localization
 # These define titles and lore for items in inspect menus
@@ -496,91 +496,91 @@ warn:
 menus:
   # Player head in inspect menus
   player_head:
-    title: "&6{player_name}'s Information"
+    title: "<gold>{player_name}'s Information"
     lore:
-      - "&8{uuid}"
-      - "&f "
-      - "&7First Login: &f{first_login}"
-      - "&7Online: {is_online} ({last_seen_or_session_time} on {server})"
-      - "&7Playtime: &f{playtime}"
-      - "&7Real IP Logged: &f{real_ip_logged}"
-      - "&7Region: &f{region} (Country: {country})"
-      - "&7Banned: &f{is_banned}"
-      - "&7Muted: &f{is_muted}"
+      - "<dark_gray>{uuid}"
+      - "<white> "
+      - "<gray>First Login: <white>{first_login}"
+      - "<gray>Online: {is_online} ({last_seen_or_session_time} on {server})"
+      - "<gray>Playtime: <white>{playtime}"
+      - "<gray>Real IP Logged: <white>{real_ip_logged}"
+      - "<gray>Region: <white>{region} (Country: {country})"
+      - "<gray>Banned: <white>{is_banned}"
+      - "<gray>Muted: <white>{is_muted}"
       - ""
-      - "&eLeft-click to target {player_name}"
+      - "<yellow>Left-click to target {player_name}"
 
   # Punishment history items
   history_item:
-    title_active: "&f&l{punishment_type} &f({initial_duration_if_not_kick}{space_ban_mute_or_kick})"
-    title_inactive: "&m&f&l{punishment_type} &f({initial_duration_if_not_kick}{space_ban_mute_or_kick})"
+    title_active: "<white><b>{punishment_type} <white>({initial_duration_if_not_kick}{space_ban_mute_or_kick})"
+    title_inactive: "<st><white><b>{punishment_type} <white>({initial_duration_if_not_kick}{space_ban_mute_or_kick})"
     lore:
-      - "&7{status_line}"
-      - "&f "
+      - "<gray>{status_line}"
+      - "<white> "
       - "{notes}"
-      - "&f "
-      - "&7Server: &f{issued_server}"
-      - "&7ID: &c{punishment_id}"
-      - "&bClick to modify this punishment."
-    status_active: "&7Expires in {expiry}."
-    status_inactive: "&7Expired {expired} ago."
-    status_pardoned: "&7Pardoned {pardoned} ago."
-    status_permanent: "&7&7This permanent will never expire."
-    status_unstarted: "&7Punishment not yet started."
-    note_format: "&e{note_date} {note_issuer}&f: {note}"
+      - "<white> "
+      - "<gray>Server: <white>{issued_server}"
+      - "<gray>ID: <red>{punishment_id}"
+      - "<aqua>Click to modify this punishment."
+    status_active: "<gray>Expires in {expiry}."
+    status_inactive: "<gray>Expired {expired} ago."
+    status_pardoned: "<gray>Pardoned {pardoned} ago."
+    status_permanent: "<gray><gray>This permanent will never expire."
+    status_unstarted: "<gray>Punishment not yet started."
+    note_format: "<yellow>{note_date} {note_issuer}<white>: {note}"
 
   # Recent punishments items (includes target player info)
   recent_item:
-    title_active: "&f&l{punishment_type} &f({initial_duration_if_not_kick}{space_ban_mute_or_kick})"
-    title_inactive: "&m&f&l{punishment_type} &f({initial_duration_if_not_kick}{space_ban_mute_or_kick})"
+    title_active: "<white><b>{punishment_type} <white>({initial_duration_if_not_kick}{space_ban_mute_or_kick})"
+    title_inactive: "<st><white><b>{punishment_type} <white>({initial_duration_if_not_kick}{space_ban_mute_or_kick})"
     lore:
-      - "&7Player: &f{player}"
-      - "&7{status_line}"
-      - "&f "
+      - "<gray>Player: <white>{player}"
+      - "<gray>{status_line}"
+      - "<white> "
       - "{notes}"
-      - "&f "
-      - "&7Server: &f{issued_server}"
-      - "&7ID: &c{punishment_id}"
-      - "&bClick to modify this punishment."
+      - "<white> "
+      - "<gray>Server: <white>{issued_server}"
+      - "<gray>ID: <red>{punishment_id}"
+      - "<aqua>Click to modify this punishment."
 
   # Note items
   note_item:
-    title: "&e{date} {author}"
+    title: "<yellow>{date} {author}"
     lore:
-      - "&f{content}"
-      - "&f "
-      - "&eClick to see note in chat"
+      - "<white>{content}"
+      - "<white> "
+      - "<yellow>Click to see note in chat"
 
   # Report items
   report_item:
-    title: "&e{date} {id} ({status}&e)"
+    title: "<yellow>{date} {id} ({status}<yellow>)"
     lore:
-      - "&7Reported by &a{reporter} &7({type})"
-      - "&f "
+      - "<gray>Reported by <green>{reporter} <gray>({type})"
+      - "<white> "
       - "{content}"
-      - "&f "
-      - "&cLeft-click to inspect player"
-      - "&aRight-click to dismiss report"
+      - "<white> "
+      - "<red>Left-click to inspect player"
+      - "<green>Right-click to dismiss report"
 
   # Alt account items
   alt_item:
     title: "{color}{player_name}"
     lore:
-      - "&8{uuid}"
-      - "&f "
-      - "&7Online: {is_online} ({last_seen_or_session_time} on {server})"
-      - "&7Real IP logged: {real_ip}"
-      - "&7First Login: &f{first_login}"
-      - "&7{punishments}"
-      - "&f "
-      - "&eClick to inspect {player_name}"
+      - "<dark_gray>{uuid}"
+      - "<white> "
+      - "<gray>Online: {is_online} ({last_seen_or_session_time} on {server})"
+      - "<gray>Real IP logged: {real_ip}"
+      - "<gray>First Login: <white>{first_login}"
+      - "<gray>{punishments}"
+      - "<white> "
+      - "<yellow>Click to inspect {player_name}"
     punishment_line_active_true:
-      - "&7Active Punishments ({active_count}): &f"
+      - "<gray>Active Punishments ({active_count}): <white>"
       - "{active_punishment_list}"
     punishment_line_active_false:
-      - "&7Active Punishments: &f0"
-      - "&7Inactive Punishments: &f{inactive_count}"
-    active_punishment_format: "&7- &e#{punishment_id} {punishment_date}: {punishment_type} ({punishment_remaining})"
+      - "<gray>Active Punishments: <white>0"
+      - "<gray>Inactive Punishments: <white>{inactive_count}"
+    active_punishment_format: "<gray>- <yellow>#{punishment_id} {punishment_date}: {punishment_type} ({punishment_remaining})"
 
 
   # Empty placeholders for lists
@@ -594,97 +594,97 @@ menus:
 
   # Staff menu - Tickets
   ticket_item:
-    title: "&6Ticket #{id}"
+    title: "<gold>Ticket #{id}"
     lore:
-      - "&7Player: &f{player}"
-      - "&7Title: &f{title}"
-      - "&7Created: &f{date}"
-      - "&7Status: {status}"
-      - "&f "
-      - "&eClick to open in panel"
+      - "<gray>Player: <white>{player}"
+      - "<gray>Title: <white>{title}"
+      - "<gray>Created: <white>{date}"
+      - "<gray>Status: {status}"
+      - "<white> "
+      - "<yellow>Click to open in panel"
 
   # Staff menu - Reports
   staff_report_item:
-    title: "&e{date} {id} ({status}&e)"
+    title: "<yellow>{date} {id} ({status}<yellow>)"
     lore:
-      - "&c{reported}&7 reported by &a{reporter} &7({type})"
-      - "&f "
+      - "<red>{reported}<gray> reported by <green>{reporter} <gray>({type})"
+      - "<white> "
       - "{content}"
-      - "&f "
-      - "&cLeft-click to inspect player"
-      - "&aRight-click to dismiss report"
+      - "<white> "
+      - "<red>Left-click to inspect player"
+      - "<green>Right-click to dismiss report"
   linked_ticket_item:
-    title: "&e{date} {id} ({status}&e)"
+    title: "<yellow>{date} {id} ({status}<yellow>)"
     lore:
-      - "&7{title}"
-      - "&f "
+      - "<gray>{title}"
+      - "<white> "
       - "{content}"
   link_report_item_unselected:
-    title: "&e{date} {id}"
+    title: "<yellow>{date} {id}"
     lore:
-      - "&7Reported by &a{reporter} &7({type})"
-      - "&f "
+      - "<gray>Reported by <green>{reporter} <gray>({type})"
+      - "<white> "
       - "{content}"
-      - "&f "
-      - "&eClick to select"
+      - "<white> "
+      - "<yellow>Click to select"
   link_report_item_selected:
-    title: "&a{date} {id}"
+    title: "<green>{date} {id}"
     lore:
-      - "&7Reported by &a{reporter} &7({type})"
-      - "&f "
+      - "<gray>Reported by <green>{reporter} <gray>({type})"
+      - "<white> "
       - "{content}"
-      - "&f "
-      - "&eClick to deselect"
+      - "<white> "
+      - "<yellow>Click to deselect"
 
   # Staff Members Menu (lore template for each staff entry)
   # Placeholders: {display_name}, {online_color}, {role}, {minecraft_username},
   #   {online_status}, {session_duration}, {last_seen}, {playtime}, {punishments_count}
   staff_members:
-    title: "&e{panel_name}"
+    title: "<yellow>{panel_name}"
     lore:
-      - "&7Role: &f{role}"
-      - "&7Minecraft: &f{minecraft_username}"
+      - "<gray>Role: <white>{role}"
+      - "<gray>Minecraft: <white>{minecraft_username}"
       - ""
-      - "&7Online: {is_online} ({last_seen_or_session_time} on {server})"
-      - "&7Playtime: &f{playtime}"
-      - "&7Punishments Issued: &f{punishments_count}"
+      - "<gray>Online: {is_online} ({last_seen_or_session_time} on {server})"
+      - "<gray>Playtime: <white>{playtime}"
+      - "<gray>Punishments Issued: <white>{punishments_count}"
 
   notes:
-    created: "&aNote created successfully!"
-    create_failed: "&cFailed to create note."
-    cancelled: "&7Note creation cancelled."
+    created: "<green>Note created successfully!"
+    create_failed: "<red>Failed to create note."
+    cancelled: "<gray>Note creation cancelled."
   modify_punishment:
-    no_permission_tickets: "&cYou don't have permission to modify linked tickets."
-    no_changes: "&7No changes to linked tickets."
-    tickets_updated: "&aLinked tickets updated successfully!"
-    tickets_update_failed: "&cFailed to update linked tickets."
+    no_permission_tickets: "<red>You don't have permission to modify linked tickets."
+    no_changes: "<gray>No changes to linked tickets."
+    tickets_updated: "<green>Linked tickets updated successfully!"
+    tickets_update_failed: "<red>Failed to update linked tickets."
 
   # Online Players Menu (lore template for each player entry)
   # Placeholders: {player_name}, {session_duration}, {total_playtime}, {punishments}, {report_count}
   online_players:
-    title: "&6{player_name}"
+    title: "<gold>{player_name}"
     lore:
-      - "&7Session: &f{session_duration}"
-      - "&7Total Playtime: &f{total_playtime}"
-      - "&7Punishments: &f{punishments}"
+      - "<gray>Session: <white>{session_duration}"
+      - "<gray>Total Playtime: <white>{total_playtime}"
+      - "<gray>Punishments: <white>{punishments}"
       - ""
-      - "&7Reports ({report_count}):"
+      - "<gray>Reports ({report_count}):"
       - "{report-list}"
       - ""
-      - "&cLeft-click to inspect"
-      - "&aRight-click to target"
+      - "<red>Left-click to inspect"
+      - "<green>Right-click to target"
     # Placeholders: {date}, {details}, {reporter}
-    report_entry: " &6- &e{date} {reporter}: &f{details}"
-    reports_more: " &e... and {count} more"
-    no_reports: " &eNo reports"
+    report_entry: " <gold>- <yellow>{date} {reporter}: <white>{details}"
+    reports_more: " <yellow>... and {count} more"
+    no_reports: " <yellow>No reports"
 
 # Help Command
 # Set usage to "" to hide a command from the help list (e.g. if you disabled it).
 help:
-  header: "&a&lmodl.gg &av{version} &f- &eCommand List"
-  entry: "&f/{command} &7- {description}"
-  footer: "&ePage {page}/{total_pages}. Use &a/modl help {next_page}&e for the next page."
-  no_more_pages: "&7No more pages."
+  header: "<green><b>modl.gg <green>v{version} <white>- <yellow>Command List"
+  entry: "<white>/{command} <gray>- {description}"
+  footer: "<yellow>Page {page}/{total_pages}. Use <green>/modl help {next_page}<yellow> for the next page."
+  no_more_pages: "<gray>No more pages."
   player_commands:
     iammuted:
       usage: "iammuted <player>"
@@ -762,221 +762,221 @@ help:
 
 # Stat Wipe
 stat_wipe:
-  kick_message: "&cPlease re-log momentarily. Your statistics are being reset pursuant to a recently expired ban."
+  kick_message: "<red>Please re-log momentarily. Your statistics are being reset pursuant to a recently expired ban."
 
 # Staff Chat
 staff_chat:
-  enabled: "&eStaff chat &aenabled&e. Messages will default to staff chat."
-  disabled: "&eStaff chat &cdisabled&e. Messages will default to local chat."
-  feature_disabled: "&cStaff chat is not enabled on this server."
-  already_normal: "&cYou are already in local chat mode."
-  format: "&b[STAFF] &e{panel-name}&f: {message}"
-  local_chat_enabled: "&eStaff chat &cdisabled&e. Messages will default to local chat."
+  enabled: "<yellow>Staff chat <green>enabled<yellow>. Messages will default to staff chat."
+  disabled: "<yellow>Staff chat <red>disabled<yellow>. Messages will default to local chat."
+  feature_disabled: "<red>Staff chat is not enabled on this server."
+  already_normal: "<red>You are already in local chat mode."
+  format: "<aqua>[STAFF] <yellow>{panel-name}<white>: {message}"
+  local_chat_enabled: "<yellow>Staff chat <red>disabled<yellow>. Messages will default to local chat."
 
 # Chat Management
 chat_management:
-  chat_toggled_on: "&7&o[{staff}: enabled chat]"
-  chat_toggled_off: "&7&o[{staff}: disabled chat]"
-  chat_disabled: "&cChat is currently disabled."
-  chat_cleared: "&7&o[{staff}: cleared chat]"
-  slow_mode_enabled: "&7&o[{staff}: slowed chat to {seconds}s]"
-  slow_mode_disabled: "&7&o[{staff}: disabled slow mode]"
-  slow_mode_wait: "&cPlease wait {seconds} seconds before chatting again."
-  invalid_seconds: "&cPlease enter a valid number of seconds."
-  usage_toggle: "&fUsage: &a/chat &ftoggle"
-  usage_clear: "&fUsage: &a/chat &fclear"
-  usage_slow: "&fUsage: &a/chat &fslow <seconds|off>"
+  chat_toggled_on: "<gray><i>[{staff}: enabled chat]"
+  chat_toggled_off: "<gray><i>[{staff}: disabled chat]"
+  chat_disabled: "<red>Chat is currently disabled."
+  chat_cleared: "<gray><i>[{staff}: cleared chat]"
+  slow_mode_enabled: "<gray><i>[{staff}: slowed chat to {seconds}s]"
+  slow_mode_disabled: "<gray><i>[{staff}: disabled slow mode]"
+  slow_mode_wait: "<red>Please wait {seconds} seconds before chatting again."
+  invalid_seconds: "<red>Please enter a valid number of seconds."
+  usage_toggle: "<white>Usage: <green>/chat <white>toggle"
+  usage_clear: "<white>Usage: <green>/chat <white>clear"
+  usage_slow: "<white>Usage: <green>/chat <white>slow <seconds|off>"
   help:
-    header: "&eChat Commands:"
-    staff: "&f/chat staff &7- Toggle staff chat mode"
-    toggle: "&f/chat toggle &7- Enable/disable public chat"
-    clear: "&f/chat clear [count] &7- Clear chat"
-    slow: "&f/chat slow <seconds|off> &7- Set/disable slow mode"
+    header: "<yellow>Chat Commands:"
+    staff: "<white>/chat staff <gray>- Toggle staff chat mode"
+    toggle: "<white>/chat toggle <gray>- Enable/disable public chat"
+    clear: "<white>/chat clear [count] <gray>- Clear chat"
+    slow: "<white>/chat slow <seconds|off> <gray>- Set/disable slow mode"
 
 
 # Staff Notifications
 staff_notifications:
-  join: "&7&o[{staff}: joined]"
-  verified: "&7&o[{staff}: verified]"
-  leave: "&7&o[{staff}: left]"
-  switch: "&7&o[{staff}: connected to {server}]"
-  generic: "&7&o[{message}]"
+  join: "<gray><i>[{staff}: joined]"
+  verified: "<gray><i>[{staff}: verified]"
+  leave: "<gray><i>[{staff}: left]"
+  switch: "<gray><i>[{staff}: connected to {server}]"
+  generic: "<gray><i>[{message}]"
 
 # Staff 2FA
 staff_2fa:
-  not_verified: "&cYou must verify your identity before using staff commands. Use &f/verify"
-  verify_prompt: "&aClick the link to verify: &f{url}"
-  verify_success: "&aIdentity verified successfully!"
-  verify_error: "&cFailed to generate verification link. Please try again."
-  auto_verified: "&aAuto-verified via trusted IP."
+  not_verified: "<red>You must verify your identity before using staff commands. Use <white>/verify"
+  verify_prompt: "<green>Click the link to verify: <white>{url}"
+  verify_success: "<green>Identity verified successfully!"
+  verify_error: "<red>Failed to generate verification link. Please try again."
+  auto_verified: "<green>Auto-verified via trusted IP."
 
 # Verify Command (Staff 2FA)
 verify:
-  only_players: "&cThis command can only be used by players."
-  disabled: "&cStaff 2FA is not enabled on this server."
-  already_verified: "&aYou are already verified."
+  only_players: "<red>This command can only be used by players."
+  disabled: "<red>Staff 2FA is not enabled on this server."
+  already_verified: "<green>You are already verified."
   header: ""
-  instructions: "&aClick the link below to verify your identity:"
+  instructions: "<green>Click the link below to verify your identity:"
   click_here: "Click here to verify"
-  error: "&cFailed to generate verification link. Please try again."
-  footer: "&eThis link will expire shortly."
+  error: "<red>Failed to generate verification link. Please try again."
+  footer: "<yellow>This link will expire shortly."
 
 # Maintenance
 maintenance:
-  enabled: "&7&o[{staff}: enabled maintenance]"
-  disabled: "&7&o[{staff}: disabled maintenance]"
-  already_enabled: "&cMaintenance mode is already enabled."
-  already_disabled: "&cMaintenance mode is already disabled."
-  status_enabled: "&eMaintenance mode is currently enabled."
-  status_disabled: "&eMaintenance mode is currently disabled."
-  login_denied: "&cServer is currently under maintenance. Please try again later."
-  kick_message: "&cServer is now in maintenance mode. Please try again later."
-  usage: "&fUsage: &a/maintenance&f <on|off>"
+  enabled: "<gray><i>[{staff}: enabled maintenance]"
+  disabled: "<gray><i>[{staff}: disabled maintenance]"
+  already_enabled: "<red>Maintenance mode is already enabled."
+  already_disabled: "<red>Maintenance mode is already disabled."
+  status_enabled: "<yellow>Maintenance mode is currently enabled."
+  status_disabled: "<yellow>Maintenance mode is currently disabled."
+  login_denied: "<red>Server is currently under maintenance. Please try again later."
+  kick_message: "<red>Server is now in maintenance mode. Please try again later."
+  usage: "<white>Usage: <green>/maintenance<white> <on|off>"
 
 # Freeze
 freeze:
-  frozen_message: "&cYou have been frozen! Do not disconnect."
-  staff_notification_freeze: "&7&o[{staff}: froze {player}]"
-  staff_notification_unfreeze: "&7&o[{staff}: unfroze {player}]"
-  unfrozen: "&aYou have been unfrozen."
-  logout_notification: "&c&l{player} logged out while frozen!"
-  frozen_chat: "&b[FROZEN] &e{player}&f: {message}"
-  command_blocked: "&cYou cannot use commands while frozen."
-  target_offline: "&c{player} is not online on this server, so they cannot be frozen."
-  unavailable: "&cCould not freeze {player}: no server is connected to enforce it."
-  unfreeze_not_propagated: "&e{player} was released, but no server was connected to clear the freeze in-game."
+  frozen_message: "<red>You have been frozen! Do not disconnect."
+  staff_notification_freeze: "<gray><i>[{staff}: froze {player}]"
+  staff_notification_unfreeze: "<gray><i>[{staff}: unfroze {player}]"
+  unfrozen: "<green>You have been unfrozen."
+  logout_notification: "<red><b>{player} logged out while frozen!"
+  frozen_chat: "<aqua>[FROZEN] <yellow>{player}<white>: {message}"
+  command_blocked: "<red>You cannot use commands while frozen."
+  target_offline: "<red>{player} is not online on this server, so they cannot be frozen."
+  unavailable: "<red>Could not freeze {player}: no server is connected to enforce it."
+  unfreeze_not_propagated: "<yellow>{player} was released, but no server was connected to clear the freeze in-game."
 
 # Intercept Chat
 intercept_chat:
-  enabled: "&aNetwork chat interception enabled"
-  disabled: "&aNetwork chat interception disabled"
-  format: "&8[G-{server}] &e{player}&f: {message}"
+  enabled: "<green>Network chat interception enabled"
+  disabled: "<green>Network chat interception disabled"
+  format: "<dark_gray>[G-{server}] <yellow>{player}<white>: {message}"
 
 # Intercept (staff-only interception messages)
 intercept:
-  message: "&8[Intercept] &f{player}: &7{message}"
+  message: "<dark_gray>[Intercept] <white>{player}: <gray>{message}"
 
 # Chat Logs
 chat_logs:
   header: ""
-  entry: "&7[{timestamp}] &8[{server}] &f{message}"
-  empty: "&7No chat logs found for this player."
-  footer: "&ePage {page}/{total_pages} ({total} total)"
-  error: "&cFailed to fetch chat logs."
-  usage: "&fUsage: &a/chatlogs&f <player>"
+  entry: "<gray>[{timestamp}] <dark_gray>[{server}] <white>{message}"
+  empty: "<gray>No chat logs found for this player."
+  footer: "<yellow>Page {page}/{total_pages} ({total} total)"
+  error: "<red>Failed to fetch chat logs."
+  usage: "<white>Usage: <green>/chatlogs<white> <player>"
 
 # Command Logs
 command_logs:
   header: ""
-  entry: "&7[{timestamp}] &e{player}&7: &f/{command}"
-  empty: "&7No command logs found for this player."
-  footer: "&ePage {page}/{total_pages} ({total} total)"
-  error: "&cFailed to fetch command logs."
-  usage: "&fUsage: &a/commandlogs&f <player>"
+  entry: "<gray>[{timestamp}] <yellow>{player}<gray>: <white>/{command}"
+  empty: "<gray>No command logs found for this player."
+  footer: "<yellow>Page {page}/{total_pages} ({total} total)"
+  error: "<red>Failed to fetch command logs."
+  usage: "<white>Usage: <green>/commandlogs<white> <player>"
 
 # Staff Mode
 staff_mode:
-  enabled: "&aStaff mode enabled"
-  disabled: "&aStaff mode disabled"
-  enabled_broadcast: "&7&o[{staff}: entered staff mode]"
-  disabled_broadcast: "&7&o[{staff}: exited staff mode]"
+  enabled: "<green>Staff mode enabled"
+  disabled: "<green>Staff mode disabled"
+  enabled_broadcast: "<gray><i>[{staff}: entered staff mode]"
+  disabled_broadcast: "<gray><i>[{staff}: exited staff mode]"
 
 # Vanish
 vanish:
-  enabled: "&aYou are now vanished"
-  disabled: "&aYou are no longer vanished"
-  enabled_broadcast: "&7&o[{staff}: vanished]"
-  disabled_broadcast: "&7&o[{staff}: unvanished]"
+  enabled: "<green>You are now vanished"
+  disabled: "<green>You are no longer vanished"
+  enabled_broadcast: "<gray><i>[{staff}: vanished]"
+  disabled_broadcast: "<gray><i>[{staff}: unvanished]"
 
 # Target
 target:
-  targeting: "&eNow targeting &f{player}"
-  cleared: "&aTarget cleared."
-  usage: "&fUsage: &a/target&f <player>"
-  connecting: "&eConnecting to &f{server} &eto target &f{player}&e..."
-  cannot_target_self: "&cYou cannot target yourself."
-  not_online: "&cPlayer is not online."
+  targeting: "<yellow>Now targeting <white>{player}"
+  cleared: "<green>Target cleared."
+  usage: "<white>Usage: <green>/target<white> <player>"
+  connecting: "<yellow>Connecting to <white>{server} <yellow>to target <white>{player}<yellow>..."
+  cannot_target_self: "<red>You cannot target yourself."
+  not_online: "<red>Player is not online."
 
 # Replay
 replay:
   usage:
-    - "&f/replay status [player] &7- Check recording status"
-    - "&f/replay capture [player] &7- Capture and upload replay"
-  not_available: "&cReplay recording is not available on this server."
-  status_recording: "&a{player} is currently being recorded"
-  status_not_recording: "&c{player} is not being recorded"
-  no_bridge_connected: "&cNo bridge backend is connected for replay capture."
-  no_active_recording: "&cNo active recording for {player}"
-  capturing: "&aCapturing and uploading replay for {player}..."
-  capture_success: "&aReplay successfully captured for {player}"
-  capture_link: "&b{url}"
-  capture_failed: "&cFailed to capture replay for {player}"
+    - "<white>/replay status [player] <gray>- Check recording status"
+    - "<white>/replay capture [player] <gray>- Capture and upload replay"
+  not_available: "<red>Replay recording is not available on this server."
+  status_recording: "<green>{player} is currently being recorded"
+  status_not_recording: "<red>{player} is not being recorded"
+  no_bridge_connected: "<red>No bridge backend is connected for replay capture."
+  no_active_recording: "<red>No active recording for {player}"
+  capturing: "<green>Capturing and uploading replay for {player}..."
+  capture_success: "<green>Replay successfully captured for {player}"
+  capture_link: "<aqua>{url}"
+  capture_failed: "<red>Failed to capture replay for {player}"
   click_to_view: "[Click to view replay]"
   click_to_view_hover: "Open replay viewer"
-  console_specify_player: "&cSpecify a player name from console."
+  console_specify_player: "<red>Specify a player name from console."
 
 # Standing GUI (player-facing)
 standing_gui:
-  title: "&fYour Standing"
+  title: "<white>Your Standing"
   social_status:
-    title: "&eSocial Standing: {status}"
+    title: "<yellow>Social Standing: {status}"
     description:
       Low:
         - ""
-        - "&fYour social infraction status is low."
-        - "&fKeep up the good behavior, punishments"
-        - "&fin this category will be more lenient."
+        - "<white>Your social infraction status is low."
+        - "<white>Keep up the good behavior, punishments"
+        - "<white>in this category will be more lenient."
       Medium:
         - ""
-        - "&fYour social infraction status is medium."
-        - "&fYou have accrued several infractions,"
-        - "&fplease be more mindful as punishments"
-        - "&fin this category will be more severe."
+        - "<white>Your social infraction status is medium."
+        - "<white>You have accrued several infractions,"
+        - "<white>please be more mindful as punishments"
+        - "<white>in this category will be more severe."
       Habitual:
         - ""
-        - "&fYour social infraction status is habitual."
-        - "&fYou have accrued many infractions,"
-        - "&fplease be mindful as punishments"
-        - "&fin this category will be very severe."
+        - "<white>Your social infraction status is habitual."
+        - "<white>You have accrued many infractions,"
+        - "<white>please be mindful as punishments"
+        - "<white>in this category will be very severe."
   gameplay_status:
-    title: "&eGameplay Standing: {status}"
+    title: "<yellow>Gameplay Standing: {status}"
     description:
       Low:
         - ""
-        - "&fYour gameplay infraction status is low."
-        - "&fKeep up the good behavior, punishments"
-        - "&fin this category will be more lenient."
+        - "<white>Your gameplay infraction status is low."
+        - "<white>Keep up the good behavior, punishments"
+        - "<white>in this category will be more lenient."
       Medium:
         - ""
-        - "&fYour gameplay infraction status is medium."
-        - "&fYou have accrued several infractions,"
-        - "&fplease be more mindful as punishments"
-        - "&fin this category will be more severe."
+        - "<white>Your gameplay infraction status is medium."
+        - "<white>You have accrued several infractions,"
+        - "<white>please be more mindful as punishments"
+        - "<white>in this category will be more severe."
       Habitual:
         - ""
-        - "&fYour gameplay infraction status is habitual."
-        - "&fYou have accrued many infractions,"
-        - "&fplease be mindful as punishments"
-        - "&fin this category will be very severe."
+        - "<white>Your gameplay infraction status is habitual."
+        - "<white>You have accrued many infractions,"
+        - "<white>please be mindful as punishments"
+        - "<white>in this category will be very severe."
   status_display:
-    Low: "&aLow"
-    Medium: "&6Medium"
-    Habitual: "&cHabitual"
+    Low: "<green>Low"
+    Medium: "<gold>Medium"
+    Habitual: "<red>Habitual"
   punishment_item:
-    title: "&e#{id} {date}"
+    title: "<yellow>#{id} {date}"
     lore:
-      - "&7{duration} {type} ({status})"
+      - "<gray>{duration} {type} ({status})"
       - ""
-      - "&f{reason}"
+      - "<white>{reason}"
 
 # Punishment Action Command
 punishment_action:
-  unknown_action: "&cUnknown action: {action}"
-  enter_evidence_url: "&7Enter the evidence URL for punishment #{id}:"
-  no_url: "&cNo URL provided."
-  evidence_linked: "&aEvidence linked to punishment #{id}"
-  evidence_link_failed: "&cFailed to link evidence: {error}"
-  evidence_cancelled: "&7Evidence linking cancelled."
-  generating_upload: "&7Generating upload link..."
-  upload_failed: "&cFailed to generate upload link."
+  unknown_action: "<red>Unknown action: {action}"
+  enter_evidence_url: "<gray>Enter the evidence URL for punishment #{id}:"
+  no_url: "<red>No URL provided."
+  evidence_linked: "<green>Evidence linked to punishment #{id}"
+  evidence_link_failed: "<red>Failed to link evidence: {error}"
+  evidence_cancelled: "<gray>Evidence linking cancelled."
+  generating_upload: "<gray>Generating upload link..."
+  upload_failed: "<red>Failed to generate upload link."
 

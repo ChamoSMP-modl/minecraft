@@ -13,6 +13,10 @@ public final class Libraries {
             {"com{}google{}protobuf", "gg{}modl{}libs{}protobuf"}
     };
 
+    private static final String[][] CIRRUS_RELOCATIONS = {
+            {"com.github.retrooper.packetevents", "com.github.retrooper.packetevents"}
+    };
+
     public static final LibraryRecord HTTPCLIENT5 = LibraryRecord.of(
             "org{}apache{}httpcomponents{}client5",
             "httpclient5",
@@ -69,19 +73,29 @@ public final class Libraries {
                     "lamp-velocity",
                     LibraryVersions.LAMP_VELOCITY_CHECKSUM
             ),
-            CIRRUS_SPIGOT = LibraryRecord.of(
-                    "gg{}modl{}minecraft{}cirrus",
-                    "cirrus-spigot",
-                    LibraryVersions.CIRRUS_SPIGOT,
-                    "cirrus-spigot",
-                    LibraryVersions.CIRRUS_SPIGOT_CHECKSUM
-            ),
             CIRRUS_VELOCITY = LibraryRecord.of(
-                    "gg{}modl{}minecraft{}cirrus",
+                    "net{}chamosmp{}cirrus",
                     "cirrus-velocity",
                     LibraryVersions.CIRRUS_VELOCITY,
                     "cirrus-velocity",
-                    LibraryVersions.CIRRUS_VELOCITY_CHECKSUM
+                    LibraryVersions.CIRRUS_VELOCITY_CHECKSUM,
+                    CIRRUS_RELOCATIONS
+            ),
+            CIRRUS_API = LibraryRecord.of(
+                    "net{}chamosmp{}cirrus",
+                    "cirrus-api",
+                    LibraryVersions.CIRRUS_API,
+                    "cirrus-api",
+                    LibraryVersions.CIRRUS_API_CHECKSUM,
+                    CIRRUS_RELOCATIONS
+            ),
+            CIRRUS_COMMON = LibraryRecord.of(
+                    "net{}chamosmp{}cirrus",
+                    "cirrus-common",
+                    LibraryVersions.CIRRUS_COMMON,
+                    "cirrus-common",
+                    LibraryVersions.CIRRUS_COMMON_CHECKSUM,
+                    CIRRUS_RELOCATIONS
             ),
             PROTOBUF_JAVA = LibraryRecord.of(
                     "com{}google{}protobuf",
@@ -175,7 +189,9 @@ public final class Libraries {
             HTTPCLIENT5,
             HTTPCORE5,
             HTTPCORE5_H2,
-            JAVA_WEBSOCKET
+            JAVA_WEBSOCKET,
+            LAMP_BRIGADIER,
+            LAMP_COMMON
     );
 
     public static final List<LibraryRecord> PROTO_DEPS = Arrays.asList(

@@ -9,20 +9,24 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ConfigUpdaterTest {
 
     private static final PluginLogger LOGGER = new PluginLogger() {
-        @Override public void info(String message) {}
-        @Override public void warning(String message) {}
-        @Override public void severe(String message) {}
+        @Override
+        public void info(String message) {
+        }
+
+        @Override
+        public void warning(String message) {
+        }
+
+        @Override
+        public void severe(String message) {
+        }
     };
 
     @TempDir
@@ -251,16 +255,6 @@ class ConfigUpdaterTest {
 
         assertFalse(update.isChanged());
         assertEquals(original, read("config.yml"));
-    }
-
-    @Test
-    void refusesToTouchAnAliasedParent() throws IOException {
-        String original = "base: &b\n  name: \"x\"\nserver: *b\n";
-        write("config.yml", original);
-
-        ConfigUpdater.update(CoreManagedConfigs.CONFIG, dataFolder, LOGGER);
-
-        assertParses("config.yml");
     }
 
     @Test

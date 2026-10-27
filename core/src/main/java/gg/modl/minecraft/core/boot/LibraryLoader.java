@@ -2,13 +2,15 @@ package gg.modl.minecraft.core.boot;
 
 import com.alessiodp.libby.Library;
 import gg.modl.minecraft.api.LibraryRecord;
+import org.jspecify.annotations.NonNull;
 
 public final class LibraryLoader {
     private LibraryLoader() {
     }
 
-    public static Library toLibrary(LibraryRecord record) {
+    public static @NonNull Library toLibrary(@NonNull LibraryRecord record) {
         Library.Builder builder = Library.builder()
+                .isolatedLoad(false)
                 .groupId(record.groupId())
                 .artifactId(record.artifactId())
                 .version(record.version());

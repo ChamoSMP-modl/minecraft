@@ -161,7 +161,7 @@ public class StaffListMenu extends BaseStaffListMenu<StaffListMenu.StaffMember> 
         if ("no_permission".equals(staff.id())) {
             return CirrusItem.of(
                     CirrusItemType.BARRIER,
-                    CirrusChatElement.ofLegacyText(MenuItems.COLOR_RED + "No Permission"),
+                    CirrusChatElement.ofMiniMessage(MenuItems.COLOR_RED + "No Permission"),
                     MenuItems.lore(
                             MenuItems.COLOR_GRAY + "You don't have permission",
                             MenuItems.COLOR_GRAY + "to manage staff members"
@@ -176,7 +176,7 @@ public class StaffListMenu extends BaseStaffListMenu<StaffListMenu.StaffMember> 
 
         CirrusItem headItem = CirrusItem.of(
                 CirrusItemType.PLAYER_HEAD,
-                CirrusChatElement.ofLegacyText(
+                CirrusChatElement.ofMiniMessage(
                         (canMod ? MenuItems.COLOR_GOLD : MenuItems.COLOR_GRAY) + staff.username()),
                 MenuItems.lore(lore)
         );
@@ -208,9 +208,9 @@ public class StaffListMenu extends BaseStaffListMenu<StaffListMenu.StaffMember> 
         lore.add(MenuItems.COLOR_GRAY + "Roles:");
         for (String role : availableRoles) {
             if (role.equals(staff.currentRole())) {
-                lore.add(MenuItems.COLOR_GREEN + "  §l" + role + " §r§7(current)");
+                lore.add(MenuItems.COLOR_GREEN + "  <b>" + role + " <reset><gray>(current)");
             } else if (role.equals(selectedRole) && !role.equals(staff.currentRole())) {
-                lore.add(MenuItems.COLOR_GREEN + "  " + role + " §7(selected)");
+                lore.add(MenuItems.COLOR_GREEN + "  " + role + " <gray>(selected)");
             } else {
                 lore.add(MenuItems.COLOR_GRAY + "  " + role);
             }

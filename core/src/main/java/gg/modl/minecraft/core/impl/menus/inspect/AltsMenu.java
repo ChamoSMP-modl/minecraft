@@ -156,7 +156,7 @@ public class AltsMenu extends PaginatedInspectListMenu<Account> {
 
         CirrusItem headItem = CirrusItem.of(
                 CirrusItemType.PLAYER_HEAD,
-                CirrusChatElement.ofLegacyText(title),
+                CirrusChatElement.ofMiniMessage(title),
                 MenuItems.lore(lore)
         );
 
@@ -176,19 +176,19 @@ public class AltsMenu extends PaginatedInspectListMenu<Account> {
         vars.put("color", resolveStatusColor(activePunishments));
         vars.put("player_name", getPlayerName(alt));
         vars.put("uuid", alt.getMinecraftUuid().toString());
-        vars.put("is_online", isOnline ? "&aYes" : "&cNo");
+        vars.put("is_online", isOnline ? "<green>Yes" : "<red>No");
         vars.put("last_seen_or_session_time", resolveLatestSeen(alt));
         vars.put("server", resolveServer(alt, isOnline));
-        vars.put("real_ip", !alt.getIpList().isEmpty() ? "&aYes" : "&cNo");
+        vars.put("real_ip", !alt.getIpList().isEmpty() ? "<green>Yes" : "<red>No");
         vars.put("first_login", resolveFirstLogin(alt));
         vars.put("punishments", buildPunishmentsSummary(locale, activePunishments, activeCount, inactiveCount));
         return vars;
     }
 
     private static String resolveStatusColor(List<Punishment> activePunishments) {
-        if (activePunishments.stream().anyMatch(Punishment::isBanType)) return "&c";
-        if (activePunishments.stream().anyMatch(Punishment::isMuteType)) return "&e";
-        return "&a";
+        if (activePunishments.stream().anyMatch(Punishment::isBanType)) return "<red>";
+        if (activePunishments.stream().anyMatch(Punishment::isMuteType)) return "<yellow>";
+        return "<green>";
     }
 
     private String resolveServer(Account alt, boolean isOnline) {

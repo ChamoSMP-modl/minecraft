@@ -26,7 +26,6 @@ import gg.modl.minecraft.core.integration.iplookup.IpEnrichmentService;
 import gg.modl.minecraft.core.integration.iplookup.PendingIpLookupService;
 import gg.modl.minecraft.core.integration.mojang.MojangProfiles;
 import gg.modl.minecraft.core.locale.LocaleManager;
-import gg.modl.minecraft.core.locale.MessageRenderer;
 import gg.modl.minecraft.core.login.BanEnforcementAcknowledger;
 import gg.modl.minecraft.core.login.LoginService;
 import gg.modl.minecraft.core.login.PlayerNotificationMapper;
@@ -138,7 +137,6 @@ public class PluginLoader {
             if (httpManager.isDebugHttp()) logger.info("Loading locale from external file: " + localeFile);
             this.localeManager.loadFromFile(localeFile);
         }
-        this.localeManager.setRenderer(new MessageRenderer());
         this.dateFormatter = loadLocaleConfig(configYml, logger);
         MenuItems.setDateFormatter(this.dateFormatter);
         this.punishmentMessageService = new PunishmentMessageService(this.localeManager, this.dateFormatter, httpManager.getPanelUrl());

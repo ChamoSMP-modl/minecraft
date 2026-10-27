@@ -1,5 +1,5 @@
 [versions]
-cirrus = "4.2.4"
+cirrus = "5.0.0"
 lamp = "4.0.0"
 lombok = "1.18.48"
 gson = "2.14.0"
@@ -47,9 +47,10 @@ guava = { module = "com.google.guava:guava", version.ref = "guava" }
 protobuf-java = { module = "com.google.protobuf:protobuf-java", version.ref = "protobuf-java" }
 protobuf-util = { module = "com.google.protobuf:protobuf-java-util", version.ref = "protobuf-java" }
 
-cirrus-api = { module = "gg.modl.minecraft.cirrus:cirrus-api", version.ref = "cirrus" }
-cirrus-spigot = { module = "gg.modl.minecraft.cirrus:cirrus-spigot", version.ref = "cirrus" }
-cirrus-velocity = { module = "gg.modl.minecraft.cirrus:cirrus-velocity", version.ref = "cirrus" }
+cirrus-api = { module = "net.chamosmp.cirrus:cirrus-api", version.ref = "cirrus" }
+cirrus-spigot = { module = "net.chamosmp.cirrus:cirrus-spigot", version.ref = "cirrus" }
+cirrus-velocity = { module = "net.chamosmp.cirrus:cirrus-velocity", version.ref = "cirrus" }
+cirrus-common = { module = "net.chamosmp.cirrus:cirrus-common", version.ref = "cirrus" }
 
 lamp-common = { module = "io.github.revxrsal:lamp.common", version.ref = "lamp" }
 lamp-bukkit = { module = "io.github.revxrsal:lamp.bukkit", version.ref = "lamp" }
@@ -66,7 +67,6 @@ netty-all = { module = "io.netty:netty-all", version.ref = "netty" }
 
 adventure-api = { module = "net.kyori:adventure-api", version.ref = "adventure" }
 adventure-minimessage = { module = "net.kyori:adventure-text-minimessage", version.ref = "adventure" }
-adventure-serializer-legacy = { module = "net.kyori:adventure-text-serializer-legacy", version.ref = "adventure" }
 
 packetevents-api = { module = "com.github.retrooper:packetevents-api", version.ref = "packetevents" }
 packetevents-spigot = { module = "com.github.retrooper:packetevents-spigot", version.ref = "packetevents" }
@@ -74,6 +74,7 @@ packetevents-velocity = { module = "com.github.retrooper:packetevents-velocity",
 
 libby-core = { module = "com.alessiodp.libby:libby-core", version.ref = "libby" }
 libby-velocity = { module = "com.alessiodp.libby:libby-velocity", version.ref = "libby" }
+libby-paper = { module = "com.alessiodp.libby:libby-paper", version.ref = "libby" }
 
 velocity-api = { module = "com.velocitypowered:velocity-api", version.ref = "velocity" }
 paper-api = { module = "io.papermc.paper:paper-api", version.ref = "paper" }

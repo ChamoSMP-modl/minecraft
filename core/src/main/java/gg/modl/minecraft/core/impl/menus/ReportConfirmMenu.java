@@ -70,7 +70,7 @@ public class ReportConfirmMenu extends SimpleMenu {
 
         set(CirrusItem.of(
                 CirrusItemType.of("minecraft:lime_terracotta"),
-                CirrusChatElement.ofLegacyText(locale.getMessage("messages.report_confirm")),
+                CirrusChatElement.ofMiniMessage(locale.getMessage("messages.report_confirm")),
                 MenuItems.lore(confirmLore)
         ).slot(11).actionHandler("confirm"));
 
@@ -79,7 +79,7 @@ public class ReportConfirmMenu extends SimpleMenu {
 
         set(CirrusItem.of(
                 CirrusItemType.of("minecraft:red_terracotta"),
-                CirrusChatElement.ofLegacyText(locale.getMessage("messages.report_cancel")),
+                CirrusChatElement.ofMiniMessage(locale.getMessage("messages.report_cancel")),
                 MenuItems.lore(locale.getMessageList("messages.report_cancel_lore"))
         ).slot(15).actionHandler("cancel"));
 
@@ -87,7 +87,7 @@ public class ReportConfirmMenu extends SimpleMenu {
             boolean replayOn = reportData.isAttachReplay();
             CirrusItem replayItem = CirrusItem.of(
                     CirrusItemType.of("minecraft:ender_eye"),
-                    CirrusChatElement.ofLegacyText(MenuItems.COLOR_YELLOW + "Attach Replay"),
+                    CirrusChatElement.ofMiniMessage(MenuItems.COLOR_YELLOW + "Attach Replay"),
                     MenuItems.lore(listOf(
                             MenuItems.COLOR_GRAY + "Click to toggle replay attachment",
                             "",

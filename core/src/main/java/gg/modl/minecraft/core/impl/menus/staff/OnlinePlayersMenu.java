@@ -185,8 +185,8 @@ public class OnlinePlayersMenu extends BaseStaffListMenu<OnlinePlayersMenu.Onlin
         LocaleManager localeManager = PluginServices.locale();
 
         String punishments = player.getPunishmentCount() > 0
-                ? "&c" + player.getPunishmentCount()
-                : "&a0";
+                ? "<red>" + player.getPunishmentCount()
+                : "<green>0";
 
         Map<String, String> placeholders = new HashMap<>();
         placeholders.put("player_name", player.getName());
@@ -226,7 +226,7 @@ public class OnlinePlayersMenu extends BaseStaffListMenu<OnlinePlayersMenu.Onlin
 
         CirrusItem headItem = CirrusItem.of(
                 CirrusItemType.PLAYER_HEAD,
-                CirrusChatElement.ofLegacyText(MenuItems.translateColorCodes(title)),
+                CirrusChatElement.ofMiniMessage(MenuItems.translateColorCodes(title)),
                 MenuItems.lore(lore)
         );
 

@@ -82,7 +82,7 @@ public class RoleListMenu extends BaseStaffListMenu<RoleListMenu.Role> {
         if ("no_permission".equals(role.id())) {
             return CirrusItem.of(
                     CirrusItemType.BARRIER,
-                    CirrusChatElement.ofLegacyText(MenuItems.COLOR_RED + "No Permission"),
+                    CirrusChatElement.ofMiniMessage(MenuItems.COLOR_RED + "No Permission"),
                     MenuItems.lore(
                             MenuItems.COLOR_GRAY + "You don't have permission",
                             MenuItems.COLOR_GRAY + "to edit roles"
@@ -109,7 +109,7 @@ public class RoleListMenu extends BaseStaffListMenu<RoleListMenu.Role> {
 
         return CirrusItem.of(
             CirrusItemType.PAPER,
-            CirrusChatElement.ofLegacyText(MenuItems.COLOR_GOLD + role.name()),
+            CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GOLD + role.name()),
                 MenuItems.lore(lore)
         );
     }

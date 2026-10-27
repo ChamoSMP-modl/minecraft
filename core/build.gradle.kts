@@ -53,7 +53,7 @@ dependencies {
     testImplementation(libs.java.websocket)
     testImplementation(libs.httpclient5)
     testImplementation(libs.adventure.api)
-    testImplementation(libs.adventure.serializer.legacy) // We need this because cirrus still needs these classes
+    testImplementation(libs.adventure.minimessage)
     testImplementation(platform(libs.junit.bom))
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.gson)
@@ -111,8 +111,10 @@ val allowedLibraries = listOf(
     Library("LAMP_BRIGADIER", "io.github.revxrsal", "lamp.brigadier", "lamp"),
     Library("LAMP_BUKKIT", "io.github.revxrsal", "lamp.bukkit", "lamp"),
     Library("LAMP_VELOCITY", "io.github.revxrsal", "lamp.velocity", "lamp"),
-    Library("CIRRUS_SPIGOT", "gg.modl.minecraft.cirrus", "cirrus-spigot", "cirrus"),
-    Library("CIRRUS_VELOCITY", "gg.modl.minecraft.cirrus", "cirrus-velocity", "cirrus"),
+    Library("CIRRUS_SPIGOT", "net.chamosmp.cirrus", "cirrus-spigot", "cirrus"),
+    Library("CIRRUS_VELOCITY", "net.chamosmp.cirrus", "cirrus-velocity", "cirrus"),
+    Library("CIRRUS_COMMON", "net.chamosmp.cirrus", "cirrus-common", "cirrus"),
+    Library("CIRRUS_API", "net.chamosmp.cirrus", "cirrus-api", "cirrus"),
     Library("PROTOBUF_JAVA", "com.google.protobuf", "protobuf-java", "protobuf-java"),
     Library("PROTOBUF_JAVA_UTIL", "com.google.protobuf", "protobuf-java-util", "protobuf-java"),
     Library("FAILUREACCESS", "com.google.guava", "failureaccess", "failureaccess"),

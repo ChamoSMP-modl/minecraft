@@ -4,18 +4,11 @@ import java.util.Map;
 
 public final class YamlMessageResolver {
 
-    public interface Colorizer {
-        String colorize(String message);
-    }
-
-    private final Colorizer colorizer;
-
-    public YamlMessageResolver(Colorizer colorizer) {
-        this.colorizer = colorizer;
+    public YamlMessageResolver() {
     }
 
     @SuppressWarnings("unchecked")
-    public Object lookup(Map<String, Object> root, String path) {
+    public static Object lookup(Map<String, Object> root, String path) {
         Object current = root;
         for (String key : path.split("\\.")) {
             if (!(current instanceof Map)) return null;
@@ -24,7 +17,7 @@ public final class YamlMessageResolver {
         return current;
     }
 
-    public String applyPlaceholders(String template, Map<String, String> placeholders) {
+    public static String applyPlaceholders(String template, Map<String, String> placeholders) {
         if (placeholders == null) return template;
         String result = template;
         for (Map.Entry<String, String> entry : placeholders.entrySet()) {
@@ -33,7 +26,7 @@ public final class YamlMessageResolver {
         return result;
     }
 
-    public String render(String template, Map<String, String> placeholders) {
-        return colorizer.colorize(applyPlaceholders(template, placeholders));
+    public static String render(String template, Map<String, String> placeholders) {
+        return applyPlaceholders(template, placeholders);
     }
 }

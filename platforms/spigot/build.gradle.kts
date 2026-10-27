@@ -14,6 +14,8 @@ dependencies {
 
     annotationProcessor(libs.lombok)
 
+    implementation(libs.libby.paper)
+
     // Anticheat APIs
     compileOnly(libs.polar.api)
     compileOnly(libs.intave.access)
@@ -31,8 +33,7 @@ dependencies {
     annotationProcessor(libs.strokk.paper.processor)
 
     // Cirrus menu system
-    compileOnly(libs.cirrus.api)
-    compileOnly(libs.cirrus.spigot)
+    implementation(libs.cirrus.spigot)
 
     // PacketEvents
     compileOnly(libs.packetevents.spigot)

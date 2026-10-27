@@ -60,7 +60,7 @@ public abstract class BaseListMenu<T> extends AbstractBrowser<T> {
     protected CirrusItem createEmptyPlaceholder(String message) {
         return CirrusItem.of(
                 CirrusItemType.GRAY_STAINED_GLASS_PANE,
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_GRAY + message),
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GRAY + message),
                 MenuItems.lore(MenuItems.COLOR_DARK_GRAY + "No items to display")
         );
     }

@@ -30,22 +30,19 @@ public class LocaleManager {
     private static final Pattern JAVA_PREFIX_PATTERN = Pattern.compile("^java\\.[a-zA-Z0-9_.]+: .+");
     private static final Pattern LOCALE_PATH_PATTERN = Pattern.compile(".*\\.[a-z_]+\\.[a-z_]+.*");
 
-    private static final String MISSING_MESSAGE_PREFIX = "&cMissing locale: ";
-    private static final String MISSING_LIST_PREFIX = "&cMissing locale list: ";
+    private static final String MISSING_MESSAGE_PREFIX = "<red>Missing locale: ";
+    private static final String MISSING_LIST_PREFIX = "<red>Missing locale list: ";
 
     private volatile Map<String, Object> messages;
     private Map<String, Object> configValues;
     private final String currentLocale;
-    private final YamlMessageResolver resolver;
     private final Set<String> reportedMissingKeys = ConcurrentHashMap.newKeySet();
     private Path externalLocaleFile;
-    @Setter private MessageRenderer renderer;
     @Setter private Consumer<String> missingKeyReporter;
 
     public LocaleManager(String locale) {
         this.currentLocale = locale;
         this.configValues = new HashMap<>();
-        this.resolver = new YamlMessageResolver(this::colorize);
         publishMessages(composeMessages());
     }
 
@@ -101,7 +98,7 @@ public class LocaleManager {
 
     public String getMessage(String path, Map<String, String> placeholders) {
         Object value = resolveValue(path);
-        if (value instanceof String) return resolver.render((String) value, placeholders);
+        if (value instanceof String) return YamlMessageResolver.render((String) value, placeholders);
         return colorize(reportMissing(MISSING_MESSAGE_PREFIX, path));
     }
 
@@ -118,36 +115,35 @@ public class LocaleManager {
 
     private Object resolveValue(String path) {
         if (path.startsWith("config.")) {
-            Object value = resolver.lookup(configValues, path.substring(7));
-            return value != null ? value : resolver.lookup(messages, path);
+            Object value = YamlMessageResolver.lookup(configValues, path.substring(7));
+            return value != null ? value : YamlMessageResolver.lookup(messages, path);
         }
-        return resolver.lookup(messages, path);
+        return YamlMessageResolver.lookup(messages, path);
     }
 
-    @SuppressWarnings("unchecked")
     public List<String> getMessageList(String path) {
         return getMessageList(path, mapOf());
     }
 
     @SuppressWarnings("unchecked")
     public List<String> getMessageList(String path, Map<String, String> placeholders) {
-        Object value = resolver.lookup(messages, path);
+        Object value = YamlMessageResolver.lookup(messages, path);
         if (value instanceof List) {
             List<String> list = (List<String>) value;
             return list.stream()
-                    .map(line -> resolver.render(line, placeholders))
+                    .map(line -> YamlMessageResolver.render(line, placeholders))
                     .collect(Collectors.toList());
         }
         return listOf(colorize(reportMissing(MISSING_LIST_PREFIX, path)));
     }
 
     private String resolveAsJoinedLines(String path, Map<String, String> variables) {
-        Object value = resolver.lookup(messages, path);
+        Object value = YamlMessageResolver.lookup(messages, path);
         if (value instanceof List<?>) {
             @SuppressWarnings("unchecked")
             List<String> lines = (List<String>) value;
             return lines.stream()
-                    .map(line -> resolver.render(line, variables))
+                    .map(line -> YamlMessageResolver.render(line, variables))
                     .collect(Collectors.joining("\n"));
         }
         if (value instanceof String) return getMessage(path, variables);
@@ -155,8 +151,7 @@ public class LocaleManager {
     }
 
     private String colorize(String message) {
-        if (renderer != null && renderer.isMiniMessage(message)) return renderer.renderToLegacy(message);
-        return LegacyTextRenderer.colorize(message);
+        return message;
     }
 
     public String getPunishmentMessage(String path, Map<String, String> variables) {
@@ -172,7 +167,7 @@ public class LocaleManager {
 
     public String getPublicNotificationMessage(int ordinal, Map<String, String> variables) {
         String path = "punishment_types.ordinal_" + ordinal + ".public_notification";
-        Object value = resolver.lookup(messages, path);
+        Object value = YamlMessageResolver.lookup(messages, path);
 
         if (value instanceof String) return getMessage(path, variables);
         return getDefaultPublicNotification(ordinal, variables);
@@ -238,10 +233,12 @@ public class LocaleManager {
         if (category == null) return "punishments.player_notification.default";
 
         String upper = category.toUpperCase();
-        if ("KICK".equals(upper)) return "punishments.player_notification.kick_default";
-        if ("MUTE".equals(upper)) return "punishments.player_notification.mute_default";
-        if ("BAN".equals(upper)) return "punishments.player_notification.ban_default";
-        return "punishments.player_notification.default";
+        return switch (upper) {
+            case "KICK" -> "punishments.player_notification.kick_default";
+            case "MUTE" -> "punishments.player_notification.mute_default";
+            case "BAN" -> "punishments.player_notification.ban_default";
+            default -> "punishments.player_notification.default";
+        };
     }
 
     private String getDefaultPublicNotification(int ordinal, Map<String, String> variables) {
@@ -282,13 +279,13 @@ public class LocaleManager {
     }
 
     private String getFragment(String path) {
-        Object value = resolver.lookup(messages, path);
+        Object value = YamlMessageResolver.lookup(messages, path);
         if (value instanceof String) return (String) value;
         return reportMissing(MISSING_MESSAGE_PREFIX, path);
     }
 
     private String renderFragment(String path, Map<String, String> variables) {
-        return resolver.applyPlaceholders(getFragment(path), variables);
+        return YamlMessageResolver.applyPlaceholders(getFragment(path), variables);
     }
 
     private String formatExpiryTemplate(String path, String type, long timeLeftMillis) {
@@ -327,8 +324,8 @@ public class LocaleManager {
     }
 
     public String getPermanentDurationWord() {
-        Object configuredOverride = resolver.lookup(configValues, "duration_format.permanent");
-        if (configuredOverride instanceof String) return resolver.render((String) configuredOverride, mapOf());
+        Object configuredOverride = YamlMessageResolver.lookup(configValues, "duration_format.permanent");
+        if (configuredOverride instanceof String) return YamlMessageResolver.render((String) configuredOverride, mapOf());
         return getFragment("punishment_words.duration_permanent");
     }
 
@@ -352,14 +349,14 @@ public class LocaleManager {
 
         if (days > 0) duration.append(getMessage("config.duration_format.days", mapOf("days", String.valueOf(days))));
         if (hours > 0) {
-            if (duration.length() > 0) duration.append(" ");
+            if (!duration.isEmpty()) duration.append(" ");
             duration.append(getMessage("config.duration_format.hours", mapOf("hours", String.valueOf(hours))));
         }
         if (minutes > 0) {
-            if (duration.length() > 0) duration.append(" ");
+            if (!duration.isEmpty()) duration.append(" ");
             duration.append(getMessage("config.duration_format.minutes", mapOf("minutes", String.valueOf(minutes))));
         }
-        if (seconds > 0 && duration.length() == 0) {
+        if (seconds > 0 && duration.isEmpty()) {
             duration.append(getMessage("config.duration_format.seconds", mapOf("seconds", String.valueOf(seconds))));
         }
 
@@ -440,7 +437,7 @@ public class LocaleManager {
         if (unwrapped.equalsIgnoreCase("Player not found")) return getMessage("general.player_not_found");
         if (unwrapped.contains("Missing locale:") || LOCALE_PATH_PATTERN.matcher(unwrapped).matches()) return getMessage("messages.unknown_error");
 
-        String cleaned = unwrapped.replaceAll("[\u00a7&][0-9a-fk-or]", "");
+        String cleaned = unwrapped.replaceAll("[§&][0-9a-fk-or]", "");
         if (cleaned.contains("Exception") || cleaned.contains("java.") || cleaned.contains("null")) return getMessage("messages.unknown_error");
 
         return cleaned;

@@ -132,7 +132,7 @@ public class StaffMembersMenu extends BaseStaffListMenu<StaffMembersMenu.StaffMe
         placeholders.put("panel_name", entry.panelName() != null ? entry.panelName() : "Unknown");
         placeholders.put("role", entry.role() != null ? entry.role() : "Unknown");
         placeholders.put("minecraft_username", entry.minecraftUsername() != null ? entry.minecraftUsername() : "Not linked");
-        placeholders.put("is_online", entry.online() ? "&aYes" : "&cNo");
+        placeholders.put("is_online", entry.online() ? "<green>Yes" : "<red>No");
         placeholders.put("last_seen_or_session_time", resolveLastSeenOrSessionTime(entry));
         placeholders.put("server", resolveServer(entry));
         placeholders.put("playtime", MenuItems.formatDuration(
@@ -187,7 +187,7 @@ public class StaffMembersMenu extends BaseStaffListMenu<StaffMembersMenu.StaffMe
 
         CirrusItem headItem = CirrusItem.of(
                 CirrusItemType.PLAYER_HEAD,
-                CirrusChatElement.ofLegacyText(MenuItems.translateColorCodes(title)),
+                CirrusChatElement.ofMiniMessage(MenuItems.translateColorCodes(title)),
                 MenuItems.lore(lore)
         );
 

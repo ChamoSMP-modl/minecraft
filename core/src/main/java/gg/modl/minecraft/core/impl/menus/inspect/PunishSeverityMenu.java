@@ -147,7 +147,7 @@ public class PunishSeverityMenu extends BaseInspectMenu {
 
         set(CirrusItem.of(
                 CirrusItemType.YELLOW_WOOL,
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_YELLOW + "Issue Punishment"),
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_YELLOW + "Issue Punishment"),
                 MenuItems.lore(lore)
         ).slot(31).actionHandler("issueSingle"));
     }
@@ -195,7 +195,7 @@ public class PunishSeverityMenu extends BaseInspectMenu {
 
         return CirrusItem.of(
                 itemType,
-                CirrusChatElement.ofLegacyText(color + name),
+                CirrusChatElement.ofMiniMessage(color + name),
                 MenuItems.lore(lore)
         ).slot(slot).actionHandler(action);
     }
@@ -223,13 +223,13 @@ public class PunishSeverityMenu extends BaseInspectMenu {
         }
         set(CirrusItem.of(
                 CirrusItemType.BOOK,
-                CirrusChatElement.ofLegacyText(linkTitle),
+                CirrusChatElement.ofMiniMessage(linkTitle),
                 MenuItems.lore(linkLore)
         ).slot(MenuSlots.SEVERITY_LINK_REPORTS).actionHandler("linkReports"));
 
         set(CirrusItem.of(
                 silentMode ? CirrusItemType.LIME_DYE : CirrusItemType.GRAY_DYE,
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_GOLD + "Silent Mode: " + (silentMode ? MenuItems.COLOR_GREEN + "Enabled" : MenuItems.COLOR_RED +
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GOLD + "Silent Mode: " + (silentMode ? MenuItems.COLOR_GREEN + "Enabled" : MenuItems.COLOR_RED +
                                                                                                                                      "Disabled")),
                 MenuItems.lore(
                         MenuItems.COLOR_GRAY + "Toggle silent mode for this punishment",
@@ -241,7 +241,7 @@ public class PunishSeverityMenu extends BaseInspectMenu {
         if (punishmentType.canBeAltBlocking() != null && punishmentType.canBeAltBlocking()) {
             set(CirrusItem.of(
                     altBlocking ? CirrusItemType.TORCH : CirrusItemType.REDSTONE_TORCH,
-                    CirrusChatElement.ofLegacyText(MenuItems.COLOR_GOLD + "Alt-Blocking: " + (altBlocking ? MenuItems.COLOR_GREEN + "Enabled" :
+                    CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GOLD + "Alt-Blocking: " + (altBlocking ? MenuItems.COLOR_GREEN + "Enabled" :
                                                                                          MenuItems.COLOR_RED + "Disabled")),
                     MenuItems.lore(
                             MenuItems.COLOR_GRAY + "Block alt accounts from joining",
@@ -254,7 +254,7 @@ public class PunishSeverityMenu extends BaseInspectMenu {
         if (punishmentType.canBeStatWiping() != null && punishmentType.canBeStatWiping()) {
             set(CirrusItem.of(
                     statWipe ? CirrusItemType.EXPERIENCE_BOTTLE : CirrusItemType.GLASS_BOTTLE,
-                    CirrusChatElement.ofLegacyText(MenuItems.COLOR_GOLD + "Stat-Wipe: " + (statWipe ? MenuItems.COLOR_GREEN + "Enabled" : MenuItems.COLOR_RED +
+                    CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GOLD + "Stat-Wipe: " + (statWipe ? MenuItems.COLOR_GREEN + "Enabled" : MenuItems.COLOR_RED +
                                                                                                                                      "Disabled")),
                     MenuItems.lore(
                             MenuItems.COLOR_GRAY + "Wipe player stats after punishment",

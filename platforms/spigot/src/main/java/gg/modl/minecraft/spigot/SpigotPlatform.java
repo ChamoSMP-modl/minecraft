@@ -10,6 +10,7 @@ import gg.modl.minecraft.core.service.database.LiteBansDatabaseProvider;
 import gg.modl.minecraft.core.util.PluginLogger;
 import gg.modl.minecraft.core.util.StringUtil;
 import gg.modl.minecraft.spigot.bridge.folia.FoliaScheduler;
+import gg.modl.minecraft.spigot.lamp.BukkitAdventureActorFactory;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -119,6 +120,7 @@ public class SpigotPlatform implements Platform {
 
     BukkitLampConfig<BukkitCommandActor> createLampConfig() {
         return BukkitLampConfig.builder(plugin)
+                .actorFactory(new BukkitAdventureActorFactory())
                 .disableBrigadier(shouldDisableBrigadier())
                 .build();
     }

@@ -57,7 +57,7 @@ class NotificationService {
             if (TICKET_CREATED_TYPE.equals(notification.getType()) && notification.getData() != null) {
                 processTicketCreatedNotification(notification);
             } else {
-                platform.staffBroadcast("&7&o[" + notification.getMessage() + "&7&o]");
+                platform.staffBroadcast("<gray><i>[" + notification.getMessage() + "<gray><i>]");
             }
             if (debugMode) logger.info("Processed staff notification: " + notification.getMessage());
         } catch (Exception e) {

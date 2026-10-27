@@ -49,7 +49,7 @@ import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 @Plugin(id = PluginInfo.ID,
         name = PluginInfo.NAME,
         version = PluginInfo.VERSION,
-        authors = { "ChamoSMP Development Team", "Chamogelastos", "byteful", "tigerbong" },
+        authors = {"ChamoSMP Development Team", "Chamogelastos", "byteful", "tigerbong"},
         description = PluginInfo.DESCRIPTION,
         url = PluginInfo.URL,
         dependencies = {
@@ -248,10 +248,8 @@ public final class VelocityPlugin {
 
         for (LibraryRecord record : Libraries.PROTO_DEPS_RELOCATED) loadLibrary(libraryManager, record);
         for (LibraryRecord record : Libraries.COMMON) loadLibrary(libraryManager, record);
-        loadLibrary(libraryManager, Libraries.LAMP_COMMON);
-        loadLibrary(libraryManager, Libraries.LAMP_BRIGADIER);
+
         loadLibrary(libraryManager, Libraries.LAMP_VELOCITY);
-        loadLibrary(libraryManager, Libraries.CIRRUS_VELOCITY);
     }
 
     private void loadLibrary(VelocityLibraryManager<VelocityPlugin> libraryManager, LibraryRecord record) {

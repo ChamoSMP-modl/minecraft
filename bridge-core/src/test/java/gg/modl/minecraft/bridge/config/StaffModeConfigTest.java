@@ -26,33 +26,33 @@ class StaffModeConfigTest {
                 "staff_hotbar:",
                 "  2:",
                 "    item: \"minecraft:stick\"",
-                "    name: \"&aInspect\"",
+                "    name: \"<green>Inspect\"",
                 "    action: \"target_selector\"",
                 "    lore:",
-                "      - \"&7Line one\"",
+                "      - \"<gray>Line one\"",
                 "target_hotbar:",
                 "  5:",
                 "    item: \"minecraft:book\"",
-                "    name: \"&eNotes\"",
+                "    name: \"<yellow>Notes\"",
                 "    action: \"inspect_target\"",
                 "staff_scoreboard:",
                 "  enabled: true",
-                "  title: \"&bStaff\"",
-                "  vanish: \" &7[V]\"",
+                "  title: \"<aqua>Staff\"",
+                "  vanish: \" <gray>[V]\"",
                 "  lines:",
-                "    - \"&fPlayers: &a{online}\""
+                "    - \"<white>Players: <green>{online}\""
         );
 
         StaffModeConfig config = StaffModeConfig.load(tempDir, PluginLogger.fromJul(Logger.getLogger("test")));
 
         assertFalse(config.isVanishOnEnable());
         assertEquals("minecraft:stick", config.getStaffHotbar().get(2).getItem());
-        assertEquals("&aInspect", config.getStaffHotbar().get(2).getName());
+        assertEquals("<green>Inspect", config.getStaffHotbar().get(2).getName());
         assertEquals("target_selector", config.getStaffHotbar().get(2).getAction());
-        assertEquals("&7Line one", config.getStaffHotbar().get(2).getLore().get(0));
+        assertEquals("<gray>Line one", config.getStaffHotbar().get(2).getLore().get(0));
         assertEquals("minecraft:book", config.getTargetHotbar().get(5).getItem());
         assertTrue(config.getStaffScoreboard().isEnabled());
-        assertEquals("&bStaff", config.getStaffScoreboard().getTitle());
+        assertEquals("<aqua>Staff", config.getStaffScoreboard().getTitle());
     }
 
     @Test

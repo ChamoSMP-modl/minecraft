@@ -19,9 +19,9 @@
   title: "Chat Abuse"
   chat-report: true
   description:
-    - "&7Low-quality chat, spam, or inappropriate language"
+    - "<gray>Low-quality chat, spam, or inappropriate language"
     - ""
-    - "&eClick to report"
+    - "<yellow>Click to report"
 
 # Slot 3 - Anti-social
 3:
@@ -30,9 +30,9 @@
   title: "Anti-social"
   chat-report: true
   description:
-    - "&7Harassment, threats, or bullying"
+    - "<gray>Harassment, threats, or bullying"
     - ""
-    - "&eClick to report"
+    - "<yellow>Click to report"
 
 # Slot 4 - Inappropriate Username/Skin
 4:
@@ -42,9 +42,9 @@
   chat-report: false
   replay-capture: true
   description:
-    - "&7Offensive username or skin"
+    - "<gray>Offensive username or skin"
     - ""
-    - "&eClick to report"
+    - "<yellow>Click to report"
 
 # Slot 5 - Cheating
 5:
@@ -54,9 +54,9 @@
   chat-report: false
   replay-capture: true
   description:
-    - "&7Hacking or using unfair modifications"
+    - "<gray>Hacking or using unfair modifications"
     - ""
-    - "&eClick to report"
+    - "<yellow>Click to report"
 
 # Slot 6 - Game Rule Violation
 6:
@@ -66,9 +66,9 @@
   chat-report: false
   replay-capture: true
   description:
-    - "&7Violating server-specific game rules"
+    - "<gray>Violating server-specific game rules"
     - ""
-    - "&eClick to report"
+    - "<yellow>Click to report"
 
 # Slot 7 - Disabled
 7:
@@ -86,9 +86,9 @@
   chat-report: false
   replay-capture: true
   description:
-    - "&7Abusing bugs or exploits"
+    - "<gray>Abusing bugs or exploits"
     - ""
-    - "&eClick to report"
+    - "<yellow>Click to report"
 
 # Slot 10 - Stats Boosting
 10:
@@ -98,9 +98,9 @@
   chat-report: false
   replay-capture: true
   description:
-    - "&7Artificially inflating stats"
+    - "<gray>Artificially inflating stats"
     - ""
-    - "&eClick to report"
+    - "<yellow>Click to report"
 
 # Slot 11 - Other
 11:
@@ -110,9 +110,9 @@
   chat-report: false
   replay-capture: true
   description:
-    - "&7Any other rule violation"
+    - "<gray>Any other rule violation"
     - ""
-    - "&eClick to report"
+    - "<yellow>Click to report"
 
 # Slot 12 - Disabled
 12:
@@ -129,13 +129,13 @@
 # Info item shown at bottom of the report menu
 info:
   item: "minecraft:oak_sign"
-  title: "&aInformation"
+  title: "<green>Information"
   description:
-    - "&ePlease review the server rules"
-    - "&ebefore submitting a report."
+    - "<yellow>Please review the server rules"
+    - "<yellow>before submitting a report."
     - ""
-    - "&fQuick report commands:"
-    - "&7/chatreport <player> [details]"
-    - "&7/hackreport <player> [details]"
+    - "<white>Quick report commands:"
+    - "<gray>/chatreport <player> [details]"
+    - "<gray>/hackreport <player> [details]"
     - ""
-    - "&cFalse reports may result in punishment!"
+    - "<red>False reports may result in punishment!"

@@ -30,7 +30,7 @@ import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 
 @RequiredArgsConstructor
 public class AltsCommand {
-    private static final String STATUS_COLOR_BANNED = "&c", STATUS_COLOR_MUTED = "&e", STATUS_COLOR_CLEAN = "&a";
+    private static final String STATUS_COLOR_BANNED = "<red>", STATUS_COLOR_MUTED = "<yellow>", STATUS_COLOR_CLEAN = "<green>";
     private static final int ENTRIES_PER_PAGE = 8;
 
     private final HttpClientHolder httpClientHolder;

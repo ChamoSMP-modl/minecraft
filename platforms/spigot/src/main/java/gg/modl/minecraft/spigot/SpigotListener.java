@@ -17,9 +17,6 @@ import gg.modl.minecraft.core.locale.LocaleManager;
 import gg.modl.minecraft.core.login.LoginPipeline;
 import gg.modl.minecraft.core.login.LoginService;
 import gg.modl.minecraft.core.service.ChatMessageCache;
-import io.papermc.paper.connection.PlayerConfigurationConnection;
-import io.papermc.paper.connection.PlayerLoginConnection;
-import io.papermc.paper.event.connection.PlayerConnectionValidateLoginEvent;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -65,6 +62,7 @@ public class SpigotListener implements Listener {
             platform.getLogger().debug("Using cached login result for " + event.getName());
             loginPipeline.loginCache().storePreLoginResult(event.getUniqueId(),
                     new LoginCache.PreLoginResult(cached.response(), cached.ipInfo(), cached.skinHash()));
+            handleBanStatus(event);
             return;
         }
 
@@ -106,25 +104,13 @@ public class SpigotListener implements Listener {
             platform.getLogger().warning("Async pre-login timed out for " + event.getName() + ": " + e.getMessage());
             loginPipeline.loginCache().storePreLoginResult(event.getUniqueId(), new LoginCache.PreLoginResult(e));
         }
+
+        handleBanStatus(event);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerLogin(PlayerConnectionValidateLoginEvent event) {
-        String playerName = null;
-        UUID playerUuid = null;
-        if (event.getConnection() instanceof PlayerLoginConnection conn) {
-            playerName = Objects.requireNonNull(conn.getAuthenticatedProfile()).getName();
-            playerUuid = Objects.requireNonNull(conn.getAuthenticatedProfile()).getId();
-        } else if (event.getConnection() instanceof PlayerConfigurationConnection conn) {
-            playerName = Objects.requireNonNull(conn.getProfile()).getName();
-            playerUuid = Objects.requireNonNull(conn.getProfile()).getId();
-        }
-
-        if (playerUuid == null || playerName == null) {
-            platform.getLogger().warning("Could not get a player's name or uuid - blocking login for safety");
-            denyLoginUnverified(event);
-            return;
-        }
+    public void handleBanStatus(AsyncPlayerPreLoginEvent event) {
+        String playerName = event.getName();
+        UUID playerUuid = event.getUniqueId();
 
         LoginCache.PreLoginResult preLoginResult = loginPipeline.loginCache().getAndRemovePreLoginResult(playerUuid);
 
@@ -140,7 +126,8 @@ public class SpigotListener implements Listener {
             }
 
             // Yeah, this is a big wall of text
-            event.kickMessage(
+            event.disallow(
+                    AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
                     MiniMessage.miniMessage().deserialize(
                             Objects.requireNonNull(
                                     loginPipeline.loginService().denialMessage(
@@ -165,12 +152,16 @@ public class SpigotListener implements Listener {
 
         String denialMessage = loginPipeline.loginService().denialMessage(result);
         if (denialMessage != null) {
-            event.kickMessage(MiniMessage.miniMessage().deserialize(denialMessage));
+            event.disallow(
+                    AsyncPlayerPreLoginEvent.Result.KICK_BANNED,
+                    MiniMessage.miniMessage().deserialize(denialMessage)
+            );
         }
     }
 
-    private void denyLoginUnverified(PlayerConnectionValidateLoginEvent event) {
-        event.kickMessage(
+    private void denyLoginUnverified(AsyncPlayerPreLoginEvent event) {
+        event.disallow(
+                AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
                 MiniMessage.miniMessage().deserialize(localeManager.getMessage("api_errors.ban_check_failed"))
         );
     }

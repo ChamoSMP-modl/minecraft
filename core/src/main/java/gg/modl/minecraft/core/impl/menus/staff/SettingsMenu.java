@@ -65,13 +65,13 @@ public class SettingsMenu extends BaseStaffMenu {
 
         set(CirrusItem.of(
                 CirrusItemType.ANVIL,
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_GOLD + "Information"),
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GOLD + "Information"),
                 MenuItems.lore(infoLore)
         ).slot(MenuSlots.SETTINGS_INFO));
 
         set(CirrusItem.of(
                 CirrusItemType.PLAYER_HEAD,
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_GOLD + "Staff List"),
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GOLD + "Staff List"),
                 MenuItems.lore(
                         MenuItems.COLOR_GRAY + "View all staff members",
                         MenuItems.COLOR_GRAY + "and their online status"
@@ -81,7 +81,7 @@ public class SettingsMenu extends BaseStaffMenu {
         if (canManageStaff) {
             set(CirrusItem.of(
                 CirrusItemType.IRON_CHESTPLATE,
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_GOLD + "Manage Staff"),
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GOLD + "Manage Staff"),
                 MenuItems.lore(
                     MenuItems.COLOR_GRAY + "Manage staff roles"
                 )
@@ -91,7 +91,7 @@ public class SettingsMenu extends BaseStaffMenu {
         if (canModifySettings) {
             set(CirrusItem.of(
                     CirrusItemType.BLAZE_ROD,
-                    CirrusChatElement.ofLegacyText(MenuItems.COLOR_GOLD + "Edit Roles"),
+                    CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GOLD + "Edit Roles"),
                     MenuItems.lore(
                             MenuItems.COLOR_GRAY + "Modify role permissions"
                     )
@@ -101,7 +101,7 @@ public class SettingsMenu extends BaseStaffMenu {
         if (canModifySettings) {
             set(CirrusItem.of(
                     CirrusItemType.REDSTONE,
-                    CirrusChatElement.ofLegacyText(MenuItems.COLOR_RED + "Reload Modl"),
+                    CirrusChatElement.ofMiniMessage(MenuItems.COLOR_RED + "Reload Modl"),
                     MenuItems.lore(
                             MenuItems.COLOR_GRAY + "Reload configuration and locale files"
                     )

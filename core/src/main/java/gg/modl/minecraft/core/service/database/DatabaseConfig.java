@@ -7,7 +7,7 @@ public record DatabaseConfig(String host, String database, String username, Stri
                              String tablePrefix, int port) {
     @RequiredArgsConstructor
     public enum DatabaseType {
-        MYSQL("mysql", "com.mysql.cj.jdbc.Driver", "jdbc:mysql://%s:%d/%s?useSSL=false&allowPublicKeyRetrieval=true"),
+        MYSQL("mysql", "com.mysql.cj.jdbc.Driver", "jdbc:mysql://%s:%d/%s?useSSL=false<green>llowPublicKeyRetrieval=true"),
         MARIADB("mariadb", "org.mariadb.jdbc.Driver", "jdbc:mariadb://%s:%d/%s"),
         POSTGRESQL("postgresql", "org.postgresql.Driver", "jdbc:postgresql://%s:%d/%s"),
         H2("h2", "org.h2.Driver", "jdbc:h2:file:./%s");

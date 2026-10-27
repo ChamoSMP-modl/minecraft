@@ -14,6 +14,7 @@ import gg.modl.minecraft.core.integration.mojang.WebPlayer;
 import gg.modl.minecraft.core.service.database.LiteBansDatabaseProvider;
 import gg.modl.minecraft.core.util.PluginLogger;
 import gg.modl.minecraft.core.util.StringUtil;
+import gg.modl.minecraft.velocity.lamp.VelocityAdventureActorFactory;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
@@ -21,6 +22,7 @@ import org.slf4j.Logger;
 import revxrsal.commands.Lamp;
 import revxrsal.commands.command.CommandActor;
 import revxrsal.commands.velocity.VelocityLamp;
+import revxrsal.commands.velocity.VelocityLampConfig;
 import revxrsal.commands.velocity.VelocityVisitors;
 import revxrsal.commands.velocity.actor.VelocityCommandActor;
 
@@ -123,7 +125,10 @@ public class VelocityPlatform implements Platform {
 
     @Override
     public Lamp<VelocityCommandActor> buildLamp(Consumer<Lamp.Builder<? extends CommandActor>> configurator) {
-        Lamp.Builder<VelocityCommandActor> builder = VelocityLamp.builder(plugin, server);
+        VelocityLampConfig<VelocityCommandActor> lampConfig = VelocityLampConfig.builder(plugin, server)
+                .actorFactory(new VelocityAdventureActorFactory())
+                .build();
+        Lamp.Builder<VelocityCommandActor> builder = VelocityLamp.builder(lampConfig);
         configurator.accept(builder);
         return builder.build();
     }

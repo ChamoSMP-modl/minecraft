@@ -93,7 +93,7 @@ public final class ReportRenderUtil {
 
         return CirrusItem.of(
                 itemType,
-                CirrusChatElement.ofLegacyText(title),
+                CirrusChatElement.ofMiniMessage(title),
                 MenuItems.lore(lore)
         ).actionHandler("toggleReport_" + report.id());
     }

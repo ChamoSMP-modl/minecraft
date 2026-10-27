@@ -70,7 +70,7 @@ public class NotesMenu extends PaginatedInspectListMenu<Note> {
 
         items.put(MenuSlots.CREATE_NOTE_BUTTON, CirrusItem.of(
                 CirrusItemType.OAK_SIGN,
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_GREEN + "Create Note"),
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GREEN + "Create Note"),
                 MenuItems.lore(
                         MenuItems.COLOR_GRAY + "Add a new note for " + targetName
                 )
@@ -121,7 +121,7 @@ public class NotesMenu extends PaginatedInspectListMenu<Note> {
 
         return CirrusItem.of(
                 CirrusItemType.PAPER,
-                CirrusChatElement.ofLegacyText(title),
+                CirrusChatElement.ofMiniMessage(title),
                 MenuItems.lore(lore)
         );
     }

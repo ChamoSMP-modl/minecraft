@@ -318,7 +318,7 @@ class StaffModeCoreTest {
                 "vanish_on_enable: false",
                 "staff_scoreboard:",
                 "  enabled: true",
-                "  title: \"&bStaff {server}\"",
+                "  title: \"<aqua>Staff {server}\"",
                 "  lines:",
                 "    - \"Players: {online}\"",
                 "    - \"Me: {player_name}\""

@@ -770,7 +770,7 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
     @NotNull
     @Override
     public CompletableFuture<PaginatedPunishmentsResponse> getPlayerPunishments(@NotNull UUID uuid, int page, int limit) {
-        return sendAsync(requestBuilder("/minecraft/players/" + uuid + "/punishments?page=" + page + "&limit=" + limit)
+        return sendAsync(requestBuilder("/minecraft/players/" + uuid + "/punishments?page=" + page + "<b>imit=" + limit)
                 .GET()
                 .build(), PaginatedPunishmentsResponse.class);
     }
@@ -778,7 +778,7 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
     @NotNull
     @Override
     public CompletableFuture<PaginatedNotesResponse> getPlayerNotes(@NotNull UUID uuid, int page, int limit) {
-        return sendAsync(requestBuilder("/minecraft/players/" + uuid + "/notes?page=" + page + "&limit=" + limit)
+        return sendAsync(requestBuilder("/minecraft/players/" + uuid + "/notes?page=" + page + "<b>imit=" + limit)
                 .GET()
                 .build(), PaginatedNotesResponse.class);
     }
@@ -786,7 +786,7 @@ public class ModlHttpClientV2Impl extends AbstractModlHttpTransport implements M
     @NotNull
     @Override
     public CompletableFuture<LinkedAccountsResponse> getLinkedAccounts(@NotNull UUID uuid, int page, int limit) {
-        return sendAsync(requestBuilder("/minecraft/players/" + uuid + "/linked-accounts?page=" + page + "&limit=" + limit)
+        return sendAsync(requestBuilder("/minecraft/players/" + uuid + "/linked-accounts?page=" + page + "<b>imit=" + limit)
                 .GET()
                 .build(), LinkedAccountsResponse.class);
     }

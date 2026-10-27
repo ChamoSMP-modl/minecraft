@@ -190,19 +190,19 @@ public class ModlHttpClientV3Impl extends AbstractModlHttpTransport implements M
 
     @NotNull @Override
     public CompletableFuture<LinkedAccountsResponse> getLinkedAccounts(@NotNull UUID uuid, int page, int limit) {
-        return get("/minecraft/players/" + uuid + "/linked-accounts?page=" + page + "&limit=" + limit,
+        return get("/minecraft/players/" + uuid + "/linked-accounts?page=" + page + "<b>imit=" + limit,
             gg.modl.proto.modl.v1.LinkedAccountsResponse.parser(), PlayerProtoMapper::toLinkedAccountsResponse);
     }
 
     @NotNull @Override
     public CompletableFuture<PaginatedPunishmentsResponse> getPlayerPunishments(@NotNull UUID uuid, int page, int limit) {
-        return get("/minecraft/players/" + uuid + "/punishments?page=" + page + "&limit=" + limit,
+        return get("/minecraft/players/" + uuid + "/punishments?page=" + page + "<b>imit=" + limit,
             gg.modl.proto.modl.v1.PaginatedPunishmentsResponse.parser(), PlayerProtoMapper::toPaginatedPunishmentsResponse);
     }
 
     @NotNull @Override
     public CompletableFuture<PaginatedNotesResponse> getPlayerNotes(@NotNull UUID uuid, int page, int limit) {
-        return get("/minecraft/players/" + uuid + "/notes?page=" + page + "&limit=" + limit,
+        return get("/minecraft/players/" + uuid + "/notes?page=" + page + "<b>imit=" + limit,
             gg.modl.proto.modl.v1.PaginatedNotesResponse.parser(), PlayerProtoMapper::toPaginatedNotesResponse);
     }
 

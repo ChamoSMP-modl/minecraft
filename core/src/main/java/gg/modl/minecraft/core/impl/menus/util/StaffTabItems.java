@@ -71,6 +71,6 @@ public final class StaffTabItems {
 
     private static void put(Map<Integer, CirrusItem> items, int slot, CirrusItemType type, String title,
                             String actionHandler, List<CirrusChatElement> lore) {
-        items.put(slot, CirrusItem.of(type, CirrusChatElement.ofLegacyText(title), lore).actionHandler(actionHandler));
+        items.put(slot, CirrusItem.of(type, CirrusChatElement.ofMiniMessage(title), lore).actionHandler(actionHandler));
     }
 }

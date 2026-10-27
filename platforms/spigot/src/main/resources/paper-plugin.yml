@@ -16,34 +16,35 @@ dependencies:
   server:
     ProtocolLib:
       required: false
-      load: AFTER
+      load: BEFORE
     ProtocolSupport:
       required: false
-      load: AFTER
+      load: BEFORE
     ViaVersion:
       required: false
-      load: AFTER
+      load: BEFORE
     ViaBackwards:
       required: false
-      load: AFTER
+      load: BEFORE
     ViaRewind:
       required: false
-      load: AFTER
+      load: BEFORE
     Geyser-Spigot:
       required: false
-      load: AFTER
+      load: BEFORE
     GrimAC:
       required: false
-      load: AFTER
+      load: BEFORE
     Polar:
       required: false
-      load: AFTER
+      load: BEFORE
     Intave:
       required: false
-      load: AFTER
+      load: BEFORE
     packetevents:
-      required: false
-      load: AFTER
+      required: true
+      load: BEFORE
+      join-classpath: true
 
 permissions:
   modl.bridge.reload:

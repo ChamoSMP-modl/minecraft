@@ -77,7 +77,7 @@ public class ReportChatLogMenu extends SimpleMenu {
 
         CirrusItem chatItem = CirrusItem.of(
                 CirrusItemType.of(chatToggled ? "minecraft:lime_terracotta" : "minecraft:orange_terracotta"),
-                CirrusChatElement.ofLegacyText(locale.getMessage("messages.report_attach_chat")),
+                CirrusChatElement.ofMiniMessage(locale.getMessage("messages.report_attach_chat")),
                 MenuItems.lore(listOf(
                         chatToggled
                                 ? MenuItems.COLOR_GREEN + "Chat log will be attached"
@@ -89,7 +89,7 @@ public class ReportChatLogMenu extends SimpleMenu {
 
         CirrusItem replayItem = CirrusItem.of(
                 CirrusItemType.of("minecraft:ender_eye"),
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_YELLOW + "Capture Replay"),
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_YELLOW + "Capture Replay"),
                 MenuItems.lore(listOf(
                         MenuItems.COLOR_GRAY + "Captures recent gameplay recording",
                         "",
@@ -103,7 +103,7 @@ public class ReportChatLogMenu extends SimpleMenu {
 
         set(CirrusItem.of(
                 CirrusItemType.of("minecraft:lime_terracotta"),
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_GREEN + "Continue"),
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GREEN + "Continue"),
                 MenuItems.lore(listOf(MenuItems.COLOR_GRAY + "Proceed to add details"))
         ).slot(22).actionHandler("continue"));
 
@@ -113,7 +113,7 @@ public class ReportChatLogMenu extends SimpleMenu {
     private void buildChatOnlyMenu() {
         set(CirrusItem.of(
                 CirrusItemType.of("minecraft:orange_terracotta"),
-                CirrusChatElement.ofLegacyText(locale.getMessage("messages.report_attach_chat")),
+                CirrusChatElement.ofMiniMessage(locale.getMessage("messages.report_attach_chat")),
                 MenuItems.lore(locale.getMessageList("messages.report_attach_chat_lore"))
         ).slot(11).actionHandler("attachChat"));
 
@@ -121,7 +121,7 @@ public class ReportChatLogMenu extends SimpleMenu {
 
         set(CirrusItem.of(
                 CirrusItemType.of("minecraft:light_blue_terracotta"),
-                CirrusChatElement.ofLegacyText(locale.getMessage("messages.report_skip_chat")),
+                CirrusChatElement.ofMiniMessage(locale.getMessage("messages.report_skip_chat")),
                 MenuItems.lore(locale.getMessageList("messages.report_skip_chat_lore"))
         ).slot(15).actionHandler("skipChat"));
 
@@ -131,7 +131,7 @@ public class ReportChatLogMenu extends SimpleMenu {
     private void buildReplayOnlyMenu() {
         set(CirrusItem.of(
                 CirrusItemType.of("minecraft:ender_eye"),
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_YELLOW + "Capture Replay"),
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_YELLOW + "Capture Replay"),
                 MenuItems.lore(listOf(
                         MenuItems.COLOR_GRAY + "Captures recent gameplay recording",
                         MenuItems.COLOR_GRAY + "and attaches it to the report",
@@ -144,7 +144,7 @@ public class ReportChatLogMenu extends SimpleMenu {
 
         set(CirrusItem.of(
                 CirrusItemType.of("minecraft:light_blue_terracotta"),
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_GRAY + "Skip"),
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GRAY + "Skip"),
                 MenuItems.lore(listOf(MenuItems.COLOR_GRAY + "Continue without replay"))
         ).slot(15).actionHandler("skipReplay"));
 

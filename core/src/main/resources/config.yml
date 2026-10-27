@@ -19,7 +19,7 @@ staff_chat:
   prefix: "!"
   # Format for staff chat messages
   # Placeholders: {player}, {message}
-  format: "&b[Staff] &f{player}: &7{message}"
+  format: "<aqua>[Staff] <white>{player}: <gray>{message}"
 
 # Staff 2FA Configuration
 # Staff members must verify identity via a panel link before using staff features.

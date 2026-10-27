@@ -23,7 +23,7 @@ import java.util.UUID;
 @PlayerOnly
 @StaffOrPermission(value = Permissions.STAFF_MODE, needsPermissionOnStaff = false)
 public class LocalChatCommand {
-    private static final String LOCAL_CHAT_FORMAT = "§f<%s§f> %s";
+    private static final String LOCAL_CHAT_FORMAT = "<white><%s<white>> %s";
 
     private final Platform platform;
     private final Cache cache;

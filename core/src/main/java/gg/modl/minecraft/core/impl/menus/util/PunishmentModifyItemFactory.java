@@ -28,7 +28,7 @@ public final class PunishmentModifyItemFactory {
         if (canModify) {
             return CirrusItem.of(
                     CirrusItemType.OAK_SIGN,
-                    CirrusChatElement.ofLegacyText(MenuItems.COLOR_YELLOW + "Add Note"),
+                    CirrusChatElement.ofMiniMessage(MenuItems.COLOR_YELLOW + "Add Note"),
                     MenuItems.lore(
                             MenuItems.COLOR_GRAY + "Add a staff note to this punishment"
                     )
@@ -36,7 +36,7 @@ public final class PunishmentModifyItemFactory {
         }
         return CirrusItem.of(
                 CirrusItemType.OAK_SIGN,
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_GRAY + "Add Note"),
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GRAY + "Add Note"),
                 MenuItems.lore(
                         MenuItems.COLOR_RED + "No Permission"
                 )
@@ -70,7 +70,7 @@ public final class PunishmentModifyItemFactory {
 
             return CirrusItem.of(
                     itemType,
-                    CirrusChatElement.ofLegacyText(MenuItems.COLOR_AQUA + "Evidence"),
+                    CirrusChatElement.ofMiniMessage(MenuItems.COLOR_AQUA + "Evidence"),
                     MenuItems.lore(evidenceLore)
             ).slot(MenuSlots.MODIFY_EVIDENCE).actionHandler("evidence");
         }
@@ -80,7 +80,7 @@ public final class PunishmentModifyItemFactory {
 
         return CirrusItem.of(
                 itemType,
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_GRAY + "Evidence"),
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GRAY + "Evidence"),
                 MenuItems.lore(evidenceLore)
         ).slot(MenuSlots.MODIFY_EVIDENCE);
     }
@@ -89,7 +89,7 @@ public final class PunishmentModifyItemFactory {
         if (canModify) {
             return CirrusItem.of(
                     CirrusItemType.GOLDEN_APPLE,
-                    CirrusChatElement.ofLegacyText(MenuItems.COLOR_GREEN + "Pardon Punishment"),
+                    CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GREEN + "Pardon Punishment"),
                     MenuItems.lore(
                             MenuItems.COLOR_GRAY + "Remove punishment and clear",
                             MenuItems.COLOR_GRAY + "associated points"
@@ -98,7 +98,7 @@ public final class PunishmentModifyItemFactory {
         }
         return CirrusItem.of(
                 CirrusItemType.GOLDEN_APPLE,
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_GRAY + "Pardon Punishment"),
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GRAY + "Pardon Punishment"),
                 MenuItems.lore(
                         MenuItems.COLOR_RED + "No Permission"
                 )
@@ -110,7 +110,7 @@ public final class PunishmentModifyItemFactory {
         if (canModify) {
             return CirrusItem.of(
                     CirrusItemType.ANVIL,
-                    CirrusChatElement.ofLegacyText(MenuItems.COLOR_GOLD + "Change Duration"),
+                    CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GOLD + "Change Duration"),
                     MenuItems.lore(
                             MenuItems.COLOR_GRAY + "Shorten or lengthen punishment duration",
                             "",
@@ -120,7 +120,7 @@ public final class PunishmentModifyItemFactory {
         }
         return CirrusItem.of(
                 CirrusItemType.ANVIL,
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_GRAY + "Change Duration"),
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GRAY + "Change Duration"),
                 MenuItems.lore(
                         MenuItems.COLOR_GRAY + "Current: " + MenuItems.COLOR_WHITE + MenuItems.formatDuration(effectiveDuration),
                         "",
@@ -149,7 +149,7 @@ public final class PunishmentModifyItemFactory {
 
         return CirrusItem.of(
                 CirrusItemType.ENDER_EYE,
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_GOLD + "Linked Tickets"),
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GOLD + "Linked Tickets"),
                 MenuItems.lore(ticketLore)
         ).slot(MenuSlots.MODIFY_LINKED_TICKETS).actionHandler("linkedTickets");
     }
@@ -160,7 +160,7 @@ public final class PunishmentModifyItemFactory {
         if (canModify) {
             return CirrusItem.of(
                     itemType,
-                    CirrusChatElement.ofLegacyText(MenuItems.COLOR_GOLD + "Toggle Stat-Wipe"),
+                    CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GOLD + "Toggle Stat-Wipe"),
                     MenuItems.lore(
                             MenuItems.COLOR_GRAY + (statWipe ? "Disable" : "Enable") + " stat-wiping for this ban",
                             "",
@@ -170,7 +170,7 @@ public final class PunishmentModifyItemFactory {
         }
         return CirrusItem.of(
                 itemType,
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_GRAY + "Toggle Stat-Wipe"),
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GRAY + "Toggle Stat-Wipe"),
                 MenuItems.lore(
                         MenuItems.COLOR_GRAY + "Current: " + (statWipe ? MenuItems.COLOR_GREEN + "Enabled" : MenuItems.COLOR_RED + "Disabled"),
                         "",
@@ -185,7 +185,7 @@ public final class PunishmentModifyItemFactory {
         if (canModify) {
             return CirrusItem.of(
                     itemType,
-                    CirrusChatElement.ofLegacyText(MenuItems.COLOR_GOLD + "Toggle Alt-Blocking"),
+                    CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GOLD + "Toggle Alt-Blocking"),
                     MenuItems.lore(
                             MenuItems.COLOR_GRAY + (altBlock ? "Disable" : "Enable") + " alt-blocking for this ban",
                             "",
@@ -195,7 +195,7 @@ public final class PunishmentModifyItemFactory {
         }
         return CirrusItem.of(
                 itemType,
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_GRAY + "Toggle Alt-Blocking"),
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GRAY + "Toggle Alt-Blocking"),
                 MenuItems.lore(
                         MenuItems.COLOR_GRAY + "Current: " + (altBlock ? MenuItems.COLOR_GREEN + "Enabled" : MenuItems.COLOR_RED + "Disabled"),
                         "",

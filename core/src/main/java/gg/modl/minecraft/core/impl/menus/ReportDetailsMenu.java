@@ -57,7 +57,7 @@ public class ReportDetailsMenu extends SimpleMenu {
     private void buildMenu() {
         set(CirrusItem.of(
                 CirrusItemType.WRITABLE_BOOK,
-                CirrusChatElement.ofLegacyText(locale.getMessage("messages.report_add_details")),
+                CirrusChatElement.ofMiniMessage(locale.getMessage("messages.report_add_details")),
                 MenuItems.lore(locale.getMessageList("messages.report_add_details_lore"))
         ).slot(SLOT_ADD_DETAILS).actionHandler("addDetails"));
 
@@ -65,7 +65,7 @@ public class ReportDetailsMenu extends SimpleMenu {
 
         set(CirrusItem.of(
                 CirrusItemType.of("minecraft:wooden_sword"),
-                CirrusChatElement.ofLegacyText(locale.getMessage("messages.report_skip_details")),
+                CirrusChatElement.ofMiniMessage(locale.getMessage("messages.report_skip_details")),
                 MenuItems.lore(locale.getMessageList("messages.report_skip_details_lore"))
         ).slot(SLOT_SKIP_DETAILS).actionHandler("skipDetails"));
 

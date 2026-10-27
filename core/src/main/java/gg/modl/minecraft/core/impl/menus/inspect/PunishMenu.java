@@ -141,7 +141,7 @@ public class PunishMenu extends BaseInspectMenu {
         if (punishmentTypes.isEmpty() && guiConfig.getEnabledSlots().isEmpty()) {
             set(CirrusItem.of(
                     CirrusItemType.BARRIER,
-                    CirrusChatElement.ofLegacyText(MenuItems.COLOR_RED + "No Punishment Types"),
+                    CirrusChatElement.ofMiniMessage(MenuItems.COLOR_RED + "No Punishment Types"),
                     MenuItems.lore(
                             MenuItems.COLOR_GRAY + "Failed to load punishment types",
                             MenuItems.COLOR_GRAY + "from the API"
@@ -180,7 +180,7 @@ public class PunishMenu extends BaseInspectMenu {
 
         return CirrusItem.of(
                 itemType,
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_RED + slotConfig.getTitle()),
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_RED + slotConfig.getTitle()),
                 MenuItems.lore(lore)
         ).actionHandler("punishType_" + type.ordinal());
     }
@@ -190,7 +190,7 @@ public class PunishMenu extends BaseInspectMenu {
 
         return CirrusItem.of(
                 itemType,
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_GRAY + slotConfig.getTitle()),
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GRAY + slotConfig.getTitle()),
                 MenuItems.lore(
                         MenuItems.COLOR_RED + "No Permission",
                         MenuItems.COLOR_GRAY + "You don't have permission",
@@ -204,7 +204,7 @@ public class PunishMenu extends BaseInspectMenu {
 
         return CirrusItem.of(
                 itemType,
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_GRAY + slotConfig.getTitle()),
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GRAY + slotConfig.getTitle()),
                 MenuItems.lore(
                         MenuItems.COLOR_RED + "Punishment type not found",
                         MenuItems.COLOR_GRAY + "Ordinal: " + slotConfig.getOrdinal()
@@ -215,13 +215,13 @@ public class PunishMenu extends BaseInspectMenu {
     private String processPlaceholder(String line, PunishmentTypesResponse.PunishmentTypeData type) {
         String result = line;
 
-        result = result.replace("&7", MenuItems.COLOR_GRAY);
-        result = result.replace("&f", MenuItems.COLOR_WHITE);
-        result = result.replace("&c", MenuItems.COLOR_RED);
-        result = result.replace("&a", MenuItems.COLOR_GREEN);
-        result = result.replace("&e", MenuItems.COLOR_YELLOW);
-        result = result.replace("&6", MenuItems.COLOR_GOLD);
-        result = result.replace("&b", MenuItems.COLOR_AQUA);
+        result = result.replace("<gray>", MenuItems.COLOR_GRAY);
+        result = result.replace("<white>", MenuItems.COLOR_WHITE);
+        result = result.replace("<red>", MenuItems.COLOR_RED);
+        result = result.replace("<green>", MenuItems.COLOR_GREEN);
+        result = result.replace("<yellow>", MenuItems.COLOR_YELLOW);
+        result = result.replace("<gold>", MenuItems.COLOR_GOLD);
+        result = result.replace("<aqua>", MenuItems.COLOR_AQUA);
 
         if (type.staffDescription() != null)
             result = result.replace("{staff-description}", type.staffDescription());

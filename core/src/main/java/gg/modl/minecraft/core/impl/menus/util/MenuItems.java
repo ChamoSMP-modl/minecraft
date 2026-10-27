@@ -20,13 +20,13 @@ public final class MenuItems {
         if (formatter != null) dateFormatter = formatter;
     }
 
-    public static final String COLOR_GOLD = "§6", COLOR_YELLOW = "§e", COLOR_GREEN = "§a", COLOR_RED = "§c",
-            COLOR_GRAY = "§7", COLOR_DARK_GRAY = "§8", COLOR_WHITE = "§f", COLOR_AQUA = "§b";
+    public static final String COLOR_GOLD = "<gold>", COLOR_YELLOW = "<yellow>", COLOR_GREEN = "<green>", COLOR_RED = "<red>",
+            COLOR_GRAY = "<gray>", COLOR_DARK_GRAY = "<dark_gray>", COLOR_WHITE = "<white>", COLOR_AQUA = "<aqua>";
 
     public static CirrusItem backButton() {
         return CirrusItem.of(
                 CirrusItemType.RED_BED,
-                CirrusChatElement.ofLegacyText(COLOR_RED + "Back"),
+                CirrusChatElement.ofMiniMessage(COLOR_RED + "Back"),
                 lore(COLOR_GRAY + "Return to previous menu")
         ).actionHandler("back");
     }
@@ -34,21 +34,21 @@ public final class MenuItems {
     public static CirrusItem previousPageButton() {
         return CirrusItem.of(
                 CirrusItemType.ARROW,
-                CirrusChatElement.ofLegacyText(COLOR_YELLOW + "Previous Page")
+                CirrusChatElement.ofMiniMessage(COLOR_YELLOW + "Previous Page")
         ).actionHandler("previousPage");
     }
 
     public static CirrusItem nextPageButton() {
         return CirrusItem.of(
                 CirrusItemType.ARROW,
-                CirrusChatElement.ofLegacyText(COLOR_YELLOW + "Next Page")
+                CirrusChatElement.ofMiniMessage(COLOR_YELLOW + "Next Page")
         ).actionHandler("nextPage");
     }
 
     public static CirrusItem playerHead(String title, List<String> loreLines) {
         return CirrusItem.of(
                 CirrusItemType.PLAYER_HEAD,
-                CirrusChatElement.ofLegacyText(title),
+                CirrusChatElement.ofMiniMessage(title),
                 lore(loreLines)
         );
     }
@@ -67,7 +67,7 @@ public final class MenuItems {
 
         return CirrusItem.of(
                 CirrusItemType.ANVIL,
-                CirrusChatElement.ofLegacyText(COLOR_GOLD + "Filter"),
+                CirrusChatElement.ofMiniMessage(COLOR_GOLD + "Filter"),
                 lore(loreLines)
         ).actionHandler("filter");
     }
@@ -88,7 +88,7 @@ public final class MenuItems {
 
         return CirrusItem.of(
                 CirrusItemType.ANVIL,
-                CirrusChatElement.ofLegacyText(COLOR_GOLD + "Filter"),
+                CirrusChatElement.ofMiniMessage(COLOR_GOLD + "Filter"),
                 lore(loreLines)
         ).actionHandler("filter");
     }
@@ -102,7 +102,7 @@ public final class MenuItems {
         loreLines.add(COLOR_YELLOW + "Click to show only " + opposite + " " + itemLabel);
         return CirrusItem.of(
                 CirrusItemType.ANVIL,
-                CirrusChatElement.ofLegacyText(COLOR_GOLD + "Filter"),
+                CirrusChatElement.ofMiniMessage(COLOR_GOLD + "Filter"),
                 lore(loreLines)
         ).actionHandler("filter");
     }
@@ -121,7 +121,7 @@ public final class MenuItems {
 
         return CirrusItem.of(
                 CirrusItemType.ANVIL,
-                CirrusChatElement.ofLegacyText(COLOR_GOLD + "Sort"),
+                CirrusChatElement.ofMiniMessage(COLOR_GOLD + "Sort"),
                 lore(loreLines)
         ).actionHandler("sort");
     }
@@ -168,7 +168,7 @@ public final class MenuItems {
             wordCount++;
         }
 
-        if (currentLine.length() > 0) lines.add(COLOR_WHITE + currentLine.toString().trim());
+        if (!currentLine.isEmpty()) lines.add(COLOR_WHITE + currentLine.toString().trim());
 
         return lines;
     }
@@ -176,14 +176,14 @@ public final class MenuItems {
     public static List<CirrusChatElement> lore(String... lines) {
         return Arrays.stream(lines)
                 .map(MenuItems::translateColorCodes)
-                .map(CirrusChatElement::ofLegacyText)
+                .map(CirrusChatElement::ofMiniMessage)
                 .collect(Collectors.toList());
     }
 
     public static List<CirrusChatElement> lore(List<String> lines) {
         return lines.stream()
                 .map(MenuItems::translateColorCodes)
-                .map(CirrusChatElement::ofLegacyText)
+                .map(CirrusChatElement::ofMiniMessage)
                 .collect(Collectors.toList());
     }
 

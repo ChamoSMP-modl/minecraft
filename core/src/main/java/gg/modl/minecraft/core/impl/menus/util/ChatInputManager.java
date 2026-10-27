@@ -14,8 +14,8 @@ import java.util.function.Consumer;
 
 public class ChatInputManager {
     private static final long INPUT_EXPIRY_MS = 60_000;
-    private static final String PROMPT_PREFIX = "§6§l» §e";
-    private static final String TIMEOUT_MESSAGE = "§cInput prompt timed out. Please try again.";
+    private static final String PROMPT_PREFIX = "<gold><b>» <yellow>";
+    private static final String TIMEOUT_MESSAGE = "<red>Input prompt timed out. Please try again.";
 
     private final Platform platform;
     private final Map<UUID, PendingInput> pendingInputs = new ConcurrentHashMap<>();
@@ -41,7 +41,7 @@ public class ChatInputManager {
         pendingInputs.put(playerUuid, new PendingInput(prompt, callback, cancelCallback));
         platform.sendMessage(playerUuid, "");
         platform.sendMessage(playerUuid, PROMPT_PREFIX + prompt);
-        platform.sendMessage(playerUuid, "§7Type your response in chat, or type §ccancel §7to cancel.");
+        platform.sendMessage(playerUuid, "<gray>Type your response in chat, or type <red>cancel <gray>to cancel.");
         platform.sendMessage(playerUuid, "");
     }
 

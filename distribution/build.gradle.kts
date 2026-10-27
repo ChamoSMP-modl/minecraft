@@ -13,6 +13,9 @@ dependencies {
     implementation(project(":platforms:spigot"))
     implementation(project(":platforms:spigot-sv"))
     implementation(project(":platforms:velocity"))
+
+    implementation(libs.cirrus.api)
+    implementation(libs.cirrus.common)
 }
 
 tasks {

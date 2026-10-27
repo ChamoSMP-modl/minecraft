@@ -6,13 +6,8 @@ import gg.modl.minecraft.core.service.sync.StatWipeExecutor;
 import gg.modl.minecraft.core.util.PluginLogger;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.*;
+import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
@@ -39,8 +34,8 @@ public class BridgeServer implements StatWipeExecutor, BridgeBroadcaster {
     private final Set<Channel> authenticatedChannels = ConcurrentHashMap.newKeySet();
     private final Queue<byte[]> pendingMessages = new ConcurrentLinkedQueue<>();
 
-    private EventLoopGroup bossGroup;
-    private EventLoopGroup workerGroup;
+    private MultiThreadIoEventLoopGroup bossGroup;
+    private MultiThreadIoEventLoopGroup workerGroup;
     private Channel serverChannel;
 
     public BridgeServer(int port, String secret, BridgeMessageDispatcher dispatcher, PluginLogger logger) {
@@ -56,8 +51,8 @@ public class BridgeServer implements StatWipeExecutor, BridgeBroadcaster {
     }
 
     public void start() {
-        bossGroup = new NioEventLoopGroup(1);
-        workerGroup = new NioEventLoopGroup(2);
+        bossGroup = new MultiThreadIoEventLoopGroup(1, NioIoHandler.newFactory());
+        workerGroup = new MultiThreadIoEventLoopGroup(2, NioIoHandler.newFactory());
 
         ServerBootstrap bootstrap = new ServerBootstrap();
         bootstrap.group(bossGroup, workerGroup)

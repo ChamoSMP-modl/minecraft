@@ -27,7 +27,7 @@ import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 
 @RequiredArgsConstructor
 public class ReportsCommand {
-    private static final String STATUS_OPEN_COLOR = "&a", STATUS_CLOSED_COLOR = "&7", STATUS_DEFAULT_COLOR = "&f";
+    private static final String STATUS_OPEN_COLOR = "<green>", STATUS_CLOSED_COLOR = "<gray>", STATUS_DEFAULT_COLOR = "<white>";
     private static final int MAX_CONTENT_LENGTH = 80, TRUNCATED_LENGTH = 77;
 
     private final HttpClientHolder httpClientHolder;

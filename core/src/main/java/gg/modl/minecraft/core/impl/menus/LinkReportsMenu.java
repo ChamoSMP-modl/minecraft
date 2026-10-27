@@ -76,7 +76,7 @@ public class LinkReportsMenu extends ChromeListMenu<LinkableReport> {
 
         items.put(MenuSlots.LINK_REPORTS_APPLY, CirrusItem.of(
                 CirrusItemType.OAK_SIGN,
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_GREEN + "Apply Selection"),
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GREEN + "Apply Selection"),
                 MenuItems.lore(
                         MenuItems.COLOR_GRAY + "Save selection and return",
                         "",
@@ -86,7 +86,7 @@ public class LinkReportsMenu extends ChromeListMenu<LinkableReport> {
 
         items.put(MenuSlots.LINK_REPORTS_SELECT_ALL, CirrusItem.of(
                 CirrusItemType.EMERALD,
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_GREEN + "Select All"),
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GREEN + "Select All"),
                 MenuItems.lore(
                         MenuItems.COLOR_GRAY + "Toggle all currently filtered reports"
                 )

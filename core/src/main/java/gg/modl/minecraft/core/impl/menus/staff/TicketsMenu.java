@@ -134,7 +134,7 @@ public class TicketsMenu extends BaseStaffListMenu<TicketsMenu.Ticket> {
 
         return CirrusItem.of(
                 itemType,
-                CirrusChatElement.ofLegacyText(title),
+                CirrusChatElement.ofMiniMessage(title),
                 MenuItems.lore(lore)
         );
     }

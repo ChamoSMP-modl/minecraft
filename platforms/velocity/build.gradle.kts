@@ -12,8 +12,8 @@ dependencies {
     compileOnly(libs.lamp.common)
     compileOnly(libs.lamp.brigadier)
     compileOnly(libs.lamp.velocity)
-    compileOnly(libs.cirrus.api)
-    compileOnly(libs.cirrus.velocity)
+
+    implementation(libs.cirrus.velocity)
 
     implementation(libs.libby.velocity)
 

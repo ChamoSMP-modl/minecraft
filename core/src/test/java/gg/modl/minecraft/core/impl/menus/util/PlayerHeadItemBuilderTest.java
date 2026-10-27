@@ -28,11 +28,11 @@ class PlayerHeadItemBuilderTest {
         vars.put("country", null);
 
         List<String> rendered = assertDoesNotThrow(() -> PlayerHeadItemBuilder.renderLoreLines(
-                Collections.singletonList("&7Region: &f{region} (Country: {country})"),
+                Collections.singletonList("<gray>Region: <white>{region} (Country: {country})"),
                 vars
         ));
 
-        assertEquals(Collections.singletonList("&7Region: &fUnknown (Country: Unknown)"), rendered);
+        assertEquals(Collections.singletonList("<gray>Region: <white>Unknown (Country: Unknown)"), rendered);
     }
 
     @Test

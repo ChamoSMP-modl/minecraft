@@ -15,13 +15,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
@@ -57,7 +51,8 @@ public class StaffModeCore {
     private final FreezeCore freezeCore;
     private final StaffModeOps ops;
 
-    @Setter private BridgeQueryClient bridgeClient;
+    @Setter
+    private BridgeQueryClient bridgeClient;
 
     private final Set<UUID> staffModeActive = ConcurrentHashMap.newKeySet();
     private final Map<UUID, UUID> targetByStaff = new ConcurrentHashMap<>();
@@ -582,7 +577,7 @@ public class StaffModeCore {
         String candidate = resolved;
         StringBuilder suffix = new StringBuilder();
         while (usedEntries.contains(candidate) && suffix.length() < SCOREBOARD_MAX_LINE_LENGTH) {
-            suffix.append('§').append('r');
+            suffix.append("<reset>");
             candidate = truncateColorSafe(resolved, SCOREBOARD_MAX_LINE_LENGTH - suffix.length()) + suffix;
         }
         return candidate;
@@ -606,7 +601,7 @@ public class StaffModeCore {
                 .replace("{max_players}", String.valueOf(ops.maxPlayerCount()))
                 .replace("{date}", LocalDateTime.now().format(DATE_FORMAT))
                 .replace("{vanish}", isVanished ? config.getVanish() : "")
-                .replace("{vanish_status}", isVanished ? localeManager.colorize("&aON") : localeManager.colorize("&cOFF"))
+                .replace("{vanish_status}", isVanished ? localeManager.colorize("<green>ON") : localeManager.colorize("<red>OFF"))
                 .replace("{vanished}", isVanished ? "Vanished" : "Visible")
                 .replace("{staff_online}", String.valueOf(staffModeActive.size()));
         return replaceTargetPlaceholders(result, uuid);
@@ -621,7 +616,7 @@ public class StaffModeCore {
                     .replace("{target_health}", String.format("%.1f", ops.playerHealth(targetUuid)))
                     .replace("{target_ping}", String.valueOf(ops.playerPing(targetUuid)))
                     .replace("{freeze_status}", freezeCore.isFrozen(targetUuid)
-                            ? localeManager.colorize("&cYes") : localeManager.colorize("&aNo"));
+                            ? localeManager.colorize("<red>Yes") : localeManager.colorize("<green>No"));
         }
 
         String nameValue = targetUuid != null ? "Offline" : "None";

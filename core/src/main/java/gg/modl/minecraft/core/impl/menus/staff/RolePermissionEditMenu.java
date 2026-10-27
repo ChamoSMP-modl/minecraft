@@ -122,7 +122,7 @@ public class RolePermissionEditMenu extends BaseStaffListMenu<RolePermissionEdit
         boolean hasChanges = !enabledPermissions.equals(originalPermissions);
         items.put(MenuSlots.FILTER_BUTTON, CirrusItem.of(
                 hasChanges ? CirrusItemType.LIME_DYE : CirrusItemType.GRAY_DYE,
-                CirrusChatElement.ofLegacyText(
+                CirrusChatElement.ofMiniMessage(
                         hasChanges ? MenuItems.COLOR_GREEN + "Apply Changes" : MenuItems.COLOR_GRAY + "No Changes"),
                 MenuItems.lore(
                         hasChanges ?
@@ -163,7 +163,7 @@ public class RolePermissionEditMenu extends BaseStaffListMenu<RolePermissionEdit
     protected CirrusItem map(Permission permission) {
         if ("no_permission".equals(permission.getNode())) return CirrusItem.of(
                 CirrusItemType.BARRIER,
-                CirrusChatElement.ofLegacyText(MenuItems.COLOR_RED + "No Permission"),
+                CirrusChatElement.ofMiniMessage(MenuItems.COLOR_RED + "No Permission"),
                     MenuItems.lore(
                             MenuItems.COLOR_GRAY + "You don't have permission",
                             MenuItems.COLOR_GRAY + "to edit role permissions"
@@ -179,7 +179,7 @@ public class RolePermissionEditMenu extends BaseStaffListMenu<RolePermissionEdit
         if (isChild && isParentEnabled(permission.getNode())) {
             CirrusItem item = CirrusItem.of(
                     CirrusItemType.LIME_DYE,
-                    CirrusChatElement.ofLegacyText(MenuItems.COLOR_GREEN + displayPrefix + permission.getNode()),
+                    CirrusChatElement.ofMiniMessage(MenuItems.COLOR_GREEN + displayPrefix + permission.getNode()),
                     MenuItems.lore(
                             MenuItems.COLOR_DARK_GRAY + "Auto-granted by parent"
                     )
@@ -190,7 +190,7 @@ public class RolePermissionEditMenu extends BaseStaffListMenu<RolePermissionEdit
 
         return CirrusItem.of(
             permission.isEnabled() ? CirrusItemType.LIME_DYE : CirrusItemType.GRAY_DYE,
-            CirrusChatElement.ofLegacyText(
+            CirrusChatElement.ofMiniMessage(
                 (permission.isEnabled() ? MenuItems.COLOR_GREEN : MenuItems.COLOR_GRAY) + displayPrefix + permission.getNode() + suffix
             ),
             MenuItems.lore(MenuItems.COLOR_YELLOW + "Click to toggle")

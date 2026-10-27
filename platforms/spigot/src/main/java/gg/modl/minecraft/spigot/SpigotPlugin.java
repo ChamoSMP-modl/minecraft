@@ -45,10 +45,16 @@ public class SpigotPlugin extends JavaPlugin {
     @Override
     public synchronized void onLoad() {
         this.pluginLogger = PluginLogger.fromJul(getLogger());
+
+        pluginLogger.info("Loading Cirrus/Proto Relocated dependencies...");
+        PaperLoader.resolveLibbyDependencies(this);
+        pluginLogger.info("Successfully loaded Cirrus/Proto Relocated dependencies");
+
         this.signedVelocityBootstrap = new SignedVelocityBootstrap(this);
         registerPolarLoaderCallback();
 
         bootConfig = loadBootConfig();
+
         if (bootConfig == null) {
             needsSetup = true;
         }
@@ -158,7 +164,6 @@ public class SpigotPlugin extends JavaPlugin {
     }
 
     private void enableStandaloneMode(boolean lateBootstrap, HttpManager httpManager) {
-
         new CirrusSpigot(this).init();
 
         TicketCreator ticketCreator = TicketCreatorFactory.standalone(this, () -> loader.getHttpClient());

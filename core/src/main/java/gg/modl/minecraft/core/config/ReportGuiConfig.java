@@ -32,7 +32,7 @@ public class ReportGuiConfig {
 
     @Data @NoArgsConstructor
     public static class InfoConfig {
-        private String item = "minecraft:oak_sign", title = "&eInformation";
+        private String item = "minecraft:oak_sign", title = "<yellow>Information";
         private List<String> description = new ArrayList<>();
     }
 
@@ -151,36 +151,36 @@ public class ReportGuiConfig {
 
         config.slots.put(1, new ReportSlotConfig("minecraft:paper", "", listOf(), 1, false, false, false));
         config.slots.put(2, new ReportSlotConfig("minecraft:feather", "Chat Abuse",
-            listOf("&7Low-quality chat, spam, or inappropriate language", "", "&eClick to report"), 2, true, true, false));
+            listOf("<gray>Low-quality chat, spam, or inappropriate language", "", "<yellow>Click to report"), 2, true, true, false));
         config.slots.put(3, new ReportSlotConfig("minecraft:pufferfish", "Anti-social",
-            listOf("&7Harassment, threats, or bullying", "", "&eClick to report"), 3, true, true, false));
+            listOf("<gray>Harassment, threats, or bullying", "", "<yellow>Click to report"), 3, true, true, false));
         config.slots.put(4, new ReportSlotConfig("minecraft:name_tag", "Inappropriate Username/Skin",
-            listOf("&7Offensive username or skin", "", "&eClick to report"), 4, true, false, false));
+            listOf("<gray>Offensive username or skin", "", "<yellow>Click to report"), 4, true, false, false));
         config.slots.put(5, new ReportSlotConfig("minecraft:diamond_sword", "Cheating",
-            listOf("&7Hacking or using unfair modifications", "", "&eClick to report"), 5, true, false, true));
+            listOf("<gray>Hacking or using unfair modifications", "", "<yellow>Click to report"), 5, true, false, true));
         config.slots.put(6, new ReportSlotConfig("minecraft:book", "Game Rule Violation",
-            listOf("&7Violating server-specific game rules", "", "&eClick to report"), 6, true, false, true));
+            listOf("<gray>Violating server-specific game rules", "", "<yellow>Click to report"), 6, true, false, true));
         config.slots.put(7, new ReportSlotConfig("minecraft:paper", "", listOf(), 7, false, false, false));
         config.slots.put(8, new ReportSlotConfig("minecraft:paper", "", listOf(), 8, false, false, false));
         config.slots.put(9, new ReportSlotConfig("minecraft:tnt", "Exploits",
-            listOf("&7Abusing bugs or exploits", "", "&eClick to report"), 9, true, false, true));
+            listOf("<gray>Abusing bugs or exploits", "", "<yellow>Click to report"), 9, true, false, true));
         config.slots.put(10, new ReportSlotConfig("minecraft:experience_bottle", "Stats Boosting",
-            listOf("&7Artificially inflating stats", "", "&eClick to report"), 10, true, false, true));
+            listOf("<gray>Artificially inflating stats", "", "<yellow>Click to report"), 10, true, false, true));
         config.slots.put(11, new ReportSlotConfig("minecraft:paper", "Other",
-            listOf("&7Any other rule violation", "", "&eClick to report"), 11, true, false, false));
+            listOf("<gray>Any other rule violation", "", "<yellow>Click to report"), 11, true, false, false));
         config.slots.put(12, new ReportSlotConfig("minecraft:paper", "", listOf(), 12, false, false, false));
         config.slots.put(13, new ReportSlotConfig("minecraft:paper", "", listOf(), 13, false, false, false));
         config.slots.put(14, new ReportSlotConfig("minecraft:paper", "", listOf(), 14, false, false, false));
 
         InfoConfig infoConfig = new InfoConfig();
         infoConfig.setItem("minecraft:oak_sign");
-        infoConfig.setTitle("&eInformation");
+        infoConfig.setTitle("<yellow>Information");
         infoConfig.setDescription(listOf(
-            "&7Please review the server rules",
-            "&7before submitting a report.",
+            "<gray>Please review the server rules",
+            "<gray>before submitting a report.",
             "",
-            "&7False reports may result in",
-            "&7action against your account."
+            "<gray>False reports may result in",
+            "<gray>action against your account."
         ));
         config.setInfoConfig(infoConfig);
 

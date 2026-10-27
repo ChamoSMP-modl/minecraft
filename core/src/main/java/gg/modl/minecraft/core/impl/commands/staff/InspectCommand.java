@@ -41,8 +41,8 @@ import static gg.modl.minecraft.core.util.Java8Collections.mapOf;
 @RequiredArgsConstructor
 public class InspectCommand {
     private static final String STATUS_ACTIVE = "Active", STATUS_PARDONED = "Pardoned", STATUS_INACTIVE = "Inactive",
-            DURATION_PERMANENT = "Permanent", COLOR_YES = "&cYes", COLOR_NO = "&aNo",
-            COLOR_ACTIVE = "&a", COLOR_INACTIVE = "&7";
+            DURATION_PERMANENT = "Permanent", COLOR_YES = "<red>Yes", COLOR_NO = "<green>No",
+            COLOR_ACTIVE = "<green>", COLOR_INACTIVE = "<gray>";
     private static final int MAX_NOTES_DISPLAYED = 3, MAX_LINKED_ACCOUNTS_DISPLAYED = 5;
 
     private final HttpClientHolder httpClientHolder;

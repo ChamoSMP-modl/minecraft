@@ -114,12 +114,12 @@ public final class PlayerHeadItemBuilder {
         vars.put("player_name", targetName);
         vars.put("uuid", targetUuid.toString());
         vars.put("first_login", firstLogin);
-        vars.put("is_online", isOnline ? "&aYes" : "&cNo");
+        vars.put("is_online", isOnline ? "<green>Yes" : "<red>No");
         vars.put("last_seen_or_session_time", lastSeenOrSessionTime);
         vars.put("playtime", playtime);
-        vars.put("real_ip_logged", realIpLogged ? "&aYes" : "&cNo");
-        vars.put("is_banned", isBanned ? "&cYes" : "&aNo");
-        vars.put("is_muted", isMuted ? "&cYes" : "&aNo");
+        vars.put("real_ip_logged", realIpLogged ? "<green>Yes" : "<red>No");
+        vars.put("is_banned", isBanned ? "<red>Yes" : "<green>No");
+        vars.put("is_muted", isMuted ? "<red>Yes" : "<green>No");
         vars.put("server", server);
         vars.put("region", region);
         vars.put("country", country);
@@ -132,7 +132,7 @@ public final class PlayerHeadItemBuilder {
 
         CirrusItem headItem = CirrusItem.of(
                 CirrusItemType.PLAYER_HEAD,
-                CirrusChatElement.ofLegacyText(title),
+                CirrusChatElement.ofMiniMessage(title),
                 MenuItems.lore(lore)
         );
 
