@@ -31,7 +31,7 @@ public class ViolationTracker {
 
     public void stopCleanupTask() {
         if (cleanupTask != null) {
-            cleanupTask.cancel();
+            //cleanupTask.cancel();
             cleanupTask = null;
         }
     }

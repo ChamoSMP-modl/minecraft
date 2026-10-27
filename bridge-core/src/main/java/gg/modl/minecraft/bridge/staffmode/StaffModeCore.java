@@ -80,7 +80,7 @@ public class StaffModeCore {
 
     public void shutdown() {
         if (scoreboardTimer != null) {
-            scoreboardTimer.cancel();
+            //scoreboardTimer.cancel();
             scoreboardTimer = null;
         }
         Set<UUID> holdingCustody = new HashSet<>(staffModeActive);
