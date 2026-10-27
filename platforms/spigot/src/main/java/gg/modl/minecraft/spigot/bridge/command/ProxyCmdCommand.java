@@ -25,14 +25,14 @@ public class ProxyCmdCommand {
     @Executes
     public void onExecute(CommandSender sender, @StringArg(StringArgType.GREEDY) String command) {
         if (sender instanceof Player) {
-            sender.sendMessage(localeManager.getMessage("command.proxycmd.console_only"));
+            sender.sendRichMessage(localeManager.getMessage("command.proxycmd.console_only"));
         }
         if (!bridgeClient.isConnected()) {
-            sender.sendMessage(localeManager.getMessage("command.proxycmd.not_connected"));
+            sender.sendRichMessage(localeManager.getMessage("command.proxycmd.not_connected"));
         }
 
         bridgeClient.sendMessage(PROXY_CMD_ACTION, command);
         plugin.getLogger().info("Forwarded command to proxy: " + command);
-        sender.sendMessage(localeManager.getMessage("command.proxycmd.sent", mapOf("command", command)));
+        sender.sendRichMessage(localeManager.getMessage("command.proxycmd.sent", mapOf("command", command)));
     }
 }

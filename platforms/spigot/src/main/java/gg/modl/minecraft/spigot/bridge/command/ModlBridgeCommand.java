@@ -16,11 +16,11 @@ public class ModlBridgeCommand {
 
     @Executes("reload")
     public void onReload(CommandSender sender) {
-        presenter.reload(sender::sendMessage);
+        presenter.reload(sender::sendRichMessage);
     }
 
     @DefaultExecutes
     public void onDefault(CommandSender sender) {
-        sender.sendMessage(presenter.usage());
+        sender.sendRichMessage(presenter.usage());
     }
 }

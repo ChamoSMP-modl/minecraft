@@ -60,4 +60,8 @@ public record VelocityAdventureCommandActor(
         reply(MiniMessage.miniMessage().deserialize("<red>" + message));
     }
 
+    @Override
+    public void sendRawMessage(@NotNull String message) {
+        reply(MiniMessage.miniMessage().deserialize(message));
+    }
 }
