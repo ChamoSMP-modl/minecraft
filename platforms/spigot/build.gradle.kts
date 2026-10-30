@@ -16,6 +16,8 @@ dependencies {
 
     implementation(libs.libby.paper)
 
+    implementation(libs.faststats.bukkit)
+
     // Anticheat APIs
     compileOnly(libs.polar.api)
     compileOnly(libs.intave.access)

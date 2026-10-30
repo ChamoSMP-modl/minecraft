@@ -46,13 +46,16 @@ public class SpigotSetupWizard implements Listener {
     }
 
     private void startFolia() {
-        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(r -> {
-            Thread t = new Thread(r, "modl-setup-wizard");
-            t.setDaemon(true);
-            return t;
-        });
-        executor.schedule(this::runWizard, WIZARD_START_DELAY_SECONDS, TimeUnit.SECONDS);
-        executor.shutdown();
+        try (
+                ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(r -> {
+                    Thread t = new Thread(r, "modl-setup-wizard");
+                    t.setDaemon(true);
+                    return t;
+                })
+        ) {
+            executor.schedule(this::runWizard, WIZARD_START_DELAY_SECONDS, TimeUnit.SECONDS);
+            executor.shutdown();
+        }
     }
 
     private void runWizard() {

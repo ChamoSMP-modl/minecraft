@@ -14,32 +14,6 @@ folia-supported: true
 
 dependencies:
   server:
-    # Protocol related dependencies
-    ProtocolLib:
-      required: false
-      load: BEFORE
-      join-classpath: false
-    ProtocolSupport:
-      required: false
-      load: BEFORE
-      join-classpath: false
-    ViaVersion:
-      required: false
-      load: BEFORE
-      join-classpath: false
-    ViaBackwards:
-      required: false
-      load: BEFORE
-      join-classpath: false
-    ViaRewind:
-      required: false
-      load: BEFORE
-      join-classpath: false
-    Geyser-Spigot:
-      required: false
-      load: BEFORE
-      join-classpath: false
-
     # If Intave is loaded by the loader, it won't make modl load before it and thus Intave will not hook
     IntaveLoader:
       required: false

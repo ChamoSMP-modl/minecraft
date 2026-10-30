@@ -23,6 +23,7 @@ polar-api = "2.3.0"
 intave-access = "14.4.2"
 annotations = "26.1.0"
 strokk = "2.3.1"
+faststats = "0.31.0"
 
 shadow = "9.6.1"
 run = "3.1.0"
@@ -90,6 +91,10 @@ junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockito-inline" }
 mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito-junit-jupiter" }
 annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
+
+faststats-bukkit = { module = "dev.faststats.metrics:bukkit", version.ref = "faststats" }
+faststats-velocity = { module = "dev.faststats.metrics:velocity", version.ref = "faststats" }
+
 
 [plugins]
 

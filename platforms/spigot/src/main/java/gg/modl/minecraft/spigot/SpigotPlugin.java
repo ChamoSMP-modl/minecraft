@@ -1,6 +1,8 @@
 package gg.modl.minecraft.spigot;
 
 import com.github.retrooper.packetevents.PacketEvents;
+import dev.faststats.Metrics;
+import dev.faststats.bukkit.BukkitContext;
 import dev.simplix.cirrus.spigot.CirrusSpigot;
 import gg.modl.minecraft.api.http.request.StartupRequest;
 import gg.modl.minecraft.bridge.config.BridgeWizardConfigWriter;
@@ -42,6 +44,10 @@ public class SpigotPlugin extends JavaPlugin {
     private volatile boolean polarEnabledBeforeBridgeInit = false;
     private SignedVelocityBootstrap signedVelocityBootstrap;
 
+    private final BukkitContext fastStats = new BukkitContext.Factory(this, "e3b77f89e661e7b81a64273c7c6c91cf")
+            .metrics(Metrics.Factory::create)
+            .create();
+
     @Override
     public synchronized void onLoad() {
         this.pluginLogger = PluginLogger.fromJul(getLogger());
@@ -64,6 +70,8 @@ public class SpigotPlugin extends JavaPlugin {
 
     @Override
     public synchronized void onEnable() {
+        fastStats.ready();
+
         if (needsSetup) {
             getLogger().info("No configuration found. Starting setup wizard...");
             new SpigotSetupWizard(this, pluginLogger, this::initializeAfterWizard).start();
@@ -212,6 +220,8 @@ public class SpigotPlugin extends JavaPlugin {
 
     @Override
     public synchronized void onDisable() {
+        fastStats.shutdown();
+
         signedVelocityBootstrap.shutdown();
         if (bridgeComponent != null) bridgeComponent.disable();
         if (loader != null) loader.shutdown();

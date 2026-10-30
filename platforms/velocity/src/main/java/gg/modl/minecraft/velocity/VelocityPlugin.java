@@ -12,6 +12,8 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
+import dev.faststats.Metrics;
+import dev.faststats.velocity.VelocityContext;
 import dev.simplix.cirrus.velocity.CirrusVelocity;
 import gg.modl.minecraft.api.LibraryRecord;
 import gg.modl.minecraft.api.http.request.StartupRequest;
@@ -69,17 +71,26 @@ public final class VelocityPlugin {
     private PluginLoader pluginLoader;
     private ProxyBridgeRuntime bridgeRuntime;
 
+    private final VelocityContext fastStats;
+
     @Inject
-    public VelocityPlugin(PluginContainer plugin, ProxyServer server, @DataDirectory Path folder, Logger logger) {
+    public VelocityPlugin(PluginContainer plugin, ProxyServer server, @DataDirectory Path folder, Logger logger, VelocityContext.Builder contextBuilder) {
         this.plugin = plugin;
         this.server = server;
         this.folder = folder;
         this.logger = logger;
         this.pluginLogger = new VelocityPluginLogger(logger);
+
+        this.fastStats = contextBuilder
+                .token("e3b77f89e661e7b81a64273c7c6c91cf")
+                .metrics(Metrics.Factory::create)
+                .create();
     }
 
     @Subscribe
     public synchronized void onProxyInitialize(ProxyInitializeEvent event) {
+        fastStats.ready();
+
         BootConfig bootConfig = loadOrCreateBootConfig();
         if (bootConfig == null) {
             return;
@@ -145,6 +156,7 @@ public final class VelocityPlugin {
 
     @Subscribe
     public synchronized void onProxyShutdown(ProxyShutdownEvent event) {
+        fastStats.shutdown();
         if (bridgeRuntime != null) bridgeRuntime.shutdown();
         if (pluginLoader != null) pluginLoader.shutdown();
     }

@@ -61,4 +61,14 @@ public record BukkitAdventureCommandActor(
     public void error(@NotNull String message) {
         reply(MiniMessage.miniMessage().deserialize("<red>" + message));
     }
+
+    @Override
+    public void sendRawMessage(@NotNull String message) {
+        reply(message);
+    }
+
+    @Override
+    public void sendRawError(@NotNull String message) {
+        error(message);
+    }
 }

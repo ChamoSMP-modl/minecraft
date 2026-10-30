@@ -7,6 +7,8 @@ dependencies {
     annotationProcessor(libs.velocity.api)
     annotationProcessor(libs.lombok)
 
+    implementation(libs.faststats.velocity)
+
     compileOnly(project(":core"))
 
     compileOnly(libs.lamp.common)

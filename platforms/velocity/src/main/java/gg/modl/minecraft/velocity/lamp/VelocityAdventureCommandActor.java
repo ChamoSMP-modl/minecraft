@@ -51,6 +51,16 @@ public record VelocityAdventureCommandActor(
     }
 
     @Override
+    public void sendRawMessage(@NotNull ComponentLike message) {
+        reply(message);
+    }
+
+    @Override
+    public void sendRawError(@NotNull ComponentLike message) {
+        error(message);
+    }
+
+    @Override
     public void reply(@NotNull String message) {
         reply(MiniMessage.miniMessage().deserialize(message));
     }
@@ -62,6 +72,11 @@ public record VelocityAdventureCommandActor(
 
     @Override
     public void sendRawMessage(@NotNull String message) {
-        reply(MiniMessage.miniMessage().deserialize(message));
+        reply(message);
+    }
+
+    @Override
+    public void sendRawError(@NotNull String message) {
+        error(message);
     }
 }
