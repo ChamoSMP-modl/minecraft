@@ -1,6 +1,6 @@
 [versions]
 cirrus = "5.0.0"
-lamp = "4.0.0"
+lamp = "4.0.1"
 lombok = "1.18.48"
 gson = "2.14.0"
 snakeyaml = "2.7"
