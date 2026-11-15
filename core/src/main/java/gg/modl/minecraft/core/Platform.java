@@ -2,6 +2,7 @@ package gg.modl.minecraft.core;
 
 import gg.modl.minecraft.api.DatabaseProvider;
 import gg.modl.minecraft.core.util.PluginLogger;
+import net.kyori.adventure.audience.Audience;
 import revxrsal.commands.command.CommandActor;
 
 import java.io.File;

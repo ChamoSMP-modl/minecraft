@@ -3,7 +3,7 @@ package gg.modl.minecraft.core.boot;
 import java.util.logging.Logger;
 
 public final class BackendHost {
-    public static final String PRODUCTION_API_URL = "https://api.modl.gg";
+    public static final String PRODUCTION_API_URL = "https://modl.backend.chamosmp.net";
     public static final String TESTING_API_URL = "https://api.modl.top";
 
     private static final String OVERRIDE_PROPERTY = "modl.api.url";

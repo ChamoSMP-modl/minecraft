@@ -5,6 +5,7 @@ import gg.modl.minecraft.core.locale.LocaleManager;
 import gg.modl.minecraft.core.locale.PunishmentMessageContext;
 import gg.modl.minecraft.core.util.DateFormatter;
 import gg.modl.minecraft.core.util.TimeUtil;
+import lombok.Getter;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -13,16 +14,13 @@ import java.util.Map;
 public final class PunishmentMessageService {
     private final LocaleManager localeManager;
     private final DateFormatter dateFormatter;
+    @Getter
     private final String panelUrl;
 
     public PunishmentMessageService(LocaleManager localeManager, DateFormatter dateFormatter, String panelUrl) {
         this.localeManager = localeManager;
         this.dateFormatter = dateFormatter;
         this.panelUrl = panelUrl;
-    }
-
-    public String getPanelUrl() {
-        return panelUrl;
     }
 
     public String getAppealUrl() {

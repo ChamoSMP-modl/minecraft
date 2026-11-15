@@ -54,7 +54,7 @@ public class JoinListener {
 
     private void denyLogin(LoginEvent event, String message, Throwable failure) {
         event.setResult(ResultedEvent.ComponentResult.denied(platform.toKickComponent(message)));
-        if (failure == null) logger.warn("Login blocked for {}: {}", event.getPlayer().getUsername(), message);
+        if (failure == null) logger.warn("Login blocked for {}", event.getPlayer().getUsername());
         else logger.error("Login verification failed for {} - denying login", event.getPlayer().getUsername(), failure);
     }
 

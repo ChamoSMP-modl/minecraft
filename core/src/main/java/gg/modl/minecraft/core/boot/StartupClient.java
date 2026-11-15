@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import gg.modl.minecraft.api.http.request.StartupRequest;
 import gg.modl.minecraft.api.http.response.StartupResponse;
 import gg.modl.minecraft.core.util.PluginLogger;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -15,6 +16,7 @@ public class StartupClient {
     private static final Duration TIMEOUT = Duration.ofSeconds(30);
     private static final int MAX_RETRIES = 3;
     private static final long[] RETRY_DELAYS_MS = {2000, 4000, 8000};
+    @Getter
     private static volatile StartupResponse lastStartupResponse;
 
     private StartupClient() {
@@ -60,10 +62,6 @@ public class StartupClient {
         }
 
         return null;
-    }
-
-    public static StartupResponse getLastStartupResponse() {
-        return lastStartupResponse;
     }
 
     public static String getServerInstanceId() {

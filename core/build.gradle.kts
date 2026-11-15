@@ -39,6 +39,7 @@ dependencies {
     compileOnly(libs.java.websocket)
 
     compileOnly(libs.adventure.api)
+    compileOnly(libs.adventure.minimessage)
     compileOnly(libs.gson)
     compileOnly(libs.netty.all)
 

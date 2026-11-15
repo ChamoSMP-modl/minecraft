@@ -6,23 +6,13 @@ import gg.modl.minecraft.core.bridge.protocol.BridgeProtocol;
 import gg.modl.minecraft.core.util.PluginLogger;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.*;
+import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.Setter;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.concurrent.TimeUnit;
 
 public class BridgeQueryClient {
@@ -35,7 +25,8 @@ public class BridgeQueryClient {
     private final String serverName;
     private final PluginLogger logger;
     private final BridgeScheduler scheduler;
-    @Setter private BridgeMessageHandler messageHandler;
+    @Setter
+    private BridgeMessageHandler messageHandler;
 
     private final EventLoopGroup group;
     private Channel channel;
@@ -54,7 +45,7 @@ public class BridgeQueryClient {
         this.logger = logger;
         this.scheduler = scheduler;
         this.messageHandler = messageHandler;
-        this.group = new NioEventLoopGroup(1);
+        this.group = new MultiThreadIoEventLoopGroup(1, NioIoHandler.newFactory());
     }
 
     public void connect() {

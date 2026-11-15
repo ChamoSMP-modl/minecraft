@@ -12,6 +12,7 @@ import gg.modl.minecraft.core.util.StringUtil;
 import gg.modl.minecraft.spigot.bridge.folia.FoliaScheduler;
 import gg.modl.minecraft.spigot.lamp.BukkitAdventureActorFactory;
 import lombok.Setter;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;

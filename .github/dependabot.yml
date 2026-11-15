@@ -1,6 +1,48 @@
 version: 2
+
+registries:
+  modl-nexus:
+    type: maven-repository
+    url: https://nexus.modl.gg/repository/maven-release
+  chamosmp:
+    type: maven-repository
+    url: https://maven.chamosmp.net/releases
+  polar:
+    type: maven-repository
+    url: https://repo.polar.top/repository/polar/
+  intave:
+    type: maven-repository
+    url: https://repo.janmm14.de/repository/intave/
+  strokk:
+    type: maven-repository
+    url: https://eldonexus.de/repository/maven-public/
+  codemc:
+    type: maven-repository
+    url: https://repo.codemc.io/repository/maven-releases/
+  allesio:
+    type: maven-repository
+    url: https://repo.alessiodp.com/snapshots/
+  papermc:
+    type: maven-repository
+    url: https://repo.papermc.io/repository/maven-public/
+  faststats:
+    type: maven-repository
+    url: https://repo.faststats.dev/releases
+
+
 updates:
-  - package-ecosystem: "gradle" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  - package-ecosystem: "gradle"
+    directory: "/"
+    registries:
+      - modl-nexus
+      - chamosmp
+      - polar
+      - intave
+      - strokk
+      - codemc
+      - allesio
+      - papermc
+      - faststats
+
     schedule:
       interval: "daily"
