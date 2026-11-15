@@ -8,7 +8,7 @@ httpclient5 = "5.6.5"
 libby = "2.0.0-SNAPSHOT"
 netty = "4.2.20.Final"
 packetevents = "2.14.0"
-replay-recording = "1.1.7"
+replay-recording = "1.1.8"
 velocity = "4.3.1"
 paper = "26.3.build.+"
 adventure = "5.2.0"
@@ -83,7 +83,7 @@ paper-api = { module = "io.papermc.paper:paper-api", version.ref = "paper" }
 polar-api = { module = "top.polar:api", version.ref = "polar-api" }
 intave-access = { module = "de.jpx3.intave.access:intave-access", version.ref = "intave-access" }
 
-replay-recording = { module = "gg.modl.minecraft.replay:modl-replay-recording", version.ref = "replay-recording" }
+replay-recording = { module = "net.chamosmp.modl.minecraft.replay:modl-replay-recording", version.ref = "replay-recording" }
 
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junit-bom" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
