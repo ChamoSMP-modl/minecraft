@@ -23,7 +23,7 @@ polar-api = "2.3.0"
 intave-access = "14.4.2"
 annotations = "26.1.0"
 strokk = "2.3.1"
-faststats = "0.31.0"
+faststats = "0.32.2"
 
 shadow = "9.6.1"
 run = "3.1.0"
