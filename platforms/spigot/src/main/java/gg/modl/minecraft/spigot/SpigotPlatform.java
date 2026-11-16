@@ -12,7 +12,6 @@ import gg.modl.minecraft.core.util.StringUtil;
 import gg.modl.minecraft.spigot.bridge.folia.FoliaScheduler;
 import gg.modl.minecraft.spigot.lamp.BukkitAdventureActorFactory;
 import lombok.Setter;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
@@ -115,6 +114,8 @@ public class SpigotPlatform implements Platform {
     @Override
     public Lamp<BukkitCommandActor> buildLamp(Consumer<Lamp.Builder<? extends CommandActor>> configurator) {
         Lamp.Builder<BukkitCommandActor> builder = BukkitLamp.builder(createLampConfig());
+        builder.defaultMessageSender((i, o) -> i.audience().orElseThrow().sendMessage(MiniMessage.miniMessage().deserialize(o)));
+        builder.defaultErrorSender((i, o) -> i.audience().orElseThrow().sendMessage(MiniMessage.miniMessage().deserialize(o)));
         configurator.accept(builder);
         return builder.build();
     }
@@ -122,6 +123,7 @@ public class SpigotPlatform implements Platform {
     BukkitLampConfig<BukkitCommandActor> createLampConfig() {
         return BukkitLampConfig.builder(plugin)
                 .actorFactory(new BukkitAdventureActorFactory())
+                .messageSender((bukkitCommandActor, componentLike) -> bukkitCommandActor.audience().orElseThrow().sendMessage(componentLike))
                 .disableBrigadier(shouldDisableBrigadier())
                 .build();
     }

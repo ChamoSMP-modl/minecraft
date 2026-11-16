@@ -18,6 +18,7 @@ import gg.modl.minecraft.velocity.lamp.VelocityAdventureActorFactory;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import revxrsal.commands.Lamp;
 import revxrsal.commands.command.CommandActor;
@@ -129,6 +130,9 @@ public class VelocityPlatform implements Platform {
                 .actorFactory(new VelocityAdventureActorFactory())
                 .build();
         Lamp.Builder<VelocityCommandActor> builder = VelocityLamp.builder(lampConfig);
+        builder.defaultMessageSender((i, o) -> i.source().sendRichMessage(o));
+        builder.defaultErrorSender((i, o) -> i.source().sendRichMessage(o));
+
         configurator.accept(builder);
         return builder.build();
     }
@@ -140,11 +144,11 @@ public class VelocityPlatform implements Platform {
         velocityLamp.accept(VelocityVisitors.brigadier(server));
     }
 
-    private Player getOnlinePlayer(String username) {
+    private @Nullable Player getOnlinePlayer(String username) {
         return server.getPlayer(username).orElse(null);
     }
 
-    private Player getOnlinePlayer(UUID uuid) {
+    private @Nullable Player getOnlinePlayer(UUID uuid) {
         return server.getPlayer(uuid).orElse(null);
     }
 
@@ -265,7 +269,7 @@ public class VelocityPlatform implements Platform {
     @Override
     public DatabaseProvider createLiteBansDatabaseProvider() {
         try {
-            if (!server.getPluginManager().getPlugin("litebans").isPresent()) return null;
+            if (server.getPluginManager().getPlugin("litebans").isEmpty()) return null;
             Class.forName("litebans.api.Database");
             return new LiteBansDatabaseProvider();
         } catch (ClassNotFoundException ignored) {
